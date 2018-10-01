@@ -65,28 +65,49 @@
 <main role="main" class="container">
 
     <table id="team_table">
-        <tr id="gaga", onclick="toggleRowVisibility('gaga' , 'gagaExtra')">
+        <tr onclick="toggleRowVisibility('gaga-extra')">
             <td>Gael Lederrey</td>
         </tr>
-        <tr id="gagaExtra", class="hidden-on-open">
+        <tr class="toggle-visibility gaga-extra">
             <td>
-                <a href="http://transp-or.epfl.ch/personnal.php?Person=LEDERREY" target="_blank">http://transp-or.epfl.ch/personnal.php?Person=LEDERREY</a>
+                <table class="inner-table">
+                    <tr>
+                        <td>Fill in !</td>
+                    </tr>
+                </table>
             </td>
         </tr>
-        <tr id="semin", onclick="toggleRowVisibility('semin', 'seminExtra')">
+        <tr onclick="toggleRowVisibility('semin-extra')">
             <td>Semin Kwak</td>
         </tr>
-        <tr id="seminExtra", class="hidden-on-open">
+        <tr class="toggle-visibility semin-extra">
             <td>
-                <a href="https://people.epfl.ch/semin.kwak" target="_blank">https://people.epfl.ch/semin.kwak</a>
+                <table class="inner-table">
+                   <tr>
+                       <td> Fill in !</td>
+                   </tr>
+                </table>
             </td>
         </tr>
-        <tr id="nicho", onclick="toggleRowVisibility('nicho', 'nichoExtra')">
+        <tr onclick="toggleRowVisibility('nicho-extra')">
             <td>Nicholas Molyneaux</td>
         </tr>
-        <tr id="nichoExtra", class="hidden-on-open">
+        <tr class="toggle-visibility nicho-extra">
             <td>
-                <a href="http://transp-or.epfl.ch/personnal.php?Person=MOLYNEAUX" target="_blank">http://transp-or.epfl.ch/personnal.php?Person=MOLYNEAUX</a>
+            <table class="inner-table">
+                <tr>
+                    <td class="row-header">Occupation</td>
+                    <td> PhD student in the <a href="http://transp-or.epfl.ch/" target="_blank">TRANSP-OR lab</a> </td>
+                </tr>
+                <tr>
+                    <td class="row-header">Topics of interest</td>
+                    <td>Simulation-based optimization<br/>Pedestrian traffic modelling<br/>Traffic management</td>
+                </tr>
+                <tr>
+                    <td class="row-header">Web pages</td>
+                    <td> <a href="http://transp-or.epfl.ch/personnal.php?Person=MOLYNEAUX" target="_blank">http://transp-or.epfl.ch/personnal.php?Person=MOLYNEAUX</a><br/> <a href="https://nicholasmolyneaux.myportfolio.com/" target="_blank">https://nicholasmolyneaux.myportfolio.com/</a> </td>
+                </tr>
+            </table>
             </td>
         </tr>
     </table>

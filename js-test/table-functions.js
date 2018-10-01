@@ -11,13 +11,13 @@ function makeLarge(cell) {
     cell.style.fontSize = "50px";
 }
 
-function toggleRowVisibility(row, rowExtra) {
-    console.log(row)
-    if (document.getElementById(rowExtra).style.display === "table-cell") {
-            document.getElementById(rowExtra).style.display = "none";
+function toggleRowVisibility(rowExtra) {
+    for (const rows of document.getElementsByClassName(rowExtra)) {
+        if (rows.style.display === "table-row") {
+            rows.style.display = "none";
         }
         else {
-            document.getElementById(rowExtra).style.display = "table-cell";
+            rows.style.display = "table-row";
         }
-
+    }
 }
