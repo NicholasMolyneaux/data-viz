@@ -9,8 +9,21 @@ body {
     font-weight: bolder;
 }
 
-.the-line {
+.the-walls {
     vector-effect: non-scaling-stroke;
     stroke: black;
     stroke-width: 1;
+}
+
+.the-zones {
+  vector-effect: non-scaling-stroke;
+  stroke: red;
+  stroke-width: 1;
+  fill: red;
+}
+
+.canvas-border {
+    stroke: black;
+    stroke-width: 0.5;
+    fill: none;
 }
