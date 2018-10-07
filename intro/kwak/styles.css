@@ -16,10 +16,10 @@ body {
 }
 
 .the-zones {
-  vector-effect: non-scaling-stroke;
-  stroke: red;
-  stroke-width: 1;
-  fill: red;
+    vector-effect: non-scaling-stroke;
+    stroke: red;
+    stroke-width: 1;
+    fill: none;
 }
 
 .canvas-border {

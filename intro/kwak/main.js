@@ -41,19 +41,18 @@ group_walls.attr("transform", `translate( ${width/2 }, ${height/2 })`)
     .attr("transform", `scale(${scale})`);
 
 // Draw zones
-// let group_zones = svg
-//     .append("g");
-// graph["nodes"].map( (g) => {
-//     group_zones.append("rect")
-//         .attr("class", "the-zones")
-//         .attr("x", g["x"]-x_offset)
-//         .attr("y", g["y"]-y_offset)
-//         .attr("width", g["x2"]-g["x1"])
-//         .attr("height", g["y3"]-g["y3"]);
-//         console.log(g["x"]-x_offset)
-// });
+let group_zones = svg
+     .append("g");
+graph["nodes"].map( (g) => {
+     group_zones.append("rect")
+         .attr("class", "the-zones")
+         .attr("x", g["x1"]-x_offset)
+         .attr("y", g["y1"]-y_offset)
+         .attr("width", g["x2"]-g["x1"])
+         .attr("height", g["y3"]-g["y2"]);
+ });
 
-// group_zones.attr("transform", `translate( ${width/2 }, ${height/2 })`)
-//     .attr("transform", `scale(${scale})`);
+group_zones.attr("transform", `translate( ${width/2 }, ${height/2 })`)
+     .attr("transform", `scale(${scale})`);
 
 // Draw pedestrians
