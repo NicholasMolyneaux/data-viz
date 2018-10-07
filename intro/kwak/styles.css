@@ -17,9 +17,22 @@ body {
 
 .the-zones {
     vector-effect: non-scaling-stroke;
+    stroke: gray;
+    stroke-width: 1;
+    fill: none;
+}
+
+.controlled-areas {
+    vector-effect: non-scaling-stroke;
     stroke: red;
     stroke-width: 1;
     fill: none;
+}
+
+.flow-gates {
+    vector-effect: non-scaling-stroke;
+    stroke: blue;
+    stroke-width: 1;
 }
 
 .canvas-border {

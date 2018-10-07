@@ -55,4 +55,33 @@ graph["nodes"].map( (g) => {
 group_zones.attr("transform", `translate( ${width/2 }, ${height/2 })`)
      .attr("transform", `scale(${scale})`);
 
-// Draw pedestrians
+// Draw controlled area
+let controlled_areas = svg
+    .append("g");
+graph["controlled_areas"].map( (c) => {
+    controlled_areas.append("rect")
+        .attr("class", "controlled-areas")
+        .attr("x", c["x1"] - x_offset)
+        .attr("y", c["y1"] - y_offset)
+        .attr("width", c["x2"] - c["x1"])
+        .attr("height", c["y3"] - c["y2"]);
+} );
+controlled_areas.attr("transform", `translate( ${width/2}, ${height/2} )`)
+    .attr("transform", `scale(${scale})`);
+
+// Draw flow gate?
+let flow_gates = svg
+    .append("g");
+graph["flow_gates"].map( f => {
+    flow_gates.append("line")
+        .attr("class", "flow-gates")
+        .attr("x1", f["start_pos_x"] - x_offset)
+        .attr("y1", f["start_pos_y"] - y_offset)
+        .attr("x2", f["end_pos_x"] - x_offset)
+        .attr("y2", f["end_pos_y"] - y_offset);
+} );
+
+flow_gates.attr("transform", `translate( ${width/2 }, ${height/2 })`)
+     .attr("transform", `scale(${scale})`);
+
+
