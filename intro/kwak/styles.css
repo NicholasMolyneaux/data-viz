@@ -34,9 +34,3 @@ body {
     stroke: blue;
     stroke-width: 1;
 }
-
-.canvas-border {
-    stroke: black;
-    stroke-width: 0.5;
-    fill: none;
-}
