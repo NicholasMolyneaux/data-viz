@@ -90,17 +90,32 @@ trajectories_list.map( t => {
 
 // Move pedestrians
 let svgNS = 'http://www.w3.org/2000/svg';
+let cumDistance = (arr) => {
+    let temp_arr = arr;
+    return arr.map( (a, i) => {
+        let pos;
+        if(i == 0)
+            {pos = temp_arr[0];}
+        else
+            {pos = temp_arr[i-1];}
+        return Math.hypot(a.x-pos.x, a.y-pos.y);
+    } ).reduce( (a, x, i) => [...a, x + (a[i-1] || 0)], []);
+};
+
 trajectories_list.map( t => {
     let indivisual = document.getElementById(`user_${t}`);
     let ani = document.createElementNS(svgNS, "animateMotion");
     let begin = trajectories[t][0]['time'];
     let dur = trajectories[t][trajectories[t].length-1]['time']-begin;
+    let mpath = document.createElementNS(svgNS, "mpath");
+    let path_position = cumDistance(trajectories[t]);
+
     ani.setAttribute("dur", dur);
     ani.setAttribute("class", "animation");
     ani.setAttribute("begin", trajectories[t][0]['time']);
     ani.setAttribute("calcMode", "linear");
     ani.setAttribute("keyTimes", trajectories[t].map( u => (u.time - begin)/dur).join(";"));
-    let mpath = document.createElementNS(svgNS, "mpath");
+    ani.setAttribute("keyPoints" , path_position.map(p => p/path_position[path_position.length-1]).join(";"));
     mpath.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", `#path_${t}`);
     ani.appendChild(mpath);
     indivisual.appendChild(ani);
