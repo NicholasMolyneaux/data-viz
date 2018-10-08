@@ -12,13 +12,13 @@ body {
 .the-walls {
     vector-effect: non-scaling-stroke;
     stroke: black;
-    stroke-width: 1;
+    stroke-width: 2;
 }
 
 .the-zones {
     vector-effect: non-scaling-stroke;
     stroke: gray;
-    stroke-width: 1;
+    stroke-width: 2;
     fill: none;
 }
 
@@ -33,4 +33,18 @@ body {
     vector-effect: non-scaling-stroke;
     stroke: blue;
     stroke-width: 1;
+}
+
+.ped-trajectory {
+    vector-effect: non-scaling-stroke;
+    stroke: gray;
+    stroke-width: 2;
+    fill: none;
+    opacity: 0.1;
+}
+
+.ped-individual {
+    vector-effect: non-scaling-stroke;
+    r: 0.15;
+    fill: red;
 }

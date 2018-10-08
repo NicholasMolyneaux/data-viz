@@ -1,6 +1,6 @@
 // Import graph.js and wall.js
-import wall from "./wall.js";
-import graph from "./graph.js";
+//import wall from "./wall.js";
+//import graph from "./graph.js";
 
 const x_offset = Math.min(...wall["walls"].map( (w) => Math.min(w["x1"], w["x2"]) ));
 const y_offset = Math.min(...wall["walls"].map( (w) => Math.min(w["y1"], w["y2"]) ));
@@ -22,8 +22,7 @@ let svg = d3.select("body").append("svg")
     .attr("viewBox",`${x_offset} ${y_offset} ${x_length} ${y_length}`);
 
 // Draw walls
-let group_walls = svg
-    .append("g");
+let group_walls = svg.append("g");
 wall["walls"].map( (w)  => {
     group_walls.append("line")
         .attr("class", "the-walls")
@@ -34,8 +33,7 @@ wall["walls"].map( (w)  => {
 }) ;
 
 // Draw zones
-let group_zones = svg
-     .append("g");
+let group_zones = svg.append("g");
 graph["nodes"].map( (g) => {
      group_zones.append("rect")
          .attr("class", "the-zones")
@@ -47,8 +45,7 @@ graph["nodes"].map( (g) => {
 
 
 // Draw controlled area
-let controlled_areas = svg
-    .append("g");
+let controlled_areas = svg.append("g");
 graph["controlled_areas"].map( (c) => {
     controlled_areas.append("rect")
         .attr("class", "controlled-areas")
@@ -59,8 +56,7 @@ graph["controlled_areas"].map( (c) => {
 } );
 
 // Draw flow gate?
-let flow_gates = svg
-    .append("g");
+let flow_gates = svg.append("g");
 graph["flow_gates"].map( f => {
     flow_gates.append("line")
         .attr("class", "flow-gates")
@@ -69,3 +65,43 @@ graph["flow_gates"].map( f => {
         .attr("x2", f["end_pos_x"] )
         .attr("y2", f["end_pos_y"] );
 } );
+
+// Draw trajectories
+let ped_trajectories = svg.append("g");
+let ped_individuals = svg.append("g");
+let lineFunction = d3.svg.line()
+    .x(d => d.x)
+    .y(d => d.y)
+    .interpolate("linear");
+
+const trajectories_list = Object.keys(trajectories).map(k => k);
+trajectories_list.map( t => {
+    // Ready trajectories (paths)
+    ped_trajectories.append("path")
+        .attr("class", "ped-trajectory")
+        .attr("id",`path_${t}`)
+        .attr("d", lineFunction(trajectories[t]));
+
+    // Ready pedestrians
+    ped_individuals.append("circle")
+        .attr("class", "ped-individual")
+        .attr("id", `user_${t}`);
+} );
+
+// Move pedestrians
+let svgNS = 'http://www.w3.org/2000/svg';
+trajectories_list.map( t => {
+    let indivisual = document.getElementById(`user_${t}`);
+    let ani = document.createElementNS(svgNS, "animateMotion");
+    let begin = trajectories[t][0]['time'];
+    let dur = trajectories[t][trajectories[t].length-1]['time']-begin;
+    ani.setAttribute("dur", dur);
+    ani.setAttribute("class", "animation");
+    ani.setAttribute("begin", trajectories[t][0]['time']);
+    ani.setAttribute("calcMode", "linear");
+    ani.setAttribute("keyTimes", trajectories[t].map( u => (u.time - begin)/dur).join(";"));
+    let mpath = document.createElementNS(svgNS, "mpath");
+    mpath.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", `#path_${t}`);
+    ani.appendChild(mpath);
+    indivisual.appendChild(ani);
+});

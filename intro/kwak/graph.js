@@ -1,4 +1,4 @@
-export default
+const graph =
 {
   "location": "t-junction",
   "sublocation": "none",
@@ -262,4 +262,4 @@ export default
   "moving_walkways": [],
   "flow_separators": []
 
-}
+};

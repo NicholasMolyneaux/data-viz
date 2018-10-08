@@ -1,4 +1,4 @@
-export default
+const wall =
 {
   "location": "t-junction",
   "sublocation": "none",
@@ -100,4 +100,4 @@ export default
       "type": 0
     }
   ]
-}
+};
