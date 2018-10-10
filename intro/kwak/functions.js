@@ -46,14 +46,15 @@ async function drawZones(json) {
             .attr("y2", f["end_pos_y"] );
     } );
 }
-function movePedestrians(pedes, data) {
-    pedes.attr("cx", (d, i) => data[i].x)
-        .attr("cy", (d, i) => data[i].y);
-    pedes.enter()
-        .append("circle")
-        .attr("cx", (d, i) => data[i].x)
-        .attr("cy", (d, i) => data[i].y)
+function updatePosition(data) {
+    let pedes = d3.select("svg").selectAll("circle").data(data, d => d.id);
+    pedes.enter().append("circle")
+        .attr("cx", d => d.x)
+        .attr("cy", d  => d.y)
         .attr("r", 0.1);
+    pedes
+        .attr("cx", d => d.x)
+        .attr("cy", d => d.y);
     pedes.exit().remove();
 }
 function runAnimation(json) {
@@ -61,9 +62,8 @@ function runAnimation(json) {
     svg.selectAll("circle").remove();
     d3.json(json)
         .then(data => {
-            data.map(each_time => {
-                let pedes = svg.selectAll("circle").data(each_time.data.map(d => d.id));
-                movePedestrians(pedes, each_time.data);
+            data.map( each_time => {
+                d3.interval( () => updatePosition(each_time.data), each_time.time * 1000);
             })
         });
 }
