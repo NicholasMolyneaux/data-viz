@@ -63,7 +63,7 @@ function runAnimation(json) {
     d3.json(json)
         .then(data => {
             data.map( each_time => {
-                d3.interval( () => updatePosition(each_time.data), each_time.time * 1000);
+                d3.timeout( () => updatePosition(each_time.data), each_time.time * 1000);
             })
         });
 }
