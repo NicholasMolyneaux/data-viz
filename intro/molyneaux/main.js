@@ -1,51 +1,40 @@
-// Define Height and width for SVG canvas
-var margin = {top: 10, right: 30, bottom: 30, left: 30},
-    width = 960 - margin.left - margin.right,
-    height = 500 - margin.top - margin.bottom;
 
-// SVG canvas
-var svg = d3.select("body").append("svg")
-    .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
-    .append("g")
-    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+// Starts by loadoing trajectory data
+let trackingData;
+let timeSlider;
 
-// Background
-svg.append("rect")
-    .attr("width", "100%")
-    .attr("height", "100%")
-    .attr("fill", "gray");
+d3.json('data/intersection-with-gates_simulation_trajectories_3PWjU5KgDW.json', function(trajData) {
+    trackingData = trajData;
+    const times = trajData.map(d => d.time);
+    const minTime = Math.min(...times);
+    const maxTime = Math.max(...times);
 
-// Add some text. (CSS for the text)
-// But compute the width of the text
-var widthText = 0;
+    console.log(times, minTime, maxTime);
 
-var text = svg.append("text")
-        .attr("x", width/2)
-        .attr("y", height/2)
-        .text( function(d) { return "Have fun with d3.js!"})
-        .attr("text-anchor", "middle")
-        .attr("id", "middle-text")
-        .each(function(d,i) {
-            widthText = Math.round(1.2*this.getComputedTextLength());
-        })
-        ;
+    timeSlider = noUiSlider.create(handlesSlider, {
+        start: [minTime, maxTime],
+        range: {
+            'min': [minTime],
+            'max': [maxTime]
+        },
+        connect: true,
+    });
+});
 
-console.log(widthText);
+// sets various canvas parameters
+const svgCanvasMargins = {top: 10, right: 30, bottom: 30, left: 30};
+const svgInnerMargins = {top: 5, right: 5, bottom: 5, left: 5};
 
-// Draw a rectangle in the middle of the canvas
-// with the size of the text
-var wRect = widthText,
-    hRect = 100;
+const svg = d3.select("body").append("svg").attr("id", "moving-peds");
 
-// Warning, you need to insert the rectangle since
-// it has to come before the text and not after (--> append)
-svg.insert("rect", "text")
-        .attr("width", wRect)
-        .attr("height", hRect)
-        .attr("x", width/2 - wRect/2)
-        .attr("y", height/2 - hRect/2)
-        .attr("fill", "red")
-        .attr("id", "rect");
+// mapping functions from real world to pixels inside canvas
+let xScale, yScale;
+const width = 960;
+let height;
 
+var handlesSlider = document.getElementById('slider-handles');
 
+createBackground();
+
+let pedMover;
+let currentTimeShownIdx = 0;
