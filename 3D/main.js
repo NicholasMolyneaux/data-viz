@@ -1,21 +1,35 @@
 console.clear();
 
-var container, stats, controls;
+// Various folders
+var assetsFolder = "./assets/";
+var modelsFolder = "./model/";
+var dataFolder = "./data/";
+
+var container, stats, controls, raycaster;
 var camera, scene, renderer, light;
 //get our <DIV> container
 var container = document.getElementById('container');
 
-var walls = [];
+// Some variables
 var wallHeight = 2.5;
 var wallDepth = 0.1;
-var peopleHeight = 1.8;
+var peopleHeight = 1.6;
+var wallsHidden = false;
+var avg = [0,0];
 
+// Some 3D objects
+var topFloor, bottomFloor, ceiling;
+var walls = [];
 
+// Pedestrians
+var loader = new THREE.GLTFLoader();
+var dctPed = new Object();
+
+var mouse = new THREE.Vector2(), INTERSECTED;
 
 init();
 
 animate();
-
 
 function init() {
 
@@ -41,25 +55,18 @@ function init() {
 
     // model
     loadAndBuildWalls();
-    loadMinecraft();
 
-    // Add axes
-    var worldAxis = new THREE.AxesHelper(20);
-    scene.add(worldAxis);
+    // Load pedestrians
+    loadPedestrians();
 
-    var path = new THREE.Path();
+    // Load on pedestrian (DEBUG PURPOSE)
+    //loadMinecraft();
 
-    path.lineTo( 0, 0.8 );
-    path.quadraticCurveTo( 0, 1, 0.2, 1 );
-    path.lineTo( 1, 1 );
+    // Add axes (DEBUG PURPOSE)
+    //var worldAxis = new THREE.AxesHelper(20);
+    //scene.add(worldAxis);
 
-    var points = path.getPoints();
-
-    var geometry = new THREE.BufferGeometry().setFromPoints( points );
-    var material = new THREE.LineBasicMaterial( { color: 0xffffff } );
-
-    var line = new THREE.Line( geometry, material );
-    scene.add( line );
+    raycaster = new THREE.Raycaster();
 
     renderer = new THREE.WebGLRenderer( { antialias: true } );
     renderer.setPixelRatio( window.devicePixelRatio );
@@ -74,6 +81,12 @@ function init() {
     // Resize the window
     window.addEventListener( 'resize', onWindowResize, false );
 
+    // Click to hide walls
+    document.getElementById("hide").addEventListener("click", hideWalls);
+
+    // Click on a pedestrian
+    document.addEventListener( 'mousemove', onDocumentMouseMove, false );
+
 }
 
 function onWindowResize() {
@@ -84,16 +97,46 @@ function onWindowResize() {
 
 function animate() {
     requestAnimationFrame( animate );
-    renderer.render( scene, camera );
+    render()
     //console.log(camera.position)
     stats.update();
+}
+
+function render() {
+    // find intersections
+    raycaster.setFromCamera( mouse, camera );
+    var intersects = raycaster.intersectObjects( scene.children, true );
+
+    var intersects_glft = new Array();
+
+    // Select only skinned mesh. (To see if it works later on)
+    intersects.forEach(i => {
+        if (i.object.type == 'SkinnedMesh') {
+            intersects_glft.push(i);
+        }
+    })
+
+    if ( intersects_glft.length > 0 ) {
+        if ( INTERSECTED != intersects_glft[ 0 ].object ) {
+            if ( INTERSECTED ) INTERSECTED.material.emissive.setHex( INTERSECTED.currentHex );
+            INTERSECTED = intersects_glft[ 0 ].object;
+            INTERSECTED.currentHex = INTERSECTED.material.emissive.getHex();
+            INTERSECTED.material.emissive.setHex( 0xff0000 );
+        }
+    } else {
+        if ( INTERSECTED ) INTERSECTED.material.emissive.setHex( INTERSECTED.currentHex );
+        INTERSECTED = null;
+    }
+    renderer.render( scene, camera );
 }
 
 // Load the Minecraft Steve
 function loadMinecraft() {
 
+    console.log("DEBUG FUNCTION!")
+
     var loader = new THREE.GLTFLoader();
-    loader.load( './model/minecraft-char.glb', gltf => {
+    loader.load( modelsFolder + 'minecraft-char.glb', gltf => {
 
         // Set the position
         gltf.scene.position.set(0,0,0);
@@ -116,15 +159,13 @@ function loadMinecraft() {
 
 function loadAndBuildWalls() {
 
-    fetch("./data/walls.json")
+    fetch(dataFolder + "small/walls.json")
         .then(response => response.json())
         .then(json => buildWalls(json.walls));
 
 }
 
 function buildWalls(jsonWalls) {
-
-    var avg = [0,0];
 
     var corners = [];
 
@@ -137,7 +178,7 @@ function buildWalls(jsonWalls) {
         var length = Math.max(Math.abs(w.x1-w.x2), Math.abs(w.y1-w.y2));
 
         var vector = [w.x2-w.x1, w.y2-w.y1];
-        var norm = Math.abs(vector[0]) + Math.abs(vector[1]);
+        var norm = Math.sqrt(Math.pow(vector[0],2) + Math.pow(vector[1],2));
         vector[0] /= norm;
         vector[1] /= norm;
 
@@ -151,7 +192,17 @@ function buildWalls(jsonWalls) {
 
         var geometry = new THREE.BoxGeometry(length+wallDepth, wallHeight, wallDepth);
 
-        var material = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
+        // Load the texture
+        var texture = THREE.ImageUtils.loadTexture(assetsFolder + 'TexturesCom_MarbleTiles0167_5_seamless_S.jpg');
+
+        // Repeat along all directions
+        texture.wrapS = THREE.RepeatWrapping;
+        texture.wrapT = THREE.RepeatWrapping;
+        texture.repeat.set(1,1);
+
+        // Create the material
+        var material = new THREE.MeshLambertMaterial({ map : texture });
+
         var cube = new THREE.Mesh( geometry, material );
 
         cube.rotateY(angle);
@@ -177,8 +228,8 @@ function buildWalls(jsonWalls) {
         c.position.x -= avg[0];
         c.position.z -= avg[1];
 
-        var worldAxis = new THREE.AxesHelper(1);
-        c.add(worldAxis);
+        //var worldAxis = new THREE.AxesHelper(1);
+        //c.add(worldAxis);
 
         scene.add(c);
 
@@ -195,11 +246,11 @@ function buildWalls(jsonWalls) {
 
     centered_corners.push(centered_corners[0]);
 
-    buildFloor(centered_corners);
+    buildFloorAndCeiling(centered_corners);
 
 }
 
-function buildFloor(centered_corners) {
+function buildFloorAndCeiling(centered_corners) {
 
     var floor = new THREE.Shape();
 
@@ -223,30 +274,220 @@ function buildFloor(centered_corners) {
 
     console.log(floor);
 
-    addShape( floor, 0xffee00, 0, 0, 0, 0, 0, 0, 1 );
-
-
+    addShapes( floor, 0, 0, 0, 0, 0, 0, 1 );
 
 }
 
-function addShape( shape, color, x, y, z, rx, ry, rz, s ) {
-    // flat shape
+function addShapes( shape, x, y, z, rx, ry, rz, s ) {
+    // Floor top
+
+    // Load the texture
+    var texture = THREE.ImageUtils.loadTexture(assetsFolder + 'floor_checkerboard.jpg');
+
+    // Repeat along all directions
+    texture.wrapS = THREE.RepeatWrapping;
+    texture.wrapT = THREE.RepeatWrapping;
+    texture.repeat.set(1,1);
+
+    // Create the material
+    var material = new THREE.MeshLambertMaterial({ map : texture });
+
+    // Create the geometry
     var geometry = new THREE.ShapeBufferGeometry( shape );
-    var material = new THREE.MeshBasicMaterial( { color: color, overdraw: 0.5 } );
-    var mesh = new THREE.Mesh( geometry, material );
-    mesh.position.set( x, y, z );
-    mesh.rotation.set( rx-Math.PI/2, ry, rz );
-    mesh.scale.set( s, s, s );
-    scene.add( mesh );
 
-    // flat shape
+    // Create the Mesh
+    topFloor = new THREE.Mesh( geometry, material );
+
+    // Position, Rotate, and Scale
+    topFloor.position.set( x, y, z );
+    topFloor.rotation.set( rx-Math.PI/2, ry, rz );
+    topFloor.scale.set( s, s, s );
+    scene.add( topFloor );
+
+    // Floor bottom
+
+    // Simple black material
     var geometry = new THREE.ShapeBufferGeometry( shape );
-    var material = new THREE.MeshBasicMaterial( { color: color, overdraw: 0.5 } );
-    var mesh = new THREE.Mesh( geometry, material );
-    mesh.position.set( x, y, z );
-    mesh.rotation.set( rx+Math.PI/2, ry, rz );
-    mesh.scale.set( s, s, s );
-    scene.add( mesh );
+    var material = new THREE.MeshBasicMaterial( { color: 0x0000, overdraw: 0.5 } );
+    bottomFloor = new THREE.Mesh( geometry, material );
+    bottomFloor.position.set( x, y, z );
+    bottomFloor.rotation.set( rx+Math.PI/2, ry, rz );
+    bottomFloor.scale.set( s, s, s );
+    scene.add( bottomFloor );
+
+    // Ceiling
+
+    // Load the texture
+    var texture = THREE.ImageUtils.loadTexture(assetsFolder + 'TexturesCom_MetalPlatesPainted0075_1_seamless_S.jpg');
+
+    // Repeat along all directions
+    texture.wrapS = THREE.RepeatWrapping;
+    texture.wrapT = THREE.RepeatWrapping;
+    texture.repeat.set(1,1);
+
+    // Create the material
+    var material = new THREE.MeshLambertMaterial({ map : texture });
+
+    // Create the geometry
+    var geometry = new THREE.ShapeBufferGeometry( shape );
+
+    // Create the Mesh
+    ceiling = new THREE.Mesh( geometry, material );
+
+    // Position, Rotate, and Scale
+    ceiling.position.set( x, y+wallHeight, z );
+    ceiling.rotation.set( rx+Math.PI/2, ry, rz );
+    ceiling.scale.set( s, s, s );
+    scene.add( ceiling );
+
+}
+
+function loadPedestrians() {
+
+    const INTERVAL = 10;	// in milliseconds
+
+    fetch(dataFolder + "small/pedestrians_clean.json")
+        .then(response => response.json())
+        .then(json => {
+                json.forEach((item, index) => {
+                    setTimeout(() => {
+                        animatePedestrians(item)
+                    }, INTERVAL * index);
+                })
+            }
+        )
+}
+
+function animatePedestrians(json) {
+
+    // Update the time
+    document.getElementById("timer").innerHTML = json.time.toFixed(2) + " [s.]";
+
+    var listIds = [];
+
+    // Go through data
+    json.data.forEach(ped => {
+
+        listIds.push(ped.id);
+
+        // Check if its ID is in the dct of ped
+        if (dctPed.hasOwnProperty(ped.id)){
+            // Update the position of this pedestrian
+            updatePosition(ped);
+        } else {
+            // Create a pedestrian
+            createPedestrian(ped);
+        }
+
+    });
+
+    // Find which pedestrian is not in the dctPed anymore
+    var knownIds = new Set(Object.keys(dctPed));
+    var theseIds = new Set(listIds);
+
+    var diff = new Set([...knownIds].filter(x => !theseIds.has(x)));
+
+    // Delete all the lost pedestrians
+    diff.forEach(pedId => {
+        var ped = dctPed[pedId];
+        scene.remove(ped);
+        delete dctPed[pedId];
+    })
+
+    //console.log(json.data);
+
+}
+
+function createPedestrian(ped) {
+
+    console.log("Create Pedestrian with ID " + ped.id);
+    dctPed[ped.id] = new Object();
 
 
+    loader.load( modelsFolder + 'minecraft-char.glb', gltf => {
+
+        // Bounding box to get the size of the object
+        var box = new THREE.Box3().setFromObject( gltf.scene );
+        var size = box.getSize();
+
+        // Define the ration and scale the minecraft steve
+        var ratio = peopleHeight/size.y;
+        gltf.scene.scale.set(ratio, ratio, ratio);
+
+        // Set the position
+        gltf.scene.position.set(ped.x-avg[0],0,ped.y-avg[1]);
+
+        // Add the pedestrian to dct
+        dctPed[ped.id] = gltf.scene;
+
+        // Add the object to the scene
+        scene.add( gltf.scene );
+    }, undefined, function ( e ) {
+        console.error( e );
+    } );
+
+}
+
+function updatePosition(ped) {
+    if (dctPed[ped.id].hasOwnProperty("position")) {
+
+        var oldX = dctPed[ped.id].position['x'];
+        var oldY = dctPed[ped.id].position['z'];
+
+        var newX = ped.x-avg[0];
+        var newY = ped.y-avg[1];
+
+        var direction = [newX-oldX, newY-oldY];
+
+        var norm = Math.sqrt(Math.pow(direction[0],2) + Math.pow(direction[1],2));
+
+        direction[0] /= norm;
+        direction[1] /= norm;
+
+        var angle = 0;
+
+        if (direction[0] > 0) {
+            angle = Math.atan(direction[1]/direction[0]) - Math.PI/2;
+        } else {
+            angle = Math.atan(direction[1]/direction[0]) + Math.PI/2;
+        }
+
+        dctPed[ped.id].position.set(newX, 0, newY);
+        if (norm > 0) {
+            dctPed[ped.id].rotation.set(0, -angle, 0);
+        }
+    }
+}
+
+function hideWalls() {
+    if (wallsHidden) {
+        console.log("Walls shown!");
+
+        walls.forEach(w => {
+            w.scale.y = 1;
+            w.position.y = wallHeight/2;
+        });
+
+        ceiling.visible = true;
+
+        wallsHidden = false;
+    } else {
+        console.log("Walls hidden!");
+
+        walls.forEach(w => {
+            w.scale.y = 0.01;
+            w.position.y = 0.01;
+        });
+
+        ceiling.visible = false;
+
+        wallsHidden = true;
+    }
+
+}
+
+function onDocumentMouseMove( event ) {
+    event.preventDefault();
+    mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+    mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
 }
