@@ -1,7 +1,7 @@
 async function drawWalls(json) {
     const wall = await d3.json(json);
     // Draw walls
-    let group_walls = d3.select("svg").append("g");
+    let group_walls = d3.select("g");
     wall["walls"].map( (w)  => {
         group_walls.append("line")
             .attr("class", "the-walls")
@@ -13,7 +13,7 @@ async function drawWalls(json) {
 }
 async function drawZones(json) {
     const graph = await d3.json(json);
-    let group_zones = d3.select("svg").append("g");
+    let group_zones = d3.select("g");
     graph["nodes"].map( (g) => {
         group_zones.append("rect")
             .attr("class", "the-zones")
@@ -25,7 +25,7 @@ async function drawZones(json) {
 
 
     // Draw controlled area
-    let controlled_areas = d3.select("svg").append("g");
+    let controlled_areas = d3.select("g");
     graph["controlled_areas"].map( (c) => {
         controlled_areas.append("rect")
             .attr("class", "controlled-areas")
@@ -36,7 +36,7 @@ async function drawZones(json) {
     } );
 
     // Draw flow gate?
-    let flow_gates = d3.select("svg").append("g");
+    let flow_gates = d3.select("g");
     graph["flow_gates"].map( f => {
         flow_gates.append("line")
             .attr("class", "flow-gates")
@@ -47,7 +47,7 @@ async function drawZones(json) {
     } );
 }
 function updatePosition(data) {
-    let pedes = d3.select("svg").selectAll("circle").data(data, d => d.id);
+    let pedes = d3.select("g").selectAll("circle").data(data, d => d.id);
     pedes.enter().append("circle")
         .attr("cx", d => d.x)
         .attr("cy", d  => d.y)
@@ -58,8 +58,8 @@ function updatePosition(data) {
     pedes.exit().remove();
 }
 function runAnimation(json) {
-    let svg = d3.select("svg");
-    svg.selectAll("circle").remove();
+    let g = d3.select("g");
+    g.selectAll("circle").remove();
     d3.json(json)
         .then(data => {
             data.map( each_time => {
