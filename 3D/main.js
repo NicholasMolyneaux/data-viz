@@ -34,7 +34,7 @@ animate();
 function init() {
 
     // Set Camera position
-    camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 0.25, 200 );
+    camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 0.25, 2000 );
     camera.position.set( 0, 50, 0);
 
     // Set the controls
@@ -159,7 +159,7 @@ function loadMinecraft() {
 
 function loadAndBuildWalls() {
 
-    fetch(dataFolder + "small/walls.json")
+    fetch(dataFolder + "lausanne/walls.json")
         .then(response => response.json())
         .then(json => buildWalls(json.walls));
 
@@ -167,13 +167,7 @@ function loadAndBuildWalls() {
 
 function buildWalls(jsonWalls) {
 
-    var corners = [];
-
     jsonWalls.forEach(function(w) {
-
-        // Add the corners
-        corners.push([w.x1, w.y1]);
-        corners.push([w.x2, w.y1]);
 
         var length = Math.max(Math.abs(w.x1-w.x2), Math.abs(w.y1-w.y2));
 
@@ -220,6 +214,10 @@ function buildWalls(jsonWalls) {
 
     });
 
+    // Add the corners for the floor and ceiling
+
+    const corners = buildOuterShell(jsonWalls.filter(w => w.type === 0));
+
     avg[0] = avg[0]/walls.length;
     avg[1] = avg[1]/walls.length;
 
@@ -234,6 +232,8 @@ function buildWalls(jsonWalls) {
         scene.add(c);
 
     });
+
+    corners.push(corners[0]);
 
     // Update the corners position
     var centered_corners = []
@@ -250,13 +250,54 @@ function buildWalls(jsonWalls) {
 
 }
 
+function buildOuterShell(jsonWalls) {
+
+    function buildOuterShellRec(currWall, corners) {
+
+        if (jsonWalls.length == 0) {
+
+            return corners;
+        } else {
+
+            // Find the next wall with same corner
+            let inverted = false;
+            var found = jsonWalls.find(elem => {
+                if (elem.x1 === corners[corners.length - 1][0] && elem.y1 === corners[corners.length - 1][1]) {
+                    return elem;
+                } else if (elem.x2 === corners[corners.length - 1][0] && elem.y2 === corners[corners.length - 1][1]) {
+                    inverted = true;
+                    return elem;
+
+                }
+            });
+
+            //console.log(found);
+
+            var index = jsonWalls.indexOf(found);
+            jsonWalls.splice(index, 1);
+
+            if (!inverted) {
+                corners.push([found.x2, found.y2])
+            } else {
+                corners.push([found.x1, found.y1])
+            }
+
+            return buildOuterShellRec(found, corners);
+        }
+    }
+
+    jsonWalls.splice(0,1);
+
+    return buildOuterShellRec(jsonWalls[0], [[jsonWalls[0].x1, jsonWalls[0].y1]]);
+}
+
 function buildFloorAndCeiling(centered_corners) {
 
     var floor = new THREE.Shape();
 
     var first = true;
 
-    centered_corners.forEach(function(c) {
+    centered_corners.reverse().forEach(function(c) {
 
         if (first) {
 
@@ -267,13 +308,7 @@ function buildFloorAndCeiling(centered_corners) {
 
         floor.lineTo(c[0], c[1]);
 
-        console.log(c[0], c[1])
-        console.log(" ")
-
     });
-
-    console.log(floor);
-
     addShapes( floor, 0, 0, 0, 0, 0, 0, 1 );
 
 }
@@ -301,7 +336,7 @@ function addShapes( shape, x, y, z, rx, ry, rz, s ) {
     // Position, Rotate, and Scale
     topFloor.position.set( x, y, z );
     topFloor.rotation.set( rx-Math.PI/2, ry, rz );
-    topFloor.scale.set( s, s, s );
+    topFloor.scale.set( s, -s, s );
     scene.add( topFloor );
 
     // Floor bottom
@@ -344,7 +379,7 @@ function addShapes( shape, x, y, z, rx, ry, rz, s ) {
 
 function loadPedestrians() {
 
-    const INTERVAL = 10;	// in milliseconds
+    const INTERVAL = 10000;	// in milliseconds
 
     fetch(dataFolder + "small/pedestrians_clean.json")
         .then(response => response.json())
