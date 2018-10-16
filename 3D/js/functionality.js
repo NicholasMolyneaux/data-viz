@@ -55,6 +55,8 @@ function onDocumentMouseDown( event ) {
         followPedestrian();
 
     }
+
+    event.stopImmediatePropagation();
 }
 
 function followPedestrian() {
