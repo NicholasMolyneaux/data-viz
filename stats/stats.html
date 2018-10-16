@@ -2,9 +2,81 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="description" content="Intro to d3.js">
+
+    <title>Stats</title>
+
+    <!-- Load d3.js -->
+    <script src="https://d3js.org/d3.v3.min.js"></script>
+
+
+
+    <!-- CSS -->
+    <link href="../bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+
 </head>
 <body>
+<div class="graph">
+    <p class="title">OD Matrix Graph</p>
+    <div id="OD_matrix"></div>
+</div>
+
+<div class="graph">
+    <p class="title">Travel Time Graph</p>
+    <div id="TT"></div>
+</div>
+
+<div class="graph">
+    <p class="title">Speed Graph</p>
+    <div id="Speed"></div>
+</div>
+
+
+<div class="jumbotron">
+    <div class="form-group">
+        <p class="title_options">Options</p>
+        <div class="row">
+            <div class="col">
+                <label for="init_time">Initial Time:</label>
+                <input type="number" class="form-control" id="init_time" name="init_time" step="0.1" value="0.0" onchange="handleChange(this)">
+            </div>
+            <div class="col">
+                <label for="final_time">Final Time:</label>
+                <input type="number" class="form-control" id="final_time" name="final_time" step="0.1" value="128" onchange="handleChange(this)">
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col">
+                <label for="origin">Origin:</label> <br>
+                <select multiple class="form-control" id="origin" name="origin">
+                    <option>1</option>
+                    <option>2</option>
+                    <option>3</option>
+                    <option>4</option>
+                    <option>5</option>
+                </select>
+            </div>
+            <div class="col">
+                <label for="destination">Destination:</label> <br>
+                <select multiple class="form-control" id="destination" name="destination">
+                    <option>1</option>
+                    <option>2</option>
+                    <option>3</option>
+                    <option>4</option>
+                    <option>5</option>
+                </select>
+            </div>
+        </div>
+    </div>
+</div>
 
 </body>
+<!-- JS scripts -->
+<!-- Execute main script -->
+<script src="js/main.js"></script>
+<script src="js/button.js"></script>
+<script src="js/travel_time.js"></script>
 </html>

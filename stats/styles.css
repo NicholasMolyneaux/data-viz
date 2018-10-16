@@ -1,0 +1,28 @@
+body {
+    color: #000000;
+    font-family: "Fira Mono", Monaco, "Andale Mono", "Lucida Console", "Bitstream Vera Sans Mono", "Courier New", Courier, monospace;
+}
+
+.title {
+    font-size: 30px;
+    font-weight: bolder;
+    text-align: center;
+    width: 100%;
+}
+
+.jumbotron {
+    box-sizing: border-box;
+    padding: 10px;
+    border: 2px solid black;
+    background-color: #cccccc;
+    margin: 10px;
+}
+
+.title_options {
+    font-size: 25px;
+    font-weight: bold;
+}
+
+label {
+
+}
