@@ -48,7 +48,12 @@ body {
 
 .graph {
     width: 100%;
-    height: 50px;
+    height: 0px;
+}
+
+.graph-debug {
+    width: 100%;
+    height: 100px;
     background-color: #0c5460;
 }
 
@@ -66,4 +71,12 @@ body {
     position: absolute;
     top: 2.5%;
     background-color: white;
+}
+
+.opt-graphs {
+    box-sizing: border-box;
+    padding: 10px;
+    border: 2px solid black;
+    background-color: #cccccc;
+    margin: 10px;
 }

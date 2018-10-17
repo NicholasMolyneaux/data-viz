@@ -24,19 +24,18 @@
 <br><br>
 
 <div class="container" id="graphContainer">
-    <!--
-    <div class="container" id="graph1">
+    <div class="container" id="graph0">
         <div class="row">
-            <div class="graph col" id="vizGraph1">
-            </div>
-        </div>
-        <div class="row" id="optionsGraph1">
-            <div class="col text-center">
-                <p>SAVE</p>
+            <div class="graph-debug col" id="vizGraph0">
             </div>
         </div>
     </div>
-    -->
+    <div class="col text-center" id="optionGraph0">
+        <div class="col-4 text-center opt-graphs">
+            <label for="nbrBins">nbr. Bins:</label> <br>
+            <input type="number" class="form-control" id="nbrBins" name="final_time" step="1" value="20" min="1" onchange="changeBins(this, 'graph0')">
+        </div>
+    </div>
 </div>
 
 <div class="jumbotron">
@@ -85,5 +84,5 @@
 <!-- Execute main script -->
 <script src="js/main.js"></script>
 <script src="js/button.js"></script>
-<script src="js/hist.js"></script>
+<script src="js/graphs.js"></script>
 </html>

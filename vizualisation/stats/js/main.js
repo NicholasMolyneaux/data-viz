@@ -1,16 +1,14 @@
 const dataFolder = '../../data/';
 
-let pedestrianPaths, ODPed, hist;
+let pedestrianPaths, ODPed, histData;
 
 let initTime, finalTime;
 
-let data;
+let data = new Object();
 
 // Origin and Destination zones.
 let listOrigin = new Array(),
     listDestination = new Array();
-
-let graphDrawn = false;
 
 let nbrGraphs = 0;
 
@@ -27,19 +25,45 @@ queue()
 function main(error, trajectories, OD, histograms) {
     pedestrianPaths = trajectories;
     ODPed = OD;
-    hist = histograms;
+    histData = histograms;
 
     update_info();
+
+    // DEBUG
+    data['graph0'] = histData['tt'];
+    hist('graph0');
 }
 
 function drawGraphs() {
 
-    graphDrawn = true;
-
     // Replace later with get the data
     prepareData();
 
-    drawTT(hist['tt']);
+    graphDivs.forEach(id => {
+
+        const divTypes = document.getElementById(id + '_type');
+
+        const type = divTypes.options[divTypes.selectedIndex].value;
+
+        if (type == "TT") {
+            console.log("Drawing TT graph");
+
+            data[id] = histData['tt'];
+
+            hist(id);
+        } else if (type == "speed") {
+            console.log("Drawing Speed histogram");
+
+            data[id] = histData['density'];
+
+            hist(id);
+        } else if (type == "OD") {
+            console.log("Drawing OD chord diagram")
+        }
+
+    });
+
+    //drawTT(hist['tt']);
 }
 
 function prepareData() {

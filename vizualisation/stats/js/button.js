@@ -17,13 +17,14 @@ function addNewGraph() {
 
     let toBeAdded = "                <div class=\"col-4 text-center\" id=\"div_graph" + graphId + "\">\n" +
         "                    <label for=\"graph1_type\">Graph" + graphId + " - type:</label> <br>\n" +
-        "                    <select class=\"form-control\" id=\"graph1_type\" name=\"origin\">\n" +
-        "                        <option>Travel Time</option>\n" +
-        "                        <option>Speed</option>\n" +
-        "                        <option>OD chord</option>\n" +
+        "                    <select class=\"form-control\" id=\"graph" + graphId + "_type\" name=\"origin\">\n" +
+        "                        <option value='TT' selected>Travel Time</option>\n" +
+        "                        <option value='speed'>Speed</option>\n" +
+        "                        <option value='OD'>OD chord</option>\n" +
         "                    </select>\n" +
         "                    <br>\n" +
-        "                    <button class=\"btn btn-primary\" onclick=\"delGraph(this)\" value=\"div_graph" + graphId + "\" id=\"del_graph" + graphId + "\">Delete Graph" + graphId + "</button>\n" +
+        "                        <button class=\"btn btn-primary\" onclick=\"delGraph(this)\" value=\"div_graph" + graphId + "\" id=\"del_graph" + graphId + "\">Delete Graph" + graphId + "</button>\n" +
+        "                    </div>" +
         "                </div>\n";
 
     if (nbrGraphs < 3) {
@@ -32,13 +33,13 @@ function addNewGraph() {
 
     $('#graphs_options').append(toBeAdded);
 
-    toBeAdded = "    <div class=\"container\" id=\"graph" + graphId + "\">\n" +
+    toBeAdded = "    <div style=\"display: none;\" class=\"container\" id=\"graph" + graphId + "\">\n" +
         "        <div class=\"row\">\n" +
         "            <div class=\"graph col\" id=\"vizGraph" + graphId +  "\">\n" +
         "            </div>\n" +
         "        </div>\n" +
         "        <div class=\"row\" id=\"optionsGraph" + graphId + "\">\n" +
-        "            <div class=\"col text-center\">\n" +
+        "            <div class=\"col text-center\" id=\"optionGraph" + graphId + "\">\n" +
         "                <p>SAVE</p>\n" +
         "            </div>\n" +
         "        </div>\n" +
@@ -66,8 +67,4 @@ function delGraph(event) {
     graphDivs = graphDivs.filter(function(item) {
         return item !== nameDiv
     })
-
-    console.log(graphDivs);
-
-    // Update all the other
 }
