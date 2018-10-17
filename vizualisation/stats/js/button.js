@@ -21,7 +21,7 @@ function addNewGraph() {
         "                </div>\n";
 
     if (nbrGraphs < 3) {
-        toBeAdded +="                <div class=\"col-4 align-self-center\" id=\"btnAddGraph\">\n" +
+        toBeAdded +="                <div class=\"col-4 align-self-center text-center\" id=\"btnAddGraph\">\n" +
             "                    <input class=\"btn btn-primary\" type=\"button\" id=\"add_graph\" value=\"Add a new Graph\" onclick=\"addNewGraph()\">\n" +
             "                </div>";
     }
