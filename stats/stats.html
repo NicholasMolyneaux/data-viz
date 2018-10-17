@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="description" content="Intro to d3.js">
+
+    <title>Stats</title>
+
+    <!-- Load d3.js -->
+    <script src="https://d3js.org/d3.v3.min.js"></script>
+    <script src="http://d3js.org/queue.v1.min.js"></script>
+
+    <!-- CSS -->
+    <link href="../bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <p class="title">OD Matrix Graph</p>
+        <div class="graph col" id="OD_matrix"></div>
+    </div>
+
+    <div class="row">
+        <p class="title">Travel Time Graph</p>
+        <div class="graph col" id="TT">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col text-center">
+            <p>SAVE</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <p class="title">Speed Graph</p>
+        <div class="graph col" id="Speed"></div>
+    </div>
+</div>
+
+
+<div class="jumbotron">
+    <div class="form-group">
+        <p class="title_options">Options</p>
+        <div class="row">
+            <div class="col">
+                <label for="init_time">Initial Time:</label>
+                <input type="number" class="form-control" id="init_time" name="init_time" step="0.1" value="0.0" onchange="handleChange(this)">
+            </div>
+            <div class="col">
+                <label for="final_time">Final Time:</label>
+                <input type="number" class="form-control" id="final_time" name="final_time" step="0.1" value="128" onchange="handleChange(this)">
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col">
+                <label for="origin">Origin:</label> <br>
+                <select multiple class="form-control" id="origin" name="origin">
+                </select>
+            </div>
+            <div class="col">
+                <label for="destination">Destination:</label> <br>
+                <select multiple class="form-control" id="destination" name="destination">
+                </select>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col">
+                <label for="bins_TT">#Bins for TT:</label>
+                <input type="number" class="form-control" id="bins_TT" name="bins_TT" step="1" value="20" min="0">
+            </div>
+            <div class="col">
+                <label for="bins_density">#Bins for Density:</label>
+                <input type="number" class="form-control" id="bins_density" name="bins_density" step="1" value="20" min="0">
+            </div>
+        </div>
+        <br>
+        <div class="container text-center">
+            <input class="btn btn-primary" type="button" id="graphs_submit" value="Draw Graphs" onmousedown="event.preventDefault()" onclick="drawGraphs()">
+        </div>
+    </div>
+</div>
+
+</body>
+<!-- JS scripts -->
+<!-- Execute main script -->
+<script src="js/main.js"></script>
+<script src="js/button.js"></script>
+<script src="js/travel_time.js"></script>
+</html>
