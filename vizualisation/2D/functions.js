@@ -23,7 +23,6 @@ async function drawZones(json) {
             .attr("height", g["y3"]-g["y2"]);
     });
 
-
     // Draw controlled area
     let controlled_areas = d3.select("g");
     graph["controlled_areas"].map( (c) => {
@@ -57,13 +56,21 @@ function updatePosition(data) {
         .attr("cy", d => d.y);
     pedes.exit().remove();
 }
+
+// function showVoronoi(data) {
+//
+// }
+
 function runAnimation(json) {
     let g = d3.select("g");
     g.selectAll("circle").remove();
     d3.json(json)
         .then(data => {
             data.map( each_time => {
-                d3.timeout( () => updatePosition(each_time.data), each_time.time * 1000);
+                d3.timeout( () => {
+                    updatePosition(each_time.data);
+                    //showVoronoi(each_time.data);
+                    }, each_time.time * 1000);
             })
         });
 }
