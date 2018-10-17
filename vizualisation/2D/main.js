@@ -8,9 +8,9 @@ const svg = d3.select("body")
     .append("g");
 
 // Read json data and draw frameworks (walls and zones)
-drawWalls("./simple-data/walls.json");
-drawZones("./simple-data/graph.json");
+drawWalls("../../data/small/walls.json");
+drawZones("../../data/small/graph.json");
 
 //Pedestrians
-runAnimation("./simple-data/pedestrian_time_sequences.json");
+runAnimation("../../data/small/pedestrian_time_sequences.json");
 
