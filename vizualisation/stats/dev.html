@@ -8,24 +8,24 @@
     <title>Stats</title>
 
     <!-- Load d3.js -->
-    <script src="https://d3js.org/d3.v3.min.js"></script>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
     <script src="http://d3js.org/queue.v1.min.js"></script>
 
+    <!-- jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
     <!-- CSS -->
-    <link href="../bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../../css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 
 </head>
 <body>
+
+<br><br>
+
 <div class="container">
     <div class="row">
-        <p class="title">OD Matrix Graph</p>
-        <div class="graph col" id="OD_matrix"></div>
-    </div>
-
-    <div class="row">
-        <p class="title">Travel Time Graph</p>
-        <div class="graph col" id="TT">
+        <div class="graph col" id="graph1">
         </div>
     </div>
     <div class="row">
@@ -33,17 +33,11 @@
             <p>SAVE</p>
         </div>
     </div>
-
-    <div class="row">
-        <p class="title">Speed Graph</p>
-        <div class="graph col" id="Speed"></div>
-    </div>
 </div>
-
 
 <div class="jumbotron">
     <div class="form-group">
-        <p class="title_options">Options</p>
+        <p class="title_options">General Options</p>
         <div class="row">
             <div class="col">
                 <label for="init_time">Initial Time:</label>
@@ -68,19 +62,16 @@
             </div>
         </div>
         <br>
-        <div class="row">
-            <div class="col">
-                <label for="bins_TT">#Bins for TT:</label>
-                <input type="number" class="form-control" id="bins_TT" name="bins_TT" step="1" value="20" min="0">
-            </div>
-            <div class="col">
-                <label for="bins_density">#Bins for Density:</label>
-                <input type="number" class="form-control" id="bins_density" name="bins_density" step="1" value="20" min="0">
+        <div class="container">
+            <div class="row justify-content-around" id="graphs_options">
+                <div class="col-4 align-self-center" id="btnAddGraph">
+                    <input class="btn btn-primary" type="button" id="add_graph" value="Add a new Graph" onclick="addNewGraph()">
+                </div>
             </div>
         </div>
         <br>
         <div class="container text-center">
-            <input class="btn btn-primary" type="button" id="graphs_submit" value="Draw Graphs" onmousedown="event.preventDefault()" onclick="drawGraphs()">
+            <input class="btn btn-primary" type="button" id="graphs_submit" value="Draw Graphs" onclick="drawGraphs()">
         </div>
     </div>
 </div>
@@ -90,5 +81,5 @@
 <!-- Execute main script -->
 <script src="js/main.js"></script>
 <script src="js/button.js"></script>
-<script src="js/travel_time.js"></script>
+<script src="js/hist.js"></script>
 </html>

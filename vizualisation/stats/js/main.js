@@ -1,4 +1,4 @@
-const dataFolder = '../data/';
+const dataFolder = '../../data/';
 
 let pedestrianPaths, ODPed, hist;
 
@@ -11,6 +11,8 @@ let listOrigin = new Array(),
     listDestination = new Array();
 
 let graphDrawn = false;
+
+let nbrGraphs = 0;
 
 queue()
     .defer(d3.json, dataFolder + "small/sim_results_simulation_trajectories.json")
