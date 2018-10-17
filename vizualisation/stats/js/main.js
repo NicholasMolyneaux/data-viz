@@ -14,6 +14,10 @@ let graphDrawn = false;
 
 let nbrGraphs = 0;
 
+let graphId = 0;
+
+let graphDivs = new Array();
+
 queue()
     .defer(d3.json, dataFolder + "small/sim_results_simulation_trajectories.json")
     .defer(d3.json, dataFolder + "small/sim_results_ped_IDS_per_OD.json")

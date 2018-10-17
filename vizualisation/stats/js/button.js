@@ -3,31 +3,50 @@ function handleChange(input) {
     if (input.value > finalTime) input.value = finalTime;
 }
 
+const addGraph = "                <div class=\"col-4 align-self-center text-center\" id=\"btnAddGraph\">\n" +
+    "                    <input class=\"btn btn-primary\" type=\"button\" id=\"add_graph\" value=\"Add new Graph\" onclick=\"addNewGraph()\">\n" +
+    "                </div>";
+
 function addNewGraph() {
 
     nbrGraphs += 1;
 
+    graphId += 1;
+
     $('#btnAddGraph').remove();
 
-    let toBeAdded = "                <div class=\"col-4 text-center\" id=\"div_graph" + nbrGraphs + "\">\n" +
-        "                    <label for=\"graph1_type\">Graph" + nbrGraphs + " - type:</label> <br>\n" +
+    let toBeAdded = "                <div class=\"col-4 text-center\" id=\"div_graph" + graphId + "\">\n" +
+        "                    <label for=\"graph1_type\">Graph" + graphId + " - type:</label> <br>\n" +
         "                    <select class=\"form-control\" id=\"graph1_type\" name=\"origin\">\n" +
         "                        <option>Travel Time</option>\n" +
         "                        <option>Speed</option>\n" +
-        "                        <option>OD chord diagram</option>\n" +
+        "                        <option>OD chord</option>\n" +
         "                    </select>\n" +
         "                    <br>\n" +
-        "                    <button class=\"btn btn-primary\" onclick=\"delGraph(this)\" value=\"div_graph" + nbrGraphs + "\" id=\"del_graph" + nbrGraphs + "\">Delete Graph " + nbrGraphs + "</button>\n" +
+        "                    <button class=\"btn btn-primary\" onclick=\"delGraph(this)\" value=\"div_graph" + graphId + "\" id=\"del_graph" + graphId + "\">Delete Graph" + graphId + "</button>\n" +
         "                </div>\n";
 
     if (nbrGraphs < 3) {
-        toBeAdded +="                <div class=\"col-4 align-self-center text-center\" id=\"btnAddGraph\">\n" +
-            "                    <input class=\"btn btn-primary\" type=\"button\" id=\"add_graph\" value=\"Add a new Graph\" onclick=\"addNewGraph()\">\n" +
-            "                </div>";
+        toBeAdded += addGraph;
     }
 
-
     $('#graphs_options').append(toBeAdded);
+
+    toBeAdded = "    <div class=\"container\" id=\"graph" + graphId + "\">\n" +
+        "        <div class=\"row\">\n" +
+        "            <div class=\"graph col\" id=\"vizGraph" + graphId +  "\">\n" +
+        "            </div>\n" +
+        "        </div>\n" +
+        "        <div class=\"row\" id=\"optionsGraph" + graphId + "\">\n" +
+        "            <div class=\"col text-center\">\n" +
+        "                <p>SAVE</p>\n" +
+        "            </div>\n" +
+        "        </div>\n" +
+        "    </div>"
+
+    $('#graphContainer').append(toBeAdded);
+
+    graphDivs.push("graph"+graphId);
 }
 
 function delGraph(event) {
@@ -37,13 +56,18 @@ function delGraph(event) {
 
     if (nbrGraphs == 2) {
 
-        let toBeAdded ="                <div class=\"col-4 align-self-center\" id=\"btnAddGraph\">\n" +
-            "                    <input class=\"btn btn-primary\" type=\"button\" id=\"add_graph\" value=\"Add a new Graph\" onclick=\"addNewGraph()\">\n" +
-            "                </div>";
-
-        $('#graphs_options').append(toBeAdded);
+        $('#graphs_options').append(addGraph);
     }
 
+    const nameDiv = event.value.split("_")[1];
+
+    $('#' + nameDiv).remove();
+
+    graphDivs = graphDivs.filter(function(item) {
+        return item !== nameDiv
+    })
+
+    console.log(graphDivs);
 
     // Update all the other
 }
