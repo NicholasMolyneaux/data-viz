@@ -9,10 +9,17 @@ body {
     font-weight: bolder;
 }
 
+.voronoi-poly {
+    stroke-width: 0.1;
+    stroke: black;
+    fill: none;
+}
+
 .the-walls {
     vector-effect: non-scaling-stroke;
     stroke: black;
     stroke-width: 2;
+    fill: none;
 }
 
 .the-zones {

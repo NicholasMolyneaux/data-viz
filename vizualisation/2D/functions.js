@@ -1,3 +1,23 @@
+async function drawWallsByPath(json) {
+    let line = d3.line()
+        .x( d => d.x)
+        .y( d => d.y)
+        .curve(d3.curveMonotoneX);
+    const wall = await d3.json(json);
+    // Draw walls
+    let group_walls = d3.select("g");
+    let data = Array.prototype.concat.apply([], wall["walls"].map( (w)  =>
+        [{'x': w.x1, 'y': w.y1}, {'x': w.x2, 'y': w.y2}]
+    ));
+
+    group_walls.append("path")
+        .attr("class", "the-walls")
+        .attr("d", line(data));
+    d3.select("#wallMask").append("path")
+        .attr("d", line(data))
+        .attr("fill", "white");
+}
+
 async function drawWalls(json) {
     const wall = await d3.json(json);
     // Draw walls
@@ -57,9 +77,20 @@ function updatePosition(data) {
     pedes.exit().remove();
 }
 
-// function showVoronoi(data) {
-//
-// }
+function showVoronoi(data) {
+    let vertices = data.map( d => [d.x, d.y]);
+    if (vertices.length >= 2) {
+        let voronois = d3.select("g").selectAll(".voronoi-poly").data(voronoi(vertices));
+        voronois.enter().append("path")
+            .attr("class", "voronoi-poly")
+            .attr("d", d => `M${d.join("L")}Z`)
+            .attr("mask", "url(#wallMask)");
+        voronois
+            .attr("d", d => `M${d.join("L")}Z`)
+            .attr("mask", "url(#wallMask)");
+        voronois.exit().remove();
+    };
+}
 
 function runAnimation(json) {
     let g = d3.select("g");
@@ -69,8 +100,18 @@ function runAnimation(json) {
             data.map( each_time => {
                 d3.timeout( () => {
                     updatePosition(each_time.data);
-                    //showVoronoi(each_time.data);
+                    if (d3.select("#voronoi_checkbox").property("checked")) {
+                    showVoronoi(each_time.data);};
                     }, each_time.time * 1000);
             })
         });
+}
+
+function checkVoronoi() {
+    let voronoi_poly = d3.selectAll(".voronoi-poly");
+    if (d3.select("#voronoi_checkbox").property("checked")) {
+        voronoi_poly.style("opacity", 1);
+    } else {
+        voronoi_poly.style("opacity", 0);
+    }
 }
