@@ -10,6 +10,8 @@
     <!-- Load d3.js -->
     <script src="https://d3js.org/d3.v4.min.js"></script>
     <script src="http://d3js.org/queue.v1.min.js"></script>
+    <script src='../../js/d3-tip.js'></script>
+
 
     <!-- jQuery -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -24,17 +26,74 @@
 <br><br>
 
 <div class="container" id="graphContainer">
-    <div class="container" id="graph0">
-        <div class="row">
-            <div class="graph-debug col" id="vizGraph0">
+    <div class="row justify-content-md-center">
+        <div class="col-lg" id="graph0">
+                <div class="graph-debug col" id="vizGraph0">
             </div>
         </div>
-    </div>
-    <div class="col text-center" id="optionGraph0">
-        <div class="col-4 text-center opt-graphs">
-            <label for="nbrBins">nbr. Bins:</label> <br>
-            <input type="number" class="form-control" id="nbrBins" name="final_time" step="1" value="20" min="1" onchange="changeBins(this, 'graph0')">
+        <div class="col-lg-2 opt-graphs">
+            <label for="nbrBinsGraph0">nbr. Bins:</label>
+            <div class="row">
+                <div class="col-lg-8 col-md-8 col-10"style="padding-right: 0">
+                    <input type="range" min="1" max="100" value="20" class="slider" id="nbrBinsGraph0" onchange="changeBins(this, 'graph0')" oninput="nbrBinsValueGraph0.value = nbrBinsGraph0.value">
+                </div>
+                <div class="col-lg-4 col-md-4 col-2 text-center">
+                    <output id="nbrBinsValueGraph0">20</output>
+                </div>
+            </div>
+            <br>
+            <label for="yAxisGraph0">Unit Axis y:</label>
+            <select class="form-control" id="yAxisGraph0" onchange="changeYAxis(this, 'graph0')">
+                <option value="count">Count</option>
+                <option value="percentage">Percentage</option>
+            </select>
+            <br>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="nbrsGraph0" onchange="changeShowNumbers(this, 'graph0')">
+                <label class="form-check-label" for="nbrsGraph0">Numbers on bars</label>
+
+            </div>
+            <br>
+            <label for="fontSizeGraph0">Font size:</label>
+            <input class="form-control" type="number" min="1" max="50" value="20" id="fontSizeGraph0" onchange="changeFontSize(this, 'graph0')">
+            <br>
+            <label for="colorsGraph0">Colors:</label>
+            <div class="row" id="colorsGraph0">
+                <div class="col-lg-8 col-10">
+                    <input class="form-control" type="color" id="color1Graph0" value="#0000FF" oninput="changeColor(this, 'color1', 'graph0')">
+                </div>
+                <div class="col-lg-4 col-2 text-center">
+                    <input class="btn btn-primary" type="button" id="addColorGraph0" value="+" onclick="addColor('graph0')">
+                </div>
+            </div>
+            <br>
+            <div class="row" id="saveGraph0">
+                <div class="col-6 text-center">
+                    <input class="btn btn-primary" type="button" id="saveGraph0asPNG" value="PNG" onclick="">
+                </div>
+                <div class="col-6 text-center">
+                    <input class="btn btn-primary" type="button" id="saveGraph0asPDF" value="PDF" onclick="">
+                </div>
+            </div>
         </div>
+        <!--
+            <br>
+            <div class="row text-center">
+                <div class="col-4 text-left">
+                    <strong>Colors:</strong>
+                </div>
+            </div>
+            <div class="row text-center">
+                <div class="col text-center align-self-center" id="colorsGraph0">
+                    <input type="color" id="color1" value="#0000FF" onchange="changeColor(this, 'graph0')">
+                </div>
+                <div class="col-4 align-self-center text-center" id="btnAddColor">
+                    <input class="btn btn-primary" type="button" id="addColor" value="Add Color" onclick="addColor(this, 'graph0')">
+                    <input class="btn btn-primary" type="button" id="delColor" value="Remove Color" onclick="deleteColor(this, 'graph0')">
+                </div>
+            </div>
+        </div>
+        -->
     </div>
 </div>
 
@@ -74,7 +133,7 @@
         </div>
         <br>
         <div class="container text-center">
-            <input class="btn btn-primary" type="button" id="graphs_submit" value="Draw Graphs" onclick="drawGraphs()">
+            <input class="btn btn-primary" type="button" id="graphs_submit" value="Fetch & Draw" onclick="fetchDataAndDraw()">
         </div>
     </div>
 </div>

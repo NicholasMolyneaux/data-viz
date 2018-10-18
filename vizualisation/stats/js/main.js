@@ -1,20 +1,28 @@
 const dataFolder = '../../data/';
 
+// Data -> to be removed later
 let pedestrianPaths, ODPed, histData;
 
+// Parameters for the options -> to be removed later
 let initTime, finalTime;
-
-let data = new Object();
 
 // Origin and Destination zones.
 let listOrigin = new Array(),
     listDestination = new Array();
 
+// Parameters for the statistics
+
+// Number of graphs (avoid having too much of them on the screen
 let nbrGraphs = 0;
 
+// IDs of the graphs (counter)
 let graphId = 0;
 
+// ID of the divs where the graphs are
 let graphDivs = new Array();
+
+// Options specific to a graph. key = graphID (Data + other options)
+let graphOptions = new Object();
 
 queue()
     .defer(d3.json, dataFolder + "small/sim_results_simulation_trajectories.json")
@@ -30,11 +38,11 @@ function main(error, trajectories, OD, histograms) {
     update_info();
 
     // DEBUG
-    data['graph0'] = histData['tt'];
-    hist('graph0');
+    graphOptions['graph0'] = {'data': histData['tt'], 'type': 'histogram'};
+    drawGraph('graph0');
 }
 
-function drawGraphs() {
+function fetchDataAndDraw() {
 
     // Replace later with get the data
     prepareData();
@@ -48,15 +56,15 @@ function drawGraphs() {
         if (type == "TT") {
             console.log("Drawing TT graph");
 
-            data[id] = histData['tt'];
+            graphOptions[id] = {'data': histData['tt'], 'type': 'histogram'};
 
-            hist(id);
+            drawGraph(id);
         } else if (type == "speed") {
             console.log("Drawing Speed histogram");
 
-            data[id] = histData['density'];
+            graphOptions[id] = {'data': histData['density'], 'type': 'histogram'};
 
-            hist(id);
+            drawGraph(id);
         } else if (type == "OD") {
             console.log("Drawing OD chord diagram")
         }
