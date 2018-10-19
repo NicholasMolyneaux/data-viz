@@ -77,7 +77,6 @@ function updatePosition(data) {
     pedes.exit().remove();
 }
 
-//TODO: handle when only a single data appears.
 function showVoronoi(data) {
     let vertices = data.map( d => [d.x, d.y]);
     if (vertices.length >= 2) {
@@ -90,7 +89,12 @@ function showVoronoi(data) {
             .attr("d", d => `M${d.join("L")}Z`)
             .attr("mask", "url(#wallMask)");
         voronois.exit().remove();
+    } else{
+        deleteVoronoi();
     };
+}
+function deleteVoronoi() {
+    d3.select("g").selectAll(".voronoi-poly").remove();
 }
 
 function runAnimation(json) {
@@ -101,18 +105,25 @@ function runAnimation(json) {
             data.map( each_time => {
                 d3.timeout( () => {
                     updatePosition(each_time.data);
-                    showVoronoi(each_time.data);
+                    checkCheckBoxs(each_time.data);
                     }, each_time.time * 1000);
             })
         });
 }
 
-function checkVoronoi() {
+function checkCheckBoxs(data) {
+    checkControl();
+    checkFlow();
+    checkVoronoi(data);
+    checkZone();
+}
+
+function checkVoronoi(data) {
     let voronoi_poly = d3.selectAll(".voronoi-poly");
     if (d3.select("#voronoi_checkbox").property("checked")) {
-        voronoi_poly.style("opacity", 1);
+        showVoronoi(data)
     } else {
-        voronoi_poly.style("opacity", 0);
+        deleteVoronoi()
     }
 }
 
