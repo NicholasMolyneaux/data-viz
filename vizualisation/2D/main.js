@@ -16,12 +16,8 @@ svg.append("mask")
 
 // Read json data and draw frameworks (walls and zones)
 drawWallsByPath("../../data/small/walls.json");
-//drawZones("../../data/small/graph.json");
-
-svg.append("use")
-    .attr("clip-path", "url(#myClip)")
-    .attr("xlink:xlink:href", ".voronoi-poly");
+drawZones("../../data/small/graph.json");
 
 //Pedestrians
-runAnimation("../../data/small/pedestrian_time_sequences.json");
+runAnimation("../../data/small/pedestrians_clean.json");
 
