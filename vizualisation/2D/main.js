@@ -15,9 +15,9 @@ svg.append("mask")
     .attr("fill", "black");
 
 // Read json data and draw frameworks (walls and zones)
-drawWallsByPath("../../data/small/walls.json");
-drawZones("../../data/small/graph.json");
+drawWallsByPath("data/small/walls.json");
+drawZones("data/small/graph.json");
 
 //Pedestrians
-runAnimation("../../data/small/pedestrians_clean.json");
+runAnimation("data/small/pedestrians_clean.json");
 
