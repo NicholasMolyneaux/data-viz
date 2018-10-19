@@ -17,7 +17,6 @@ async function drawWallsByPath(json) {
         .attr("d", line(data))
         .attr("fill", "white");
 }
-
 async function drawWalls(json) {
     const wall = await d3.json(json);
     // Draw walls
@@ -65,18 +64,32 @@ async function drawZones(json) {
             .attr("y2", f["end_pos_y"] );
     } );
 }
-function updatePosition(data) {
-    let pedes = d3.select("g").selectAll("circle").data(data, d => d.id);
+function updatePosition(time_series_data) {
+    // Update circles (pedestrians)
+    let svg_g = d3.select("g");
+    let pedes = svg_g.selectAll(".ped-individual").data(time_series_data, d => d.id);
     pedes.enter().append("circle")
-        .attr("cx", d => d.x)
-        .attr("cy", d  => d.y)
-        .attr("r", 0.1);
-    pedes
+        .attr("class", "ped-individual")
+        .merge(pedes)
         .attr("cx", d => d.x)
         .attr("cy", d => d.y);
     pedes.exit().remove();
-}
 
+    // Update path of each pedestrian
+    //TODO: TOO SLOW!!!!
+    // let pedes_path = svg_g.selectAll(".ped-trajectory");
+    // pedes_path.data(time_series_data, d => d.id)
+    //     .enter().append("path")
+    //     .attr("class", "ped-trajectory")
+    //     .attr("id", d => `tj_${d.id}`)
+    //     .attr("d", d => `M ${d.x} ${d.y}`);
+    // pedes_path
+    //     .attr("d", d => {
+    //         let current_position = d3.select(`#tj_${d.id}`).attr("d");
+    //         return `${current_position} L ${d.x} ${d.y}`;
+    //     });
+    // pedes_path.exit().remove();
+}
 function showVoronoi(data) {
     let vertices = data.map( d => [d.x, d.y]);
     if (vertices.length >= 2) {
@@ -96,37 +109,26 @@ function showVoronoi(data) {
 function deleteVoronoi() {
     d3.select("g").selectAll(".voronoi-poly").remove();
 }
-
 function runAnimation(json) {
-    let g = d3.select("g");
-    g.selectAll("circle").remove();
+    //let g = d3.select("g");
+    //g.selectAll("circle").remove();
     d3.json(json)
         .then(data => {
             data.map( each_time => {
                 d3.timeout( () => {
                     updatePosition(each_time.data);
-                    checkCheckBoxs(each_time.data);
+                    checkVoronoi(each_time.data);
                     }, each_time.time * 1000);
             })
         });
 }
-
-function checkCheckBoxs(data) {
-    checkControl();
-    checkFlow();
-    checkVoronoi(data);
-    checkZone();
-}
-
 function checkVoronoi(data) {
-    let voronoi_poly = d3.selectAll(".voronoi-poly");
     if (d3.select("#voronoi_checkbox").property("checked")) {
         showVoronoi(data)
     } else {
         deleteVoronoi()
     }
 }
-
 function checkZone() {
     if (d3.select("#zone_checkbox").property("checked")) {
         d3.selectAll(".the-zones").style("opacity", 1);
