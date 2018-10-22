@@ -1,62 +1,25 @@
 body {
-  padding-top: 5rem;
+    padding-top: 3.8rem;
+
+    #font-family: 'Ubuntu', sans-serif;
+    font-family: 'Roboto', sans-serif;
 }
-.starter-template {
-  padding: 3rem 1.5rem;
-  text-align: center;
+
+.navbar, .jumbotron {
 }
 
 #title {
-  text-align: center;
-  font-weight: bold;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 60px;
+    text-align:center;
 }
 
-p {
-    text-align: justify;
+#logo-nav {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 25px;
 }
 
-.width-limited {
-    max-width: 55rem;
-
-    /* Center horizontally: */
-    margin-left: auto;
-    margin-right: auto;
+#learnMoreButton {
+    text-align:center;
 }
-
-
-#viz {
-    width: 100%;
-    /* Center the title using flexbox */
-    /*display: flex;*/
-    justify-content: center;
-    align-items: center;
-
-    padding-top: 2rem;
-    padding-bottom: 2rem;
-
-    background-color: rgb(50, 50, 50);
-}
-
-table {
-    font-size: 20px;
-}
-
-
-td {
-    padding: 6px;
-}
-
-.inner-table {
-    font-size: 16px;
-}
-
-.row-header {
-    font-weight: bold;
-    vertical-align: top;
-}
-
-.toggle-visibility {
-    display: none;
-}
-
 
