@@ -13,13 +13,17 @@ function setBaseOptions(id) {
 
         graphOptions[id]['nbrBins'] = 20;
         graphOptions[id]['showNumbers'] = false;
-        graphOptions[id]['xAxis'] = "Travel time [s]";
         graphOptions[id]['yAxis'] = "Count";
         graphOptions[id]['yAxisValue'] = 'count';
         graphOptions[id]['fontSize'] = 20;
         graphOptions[id]['counterColor'] = 1;
         graphOptions[id]['colors'] = ['#0000FF'];
         graphOptions[id]['colorIndex'] = {'color1': 0};
+        graphOptions[id]['yMin'] = null;
+        graphOptions[id]['yMax'] = null;
+        graphOptions[id]['xMin'] = null;
+        graphOptions[id]['xMax'] = null;
+        graphOptions[id]['binsData'] = {};
     }
 }
 
@@ -28,15 +32,9 @@ function hist(id, state) {
 
     const transLength = 1000;
 
-    // Greatly inspired from http://bl.ocks.org/nnattawat/8916402
+    const vizId = "viz_" + id;
 
-    //addOptionsHist(id)
-
-    const vizId = "viz" + id.charAt(0).toUpperCase() + id.substr(1);
-
-    document.getElementById(id).style.display = "block";
-
-    const color = "steelblue";
+    document.getElementById("stats_" + id).style.display = "";
 
     // A formatter for counts.
     const formatCount = d3.format(",.0f");
@@ -55,6 +53,9 @@ function hist(id, state) {
     const fullWidth = width + margin.left + margin.right;
     const fullHeight = height + margin.top + margin.bottom;
 
+    graphOptions[id]['width'] = fullWidth;
+    graphOptions[id]['height'] = fullHeight;
+
     ttDiv.select("svg").remove();
 
     let svg = ttDiv
@@ -67,12 +68,22 @@ function hist(id, state) {
         //responsive SVG needs these 2 attributes and no width and height attr
         .attr("preserveAspectRatio", "xMinYMin meet")
         .attr("viewBox", "0 0 " + fullWidth + " " + fullHeight)
+        .attr("id", "svgViz_" + id)
         //class to make it responsive
         .classed("svg-content-responsive", true),
         g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
     let max = d3.max(graphOptions[id]['data']);
     let min = d3.min(graphOptions[id]['data']);
+
+    if (graphOptions[id]['xMin'] != null) {
+        min = graphOptions[id]['xMin'];
+    }
+
+    if (graphOptions[id]['xMax'] != null) {
+        max = graphOptions[id]['xMax'];
+    }
+
 
     // set the ranges
     let x = d3.scaleLinear()
@@ -103,8 +114,19 @@ function hist(id, state) {
         }
     }
 
+    let yMinVal = 0;
+    let yMaxVal = d3.max(bins, function(d) { return yVals(d); });
+
+    if (graphOptions[id]['yMin'] != null) {
+        yMinVal = graphOptions[id]['yMin'];
+    }
+
+    if (graphOptions[id]['yMax'] != null) {
+        yMaxVal = graphOptions[id]['yMax'];
+    }
+
     // Scale the range of the data in the y domain
-    y.domain([0, d3.max(bins, function(d) { return yVals(d); })]);
+    y.domain([yMinVal, yMaxVal]);
 
     // Color Scale
     const yMax = d3.max(bins, function(d){return yVals(d)});
@@ -119,7 +141,8 @@ function hist(id, state) {
     if (graphOptions[id]['colors'].length > 1) {
         colorScale = d3.scaleLinear()
             .domain(domain)
-            .range(graphOptions[id]['colors']);
+            .range(graphOptions[id]['colors'].reverse());
+        graphOptions[id]['colors'].reverse();
     } else {
         colorScale = d3.scaleLinear()
             .domain([yMin, yMax])
@@ -142,10 +165,10 @@ function hist(id, state) {
         .on('mouseenter', tool_tip.show)
         .on('mouseout', tool_tip.hide);
 
-    if (state == 'start' || state == 'changedBins') {
+    if (state == 'start' || state == 'changedBins' || state == 'changedAxis') {
         bar.append("rect")
-            .attr("x", 1)
-            .attr("width", x(bins[0].x1) - x(bins[0].x0) - 1)
+            .attr("x", 2.5)
+            .attr("width", x(bins[0].x1) - x(bins[0].x0) - 5)
             .attr("y", function(d) {
                 return height-y(yVals(d));
             })
@@ -160,8 +183,8 @@ function hist(id, state) {
             });
     } else {
         bar.append("rect")
-            .attr("x", 1)
-            .attr("width", x(bins[0].x1) - x(bins[0].x0) - 1)
+            .attr("x", 2.5)
+            .attr("width", x(bins[0].x1) - x(bins[0].x0) - 5)
             .attr("y", function(d) {
                 return 0;
             })
@@ -190,8 +213,9 @@ function hist(id, state) {
     let xAxis = g.append("g")
         .style("font-size", graphOptions[id]['fontSize'])
         .attr("class", "axis axis--x")
+        .style("stroke-width", "1px")
         .attr("transform", "translate(0," + height + ")");
-    if(state == 'start') {
+    if(state == 'start' || state == 'changedAxis') {
         xAxis.transition()
             .duration(transLength)
             .call(d3.axisBottom(x));
@@ -209,7 +233,7 @@ function hist(id, state) {
         .style("font-size", graphOptions[id]['fontSize'])
         .text(graphOptions[id]['xAxis']);
 
-    if(state == 'start') {
+    if(state == 'start' || state == 'changedAxis') {
         xAxisText.attr("fill-opacity", 0)
             .transition()
             .duration(transLength)
@@ -220,7 +244,7 @@ function hist(id, state) {
     let yAxis = g.append("g")
         .style("font-size", graphOptions[id]['fontSize']);
 
-    if (state == 'start' || state == 'changedYAxis' || state == 'changedBins') {
+    if (state == 'start' || state == 'changedYAxis' || state == 'changedBins' || state == 'changedAxis') {
         yAxis.transition()
             .duration(transLength)
             .call(d3.axisLeft(y));
@@ -238,12 +262,16 @@ function hist(id, state) {
         .style("font-size", graphOptions[id]['fontSize'])
         .text(graphOptions[id]['yAxis']);
 
-    if (state == 'start' || state == 'changedYAxis') {
+    if (state == 'start' || state == 'changedYAxis' || state == 'changedAxis') {
         text.attr("fill-opacity", 0)
             .transition()
             .duration(transLength)
             .attr("fill-opacity", 1);
     }
+
+    // Prepare Bins data
+
+    graphOptions[id]['binsData'] = {'x': ticks, 'y_count': bins.map(d => d.length), 'y_perc': bins.map(d => d.length/nbrData*100)};
 
 }
 
@@ -288,18 +316,20 @@ function changeFontSize(e, id) {
 
 function addColor(id) {
 
-    const strColorsDiv = "colors" + id.charAt(0).toUpperCase() + id.substr(1);
-
-    const upCase = id.charAt(0).toUpperCase() + id.substr(1);
+    const strColorsDiv = "colors_" + id;
 
     graphOptions[id]['counterColor'] += 1;
 
-    let toBeAdded = "                <div class=\"col-lg-8 col-10\"  id=\"color" + graphOptions[id]['counterColor'] + "Picker" + upCase + "\">\n" +
-        "                    <input class=\"form-control\" type=\"color\" id=\"color" + graphOptions[id]['counterColor'] + upCase + "\" value=\"#000000\" oninput=\"changeColor(this, 'color" + graphOptions[id]['counterColor'] + "', '" + id + "')\">\n" +
+    let toBeAdded = "                <div class=\"col-lg-8 col-9\"  id=\"color" + graphOptions[id]['counterColor'] + "Picker_" + id + "\">\n" +
+        "                    <input class=\"form-control\" type=\"color\" id=\"color" + graphOptions[id]['counterColor'] + "_" + id + "\" value=\"#000000\" oninput=\"changeColor(this, 'color" + graphOptions[id]['counterColor'] + "', '" + id + "')\">\n" +
         "                </div>\n" +
-        "                <div class=\"col-lg-4 col-2 text-center\" id=\"color" + graphOptions[id]['counterColor'] + "Remove" + upCase + "\">\n" +
-        "                    <input class=\"btn btn-primary\" type=\"button\" id=\"RemoveColor" + graphOptions[id]['counterColor'] + upCase + "\" value=\"-\" id=\"color" + graphOptions[id]['counterColor'] + upCase + "\" onclick=\"removeColor(this, 'color" + graphOptions[id]['counterColor'] + "', '" + id + "')\">\n" +
-        "                </div>"
+        "                        <div class=\"col-lg-4 col-3 text-center\" id=\"color" + graphOptions[id]['counterColor'] + "Remove_" + id + "\">\n" +
+        "                            <button class=\"btn btn-primary\" id=\"RemoveColor" + graphOptions[id]['counterColor'] + "_" + id + "\" onclick=\"removeColor(this, 'color" + graphOptions[id]['counterColor'] + "', '" + id + "')\">\n" +
+        "                                <i class=\"fas fa-minus\"></i>\n" +
+        "                            </button>\n" +
+        "                        </div>"
+
+
 
 
     $('#' + strColorsDiv).append(toBeAdded);
@@ -311,8 +341,6 @@ function addColor(id) {
 }
 
 function removeColor(e, thisId, id) {
-
-    const upCase = id.charAt(0).toUpperCase() + id.substr(1);
 
     const index = graphOptions[id]['colorIndex'][thisId]
 
@@ -326,8 +354,8 @@ function removeColor(e, thisId, id) {
         }
     })
 
-    $('#' + thisId + 'Picker' + upCase).remove();
-    $('#' + thisId + 'Remove' + upCase).remove();
+    $('#' + thisId + 'Picker_' + id).remove();
+    $('#' + thisId + 'Remove_' + id).remove();
 
     hist(id, 'changeColor');
 }
@@ -339,3 +367,102 @@ function changeColor(e, thisId, id) {
     hist(id, 'changeColor');
 }
 
+function changeAxis(e, id, type) {
+
+    if (e.value == "") {
+        graphOptions[id][type] = null;
+    } else {
+        graphOptions[id][type] = parseFloat(e.value);
+    }
+
+    hist(id, 'changedAxis');
+}
+
+function exportGraph(id) {
+
+    const type = document.getElementById("exportType_" + id).value;
+    const name = document.getElementById("exportName_" + id).value;
+
+    if (name === "" || type === "") {
+        window.alert("Please specifiy a name and a type!");
+    } else {
+        if (type === 'png') {
+            saveAsPNG(id, name);
+        } else if (type == 'csv') {
+            saveAsCSV(id, name);
+        } else if (type == 'svg') {
+            saveAsSVG(id, name);
+        } else if (type == 'pdf') {
+            saveAsPDF(id, name);
+        }
+    }
+}
+
+function saveAsPNG(id, name) {
+
+    const svg = d3.select("#svgViz_" + id).node();
+
+    console.log(svg);
+
+    saveSvgAsPng(svg, name + ".png", {scale: 2, backgroundColor: '#FFFFFF', height: graphOptions[id]['height'], top:15, encoderOptions: 0.2});
+
+}
+
+function saveAsCSV(id, name) {
+
+    // Transform the data first
+
+    let data = [];
+
+    data.push(Object.keys(graphOptions[id]['binsData']));
+
+    graphOptions[id]['binsData']['x'].forEach((x, i) => {
+        data.push([x, graphOptions[id]['binsData']['y_count'][i], graphOptions[id]['binsData']['y_perc'][i]]);
+    })
+
+    // Building the CSV from the Data two-dimensional array
+    // Each column is separated by ";" and new line "\n" for next row
+    var csvContent = '';
+    data.forEach(function(infoArray, index) {
+        dataString = infoArray.join(';');
+        csvContent += index < data.length ? dataString + '\n' : dataString;
+    });
+
+    // The download function takes a CSV string, the filename and mimeType as parameters
+    // Scroll/look down at the bottom of this snippet to see how download is called
+    var download = function(content, fileName, mimeType) {
+        var a = document.createElement('a');
+        mimeType = mimeType || 'application/octet-stream';
+
+        if (navigator.msSaveBlob) { // IE10
+            navigator.msSaveBlob(new Blob([content], {
+                type: mimeType
+            }), fileName);
+        } else if (URL && 'download' in a) { //html5 A[download]
+            a.href = URL.createObjectURL(new Blob([content], {
+                type: mimeType
+            }));
+            a.setAttribute('download', fileName);
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        } else {
+            location.href = 'data:application/octet-stream,' + encodeURIComponent(content); // only this mime type is supported
+        }
+    }
+
+    download(csvContent, name + '.csv', 'text/csv;encoding:utf-8');
+
+}
+
+function saveAsSVG(id, name){
+    var svgData = $("#svgViz_" + id)[0].outerHTML;
+    var svgBlob = new Blob([svgData], {type:"image/svg+xml;charset=utf-8"});
+    var svgUrl = URL.createObjectURL(svgBlob);
+    var downloadLink = document.createElement("a");
+    downloadLink.href = svgUrl;
+    downloadLink.download = name + ".svg";
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+    document.body.removeChild(downloadLink);
+}

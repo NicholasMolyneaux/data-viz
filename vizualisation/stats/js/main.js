@@ -38,8 +38,8 @@ function main(error, trajectories, OD, histograms) {
     update_info();
 
     // DEBUG
-    graphOptions['graph0'] = {'data': histData['tt'], 'type': 'histogram'};
-    drawGraph('graph0');
+    //graphOptions['graph0'] = {'data': histData['tt'], 'type': 'histogram'};
+    //drawGraph('graph0');
 }
 
 function fetchDataAndDraw() {
@@ -49,6 +49,8 @@ function fetchDataAndDraw() {
 
     graphDivs.forEach(id => {
 
+        console.log(id);
+
         const divTypes = document.getElementById(id + '_type');
 
         const type = divTypes.options[divTypes.selectedIndex].value;
@@ -56,13 +58,13 @@ function fetchDataAndDraw() {
         if (type == "TT") {
             console.log("Drawing TT graph");
 
-            graphOptions[id] = {'data': histData['tt'], 'type': 'histogram'};
+            graphOptions[id] = {'data': histData['tt'], 'type': 'histogram', 'xAxis': 'Travel Time [s]'};
 
             drawGraph(id);
         } else if (type == "speed") {
             console.log("Drawing Speed histogram");
 
-            graphOptions[id] = {'data': histData['density'], 'type': 'histogram'};
+            graphOptions[id] = {'data': histData['density'], 'type': 'histogram', 'xAxis': 'Speed [m/s]'};
 
             drawGraph(id);
         } else if (type == "OD") {
