@@ -1,16 +1,28 @@
-const dataFolder = '../data/';
+const dataFolder = '../../data/';
 
-let pedestrianPaths, ODPed, hist;
+// Data -> to be removed later
+let pedestrianPaths, ODPed, histData;
 
+// Parameters for the options -> to be removed later
 let initTime, finalTime;
-
-let data;
 
 // Origin and Destination zones.
 let listOrigin = new Array(),
     listDestination = new Array();
 
-let graphDrawn = false;
+// Parameters for the statistics
+
+// Number of graphs (avoid having too much of them on the screen
+let nbrGraphs = 0;
+
+// IDs of the graphs (counter)
+let graphId = 0;
+
+// ID of the divs where the graphs are
+let graphDivs = new Array();
+
+// Options specific to a graph. key = graphID (Data + other options)
+let graphOptions = new Object();
 
 queue()
     .defer(d3.json, dataFolder + "small/sim_results_simulation_trajectories.json")
@@ -21,19 +33,47 @@ queue()
 function main(error, trajectories, OD, histograms) {
     pedestrianPaths = trajectories;
     ODPed = OD;
-    hist = histograms;
+    histData = histograms;
 
     update_info();
+
+    // DEBUG
+    //graphOptions['graph0'] = {'data': histData['tt'], 'type': 'histogram'};
+    //drawGraph('graph0');
 }
 
-function drawGraphs() {
-
-    graphDrawn = true;
+function fetchDataAndDraw() {
 
     // Replace later with get the data
     prepareData();
 
-    drawTT(hist['tt']);
+    graphDivs.forEach(id => {
+
+        console.log(id);
+
+        const divTypes = document.getElementById(id + '_type');
+
+        const type = divTypes.options[divTypes.selectedIndex].value;
+
+        if (type == "TT") {
+            console.log("Drawing TT graph");
+
+            graphOptions[id] = {'data': histData['tt'], 'type': 'histogram', 'xAxis': 'Travel Time [s]'};
+
+            drawGraph(id);
+        } else if (type == "speed") {
+            console.log("Drawing Speed histogram");
+
+            graphOptions[id] = {'data': histData['density'], 'type': 'histogram', 'xAxis': 'Speed [m/s]'};
+
+            drawGraph(id);
+        } else if (type == "OD") {
+            console.log("Drawing OD chord diagram")
+        }
+
+    });
+
+    //drawTT(hist['tt']);
 }
 
 function prepareData() {

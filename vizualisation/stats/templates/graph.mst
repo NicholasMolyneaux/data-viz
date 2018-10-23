@@ -1,0 +1,150 @@
+<div class="row justify-content-center" id="stats_{{ id }}" style="display: none;">
+    <div class="col-lg-9" id="{{ id }}">
+            <div class="graph col" id="viz_{{ id }}">
+        </div>
+    </div>
+    <div class="col-lg-2 col-10 opt-graphs">
+        <!--<h4 class="subtitle">Options:</h4>-->
+        <h4 class="subtitle">Options:</h4>
+        <br>
+        <label for="nbrBins_{{ id }}">Number of Bins:</label>
+        <div class="row">
+            <div class="col-lg-8 col-md-10 col-10 sliderDiv">
+                <input type="range" min="1" max="100" value="20" class="slider" id="nbrBins_{{ id }}" onchange="changeBins(this, '{{ id }}')" oninput="nbrBinsValue_{{ id }}.value = nbrBins_{{ id }}.value">
+            </div>
+            <div class="col-lg-4 col-md-2 col-2 text-center sliderDisp">
+                <output id="nbrBinsValue_{{ id }}">20</output>
+            </div>
+        </div>
+        <br>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="nbrs_{{ id }}" onchange="changeShowNumbers(this, '{{ id }}')">
+            <label class="form-check-label" for="nbrs_{{ id }}">Numbers on bars</label>
+
+        </div>
+        <br>
+        <label for="fontSize_{{ id }}">Font size:</label>
+        <input class="form-control opt-graphs-buttons" type="number" min="1" max="50" value="20" id="fontSize_{{ id }}" onchange="changeFontSize(this, '{{ id }}')">
+        <br>
+        <label for="yAxis_{{ id }}">Unit Axis y:</label>
+        <select class="form-control opt-graphs-buttons" id="yAxis_{{ id }}" onchange="changeYAxis(this, '{{ id }}')">
+            <option value="count">Count</option>
+            <option value="percentage">Percentage</option>
+        </select>
+        <br>
+        <div class="col text-center">
+            <button type="button" class="btn btn-primary btn-block" data-toggle="modal" data-target="#colorModal_{{ id }}">
+                Colors
+            </button>
+        </div>
+        <br>
+        <div class="col text-center">
+            <button type="button" class="btn btn-primary btn-block" data-toggle="modal" data-target="#AxesValue_{{ id }}">
+                Axes Values
+            </button>
+        </div>
+        <br><br>
+        <div class="col-lg9 text-center">
+            <!--<input class="btn btn-primary btn-lg btn-block export" type="button" id="save_{{ id }}asPNG" value="Export" onclick="saveAsPNG('{{ id }}')">-->
+            <input class="btn btn-primary btn-lg btn-block export" type="button" data-toggle="modal" data-target="#exportModal_{{ id }}" value="Export">
+        </div>
+    </div>
+
+    <!-- Modal for the colors -->
+    <div class="modal fade" id="colorModal_{{ id }}" tabindex="-1" role="dialog" aria-labelledby="colorModalTitle_{{ id }}" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Colors</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="row modal-body" id="colors_{{ id }}">
+                    <div class="col-lg-8 col-9">
+                        <input class="form-control" type="color" id="color1_{{ id }}" value="#0000FF" oninput="changeColor(this, 'color1', '{{ id }}')">
+                    </div>
+                    <div class="col-lg-4 col-3 text-center">
+                        <button class="btn btn-primary" id="addColor_{{ id }}" onclick="addColor('{{ id }}')">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for the axis values -->
+    <div class="modal fade" id="AxesValue_{{ id }}" tabindex="-1" role="dialog" aria-labelledby="AxesValueTitle_{{ id }}" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Axes Values</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p class="subsubtitle">x Axis:</p>
+                    <div class="row">
+                        <div class="col-6">
+                            <input class="form-control opt-graphs-buttons" type="number" min="0" placeholder="Min x Value" id="minX_{{ id }}" onchange="changeAxis(this, '{{ id }}', 'xMin')">
+                        </div>
+                        <div class="col-6">
+                            <input class="form-control opt-graphs-buttons" type="number" min="0" placeholder="Max x Value" id="maxX_{{ id }}" onchange="changeAxis(this, '{{ id }}', 'xMax')">
+                        </div>
+                    </div>
+                    <br>
+                    <p class="subsubtitle">y Axis:</p>
+                    <div class="row">
+                        <div class="col-6">
+                            <input class="form-control opt-graphs-buttons" type="number" min="0" placeholder="Min y Value" id="minY_{{ id }}" onchange="changeAxis(this, '{{ id }}', 'yMin')">
+                        </div>
+                        <div class="col-6">
+                            <input class="form-control opt-graphs-buttons" type="number" min="0" placeholder="Max y Value" id="maxY_{{ id }}" onchange="changeAxis(this, '{{ id }}', 'yMax')">
+                        </div>
+                    </div>
+                    <br>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for the exporting -->
+    <div class="modal fade" id="exportModal_{{ id }}" tabindex="-1" role="dialog" aria-labelledby="exportModalTitle_{{ id }}" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Export</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="row modal-body form-group">
+                    <div class="col-8">
+                        <input class="form-control opt-graphs-buttons" type="text" id="exportName_{{ id }}" placeholder="name">
+                    </div>
+                    <div class="col-1">
+                        <input type="text" readonly class="form-control-plaintext dot" value=".">
+                    </div>
+                    <div class="col-3">
+                        <select class="form-control opt-graphs-buttons" id="exportType_{{ id }}" placeholder="type">
+                            <option value="" disabled selected>Type</option>
+                            <option value="png">PNG</option>
+                            <option value="csv">CSV</option>
+                            <option value="svg">SVG</option>
+                        </select>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary download" onclick="exportGraph('{{ id }}')">
+                        Download!
+                    </button>
+                </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<br>
