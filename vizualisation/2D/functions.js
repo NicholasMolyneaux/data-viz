@@ -1,3 +1,5 @@
+import {Delaunay} from "d3-delaunay";
+
 async function drawWallsByPath(json) {
     let line = d3.line()
         .x( d => d.x)
@@ -93,18 +95,19 @@ function updatePosition(time_series_data) {
 function showVoronoi(data) {
     let vertices = data.map( d => [d.x, d.y]);
     if (vertices.length >= 2) {
-        let voronois = d3.select("g").selectAll(".voronoi-poly").data(voronoi(vertices));
+        const delaunay = Delaunay.from(vertices);
+        let voronois = d3.select("g").selectAll(".voronoi-poly").data(delaunay.voronoi());
         voronois.enter().append("path")
             .attr("class", "voronoi-poly")
-            .attr("d", d => `M${d.join("L")}Z`)
+            .attr("d", d => d.render())
             .attr("mask", "url(#wallMask)");
         voronois
-            .attr("d", d => `M${d.join("L")}Z`)
+            .attr("d", d => d.render())
             .attr("mask", "url(#wallMask)");
         voronois.exit().remove();
     } else{
         deleteVoronoi();
-    };
+    }
 }
 function deleteVoronoi() {
     d3.select("g").selectAll(".voronoi-poly").remove();
@@ -129,6 +132,8 @@ function checkVoronoi(data) {
         deleteVoronoi()
     }
 }
+
+//checkboxes
 function checkZone() {
     if (d3.select("#zone_checkbox").property("checked")) {
         d3.selectAll(".the-zones").style("opacity", 1);
@@ -150,3 +155,5 @@ function checkFlow() {
         d3.selectAll(".flow-gates").style("opacity", 0);
     }
 }
+
+export {drawWallsByPath, drawZones, runAnimation, checkVoronoi, checkZone, checkControl, checkFlow};

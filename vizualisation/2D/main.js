@@ -1,3 +1,4 @@
+import * as myModule from './functions.js';
 const svg = d3.select("svg");
 
 svg
@@ -14,10 +15,16 @@ svg.append("mask")
     .attr("height", 27)
     .attr("fill", "black");
 
+// check box behavior
+document.querySelector("#voronoi_checkbox").addEventListener('click', myModule.checkVoronoi);
+document.querySelector("#zone_checkbox").addEventListener('click', myModule.checkZone);
+document.querySelector("#control_checkbox").addEventListener('click', myModule.checkControl);
+document.querySelector("#flow_checkbox").addEventListener('click', myModule.checkFlow);
+
 // Read json data and draw frameworks (walls and zones)
-drawWallsByPath("../../data/small/walls.json");
-drawZones("../../data/small/graph.json");
+myModule.drawWallsByPath("../../data/small/walls.json");
+myModule.drawZones("../../data/small/graph.json");
 
 //Pedestrians
-runAnimation("../../data/small/pedestrians_clean.json");
+myModule.runAnimation("../../data/small/pedestrians_clean.json");
 
