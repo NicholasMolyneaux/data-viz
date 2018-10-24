@@ -28,3 +28,4 @@ myModule.drawZones("../../data/small/graph.json");
 //Pedestrians
 myModule.runAnimation("../../data/small/pedestrians_clean.json");
 
+
