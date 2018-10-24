@@ -1,5 +1,3 @@
-import {Delaunay} from "d3-delaunay";
-
 async function drawWallsByPath(json) {
     let line = d3.line()
         .x( d => d.x)
@@ -92,29 +90,23 @@ function updatePosition(time_series_data) {
     //     });
     // pedes_path.exit().remove();
 }
-function showVoronoi(data) {
+function drawVoronoi(data) {
     let vertices = data.map( d => [d.x, d.y]);
-    if (vertices.length >= 2) {
-        const delaunay = Delaunay.from(vertices);
-        let voronois = d3.select("g").selectAll(".voronoi-poly").data(delaunay.voronoi());
-        voronois.enter().append("path")
-            .attr("class", "voronoi-poly")
-            .attr("d", d => d.render())
-            .attr("mask", "url(#wallMask)");
-        voronois
-            .attr("d", d => d.render())
-            .attr("mask", "url(#wallMask)");
-        voronois.exit().remove();
-    } else{
-        deleteVoronoi();
-    }
+    const delaunay = d3.Delaunay.from(vertices);
+    //let viewBox = d3.select("svg").attr("viewBox").split(" ");
+    //const voronoi = delaunay.voronoi([viewBox[0],viewBox[1],viewBox[0]+viewBox[2],viewBox[1]+viewBox[3]]);
+    let controlled_box = d3.select(".controlled-areas");
+    const voronoi = delaunay.voronoi([Number(controlled_box.attr("x")), Number(controlled_box.attr("y")),
+        Number(controlled_box.attr("width"))+Number(controlled_box.attr("x")), Number(controlled_box.attr("height"))+Number(controlled_box.attr("y"))]);
+    d3.select("g").append("path")
+        .attr("class", "voronoi-poly")
+        .attr("d", voronoi.render())
+        .attr("mask", "url(#wallMask)");
 }
 function deleteVoronoi() {
     d3.select("g").selectAll(".voronoi-poly").remove();
 }
 function runAnimation(json) {
-    //let g = d3.select("g");
-    //g.selectAll("circle").remove();
     d3.json(json)
         .then(data => {
             data.map( each_time => {
@@ -127,9 +119,10 @@ function runAnimation(json) {
 }
 function checkVoronoi(data) {
     if (d3.select("#voronoi_checkbox").property("checked")) {
-        showVoronoi(data)
+        deleteVoronoi();
+        drawVoronoi(data);
     } else {
-        deleteVoronoi()
+        deleteVoronoi();
     }
 }
 
@@ -156,4 +149,4 @@ function checkFlow() {
     }
 }
 
-export {drawWallsByPath, drawZones, runAnimation, checkVoronoi, checkZone, checkControl, checkFlow};
+export {drawWallsByPath, drawZones, runAnimation, checkZone, checkControl, checkFlow};

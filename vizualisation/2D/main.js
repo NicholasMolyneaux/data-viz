@@ -16,7 +16,6 @@ svg.append("mask")
     .attr("fill", "black");
 
 // check box behavior
-document.querySelector("#voronoi_checkbox").addEventListener('click', myModule.checkVoronoi);
 document.querySelector("#zone_checkbox").addEventListener('click', myModule.checkZone);
 document.querySelector("#control_checkbox").addEventListener('click', myModule.checkControl);
 document.querySelector("#flow_checkbox").addEventListener('click', myModule.checkFlow);
