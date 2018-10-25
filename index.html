@@ -1,67 +1,118 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <link rel="icon" href="../../favicon.ico">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <link rel="icon" href="../../favicon.ico">
 
-    <title>Jumbotron Template for Bootstrap</title>
+  <title>PedeViz</title>
 
-    <!-- Bootstrap core CSS -->
-    <link href="./css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap core CSS -->
+  <link href="./css/bootstrap.min.css" rel="stylesheet">
 
-    <!-- Custom styles for this template -->
-    <link href="./css/theme.css" rel="stylesheet">
+  <!-- Custom styles for this template -->
+  <link href="./css/theme.css" rel="stylesheet">
 
-    <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css?family=Press+Start+2P|Roboto" rel="stylesheet">  </head>
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Press+Start+2P|Roboto" rel="stylesheet">  </head>
 
-  <body>
+<body>
 
-    <nav class="navbar navbar-toggleable-md navbar-inverse fixed-top bg-inverse">
-      <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a id="logo-nav" class="navbar-brand" href="./index.html">PedeViz</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
-      </button>
-      <a id="logo-nav" class="navbar-brand" href="#">PedeViz</a>
+    </button>
 
-      <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
-          <li class="nav-item active">
-            <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Link</a>
-          </li>
+            <li class="nav-item active">
+                <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="./upload.html">Upload</a>
+            </li>
         </ul>
-      </div>
-    </nav>
+    </div>
+</nav>
 
-    <!-- Main jumbotron for a primary marketing message or call to action -->
-    <div class="jumbotron">
-      <div class="container">
-        <h1 id="title" class="display-3">PedeViz</h1>
-        <br><br>
-        <p class="text-justify">Lorem Ipsum [...] Explicative text goes here! Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.</>
-        <p><a id="learnMoreButton" class="btn btn-primary btn-lg" href="#" role="button">Learn more &raquo;</a></p>
+<!-- Main jumbotron for a primary marketing message or call to action -->
+<div class="jumbotron">
+  <div class="container">
+    <h1 id="title" class="display-3">PedeViz</h1>
+    <br><br>
+    <p class="text-justify">Lorem Ipsum [...] Explicative text goes here! Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.</>
+    <p><a id="learnMoreButton" class="btn btn-primary btn-lg" href="#" role="button">Learn more &raquo;</a></p>
+  </div>
+</div>
+
+<div class="container">
+
+  <div class="card">
+    <div class="card-header">
+      Load the data
+    </div>
+    <div class="row">
+      <div class="col-6">
+        <div class="card">
+          <div class="card-body container">
+            <br>
+            <h6 class="card-title">Choose an Infrastructure</h6>
+            <form>
+              <div class="form-group">
+                <select class="custom-select" id="infraData">
+                    <option value="1" data-toggle="tooltip" data-container="#tooltip_container" title="tooltip 1">Option One</option>
+                    <option title="INFO2" data-toggle="tooltip" data-placement="right">Option Two</option>
+                </select>
+                <div id="tooltip_container"></div>
+              </div>
+              <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+            <br>
+          </div>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="card">
+          <div class="card-body container">
+            <br>
+            <h6 class="card-title">Choose a Trajectory data</h6>
+            <form>
+              <div class="form-group">
+                <select class="form-control" id="trajData">
+                  <option selected disabled>Select an Infrastructure first.</option>
+
+                </select>
+              </div>
+              <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+            <br>
+          </div>
+        </div>
       </div>
     </div>
+  </div>
+</div>
 
-      <hr>
+<footer class="footer">
+  <div class="container">
+    <span class="text-muted">Footer!</span>
+  </div>
+</footer>
+</body>
 
-      <footer>
-        <div class="container">
-          <p>Footer!</p>
-        </div>
-      </footer>
 
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
+<script>window.jQuery || document.write('<script src="./js/jquery-slim.min.js"><\/script>')</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.3/js/bootstrap-select.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.3/css/bootstrap-select.min.css">
 
-    <!-- Bootstrap core JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
-    <script>window.jQuery || document.write('<script src="./js/jquery-slim.min.js"><\/script>')</script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
-    <script src="./js/bootstrap.min.js"></script>
+<script src="./js/bootstrap.bundle.js"></script>
+<script src="./js/data.js"></script>
 </html>
