@@ -90,23 +90,20 @@ function updatePosition(time_series_data) {
     //     });
     // pedes_path.exit().remove();
 }
+let line = d3.line()
+    .x(d => d[0])
+    .y(d => d[1]);
+
 function drawVoronoi(data) {
     let vertices = data.map( d => [d.x, d.y]);
-    try {
-        const delaunay = d3.Delaunay.from(filterPointInPolygon(vertices, "controlled-areas"));
-        //let viewBox = d3.select("svg").attr("viewBox").split(" ");
-        //const voronoi = delaunay.voronoi([viewBox[0],viewBox[1],viewBox[0]+viewBox[2],viewBox[1]+viewBox[3]]);
-        let controlled_box = d3.select(".controlled-areas");
-        const voronoi = delaunay.voronoi([Number(controlled_box.attr("x")), Number(controlled_box.attr("y")),
-            Number(controlled_box.attr("width")) + Number(controlled_box.attr("x")), Number(controlled_box.attr("height")) + Number(controlled_box.attr("y"))]);
-        d3.select("g").append("path")
-            .attr("class", "voronoi-poly")
-            .attr("d", voronoi.render())
-            .attr("mask", "url(#wallMask)");
-    }
-    catch(err) {
-        console.log("voronoi error...")
-    }
+    let controlled_box = d3.select(".controlled-areas");
+    let v = d3.voronoi()
+        .extent([[Number(controlled_box.attr("x")), Number(controlled_box.attr("y"))], [
+            Number(controlled_box.attr("width")) + Number(controlled_box.attr("x")), Number(controlled_box.attr("height")) + Number(controlled_box.attr("y"))]]);
+    let voronois = d3.select("g").selectAll(".voronoi-poly").data(v.polygons(filterPointInPolygon(vertices, "controlled-areas")));
+    voronois.enter().append("path")
+        .attr("class", "voronoi-poly")
+        .attr("d", line);
 }
 function deleteVoronoi() {
     d3.select("g").selectAll(".voronoi-poly").remove();
