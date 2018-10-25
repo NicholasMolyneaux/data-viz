@@ -92,19 +92,33 @@ function updatePosition(time_series_data) {
 }
 function drawVoronoi(data) {
     let vertices = data.map( d => [d.x, d.y]);
-    const delaunay = d3.Delaunay.from(vertices);
-    //let viewBox = d3.select("svg").attr("viewBox").split(" ");
-    //const voronoi = delaunay.voronoi([viewBox[0],viewBox[1],viewBox[0]+viewBox[2],viewBox[1]+viewBox[3]]);
-    let controlled_box = d3.select(".controlled-areas");
-    const voronoi = delaunay.voronoi([Number(controlled_box.attr("x")), Number(controlled_box.attr("y")),
-        Number(controlled_box.attr("width"))+Number(controlled_box.attr("x")), Number(controlled_box.attr("height"))+Number(controlled_box.attr("y"))]);
-    d3.select("g").append("path")
-        .attr("class", "voronoi-poly")
-        .attr("d", voronoi.render())
-        .attr("mask", "url(#wallMask)");
+    try {
+        const delaunay = d3.Delaunay.from(filterPointInPolygon(vertices, "controlled-areas"));
+        //let viewBox = d3.select("svg").attr("viewBox").split(" ");
+        //const voronoi = delaunay.voronoi([viewBox[0],viewBox[1],viewBox[0]+viewBox[2],viewBox[1]+viewBox[3]]);
+        let controlled_box = d3.select(".controlled-areas");
+        const voronoi = delaunay.voronoi([Number(controlled_box.attr("x")), Number(controlled_box.attr("y")),
+            Number(controlled_box.attr("width")) + Number(controlled_box.attr("x")), Number(controlled_box.attr("height")) + Number(controlled_box.attr("y"))]);
+        d3.select("g").append("path")
+            .attr("class", "voronoi-poly")
+            .attr("d", voronoi.render())
+            .attr("mask", "url(#wallMask)");
+    }
+    catch(err) {
+        console.log("voronoi error...")
+    }
 }
 function deleteVoronoi() {
     d3.select("g").selectAll(".voronoi-poly").remove();
+}
+
+function filterPointInPolygon(data, polygon_id) {
+    let polygon = d3.select(`.${polygon_id}`);
+    let x1 = Number(polygon.attr("x"));
+    let y1 = Number(polygon.attr("y"));
+    let x2 = Number(polygon.attr("x")) + Number(polygon.attr("width"));
+    let y2 = Number(polygon.attr("y")) + Number(polygon.attr("height"));
+    return data.filter(d => (d[0] > x1) && (d[0] < x2) && (d[1] > y1) && (d[1] < y2));
 }
 function runAnimation(json) {
     d3.json(json)
