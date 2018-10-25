@@ -20,6 +20,9 @@ document.querySelector("#zone_checkbox").addEventListener('click', myModule.chec
 document.querySelector("#control_checkbox").addEventListener('click', myModule.checkControl);
 document.querySelector("#flow_checkbox").addEventListener('click', myModule.checkFlow);
 
+// voronoi button
+document.querySelector("#voronoi_area").addEventListener('click', myModule.setVoronoiArea);
+
 // Read json data and draw frameworks (walls and zones)
 myModule.drawWallsByPath("../../data/small/walls.json");
 myModule.drawZones("../../data/small/graph.json");

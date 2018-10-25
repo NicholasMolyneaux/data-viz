@@ -160,4 +160,8 @@ function checkFlow() {
     }
 }
 
-export {drawWallsByPath, drawZones, runAnimation, checkZone, checkControl, checkFlow};
+function setVoronoiArea() {
+    console.log("ready to set voronoi area!");
+}
+
+export {drawWallsByPath, drawZones, runAnimation, checkZone, checkControl, checkFlow, setVoronoiArea};
