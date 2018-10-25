@@ -1,0 +1,11 @@
+<div class="col-4 text-center" id="div_graph{{ id }}">
+    <label for="graph1_type">Graph{{ id }} - type:</label> <br>
+    <select class="form-control" id="graph{{ id }}_type" name="origin">
+        <option value='TT' selected>Travel Time</option>
+        <option value='speed'>Speed</option>
+        <option value='OD'>OD chord</option>
+    </select>
+    <br>
+        <button class="btn btn-primary" onclick="delGraph(this)" value="stats_graph{{ id }}" id="del_graph{{ id }}">Delete Graph{{ id }}</button>
+    </div>
+</div>
