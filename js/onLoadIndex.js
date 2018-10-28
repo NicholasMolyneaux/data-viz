@@ -17,10 +17,11 @@ $(document).ready(function() {
 function loadInfra() {
     const url = baseURL + 'infrastructures';
 
+    console.log(url);
 
     $.ajax({
         type: "GET",
-        //dataType: "json",
+        dataType: "application/json",
         url: url,
         crossDomain : true,
     })
