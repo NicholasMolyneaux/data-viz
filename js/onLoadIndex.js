@@ -19,7 +19,7 @@ function loadInfra() {
 
     console.log(url);
 
-    $.ajax({
+    /*$.ajax({
         type: "GET",
         dataType: "application/json",
         url: url,
@@ -32,9 +32,13 @@ function loadInfra() {
         })
         .fail( function(xhr, textStatus, errorThrown) {
             alert("Error, please reload the website.");
-            alert(xhr.responseText);
-            alert(textStatus);
-        });
+        });*/
+
+    $.get(url).done(function (data) {
+        infrastructures = data;
+        // Add the infra for the uploading the trajectories data
+        addInfra();
+    });
 
 }
 
@@ -88,8 +92,6 @@ function getTraj() {
         })
         .fail( function(xhr, textStatus, errorThrown) {
             alert("Error, please reload the website.");
-            alert(xhr.responseText);
-            alert(textStatus);
         });
 
 }

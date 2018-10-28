@@ -32,8 +32,6 @@ function loadInfra() {
         })
         .fail( function(xhr, textStatus, errorThrown) {
             alert("Error, please reload the website.");
-            alert(xhr.responseText);
-            alert(textStatus);
         });
 
 }
@@ -88,8 +86,6 @@ function loadTraj(infra) {
         })
         .fail( function(xhr, textStatus, errorThrown) {
             alert("Error, please reload the website.");
-            alert(xhr.responseText);
-            alert(textStatus);
         });
 
 }
