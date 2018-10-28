@@ -20,7 +20,7 @@ function loadInfra() {
 
     $.ajax({
         type: "GET",
-        dataType: "json",
+        //dataType: "json",
         url: url,
         crossDomain : true,
     })
@@ -76,7 +76,7 @@ function getTraj() {
 
     $.ajax({
         type: "GET",
-        dataType: "json",
+        //dataType: "json",
         url: url,
         crossDomain : true,
     })
