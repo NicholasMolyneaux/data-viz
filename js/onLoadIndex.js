@@ -1,11 +1,10 @@
 const baseURL = 'http://transporsrv2.epfl.ch/db/';
 
 let infrastructures = null;
-let overrideInfra = false;
+let trajectories = null;
 
 let selectedInfra = null;
-let trajectories = null;
-let overrideTraj = false;
+let selectedTraj = null;
 
 $(document).ready(function() {
 
@@ -45,7 +44,7 @@ function addInfra() {
     infrastructures = [{'name': 'infra1', 'description': 'asdasdasd'}, {'name': 'infra2', 'description': '123123'}, {'name': 'infra3', 'description': 'Lorem Ipsum'}];
 
     infrastructures.forEach(infra => {
-        $('#selectInfra').append($('<option>', {
+        $('#infraData').append($('<option>', {
             value: infra.name,
             text: infra.name
         }))
@@ -53,9 +52,11 @@ function addInfra() {
 
     document.getElementById('descInfra').style.display = '';
     document.getElementById('textDescInfra').innerHTML = infrastructures[0]['description'];
+
+    selectedInfra = infrastructures[0];
 }
 
-function updateDescriptionInfraAndLoadTraj(e) {
+function updateDescriptionInfra(e) {
 
     const infraName = e.options[e.selectedIndex].value;
 
@@ -65,12 +66,10 @@ function updateDescriptionInfraAndLoadTraj(e) {
 
     document.getElementById('textDescInfra').innerHTML = selectedInfra['description'];
 
-    loadTraj(selectedInfra);
-
 }
 
-// Load the infrastructure by doing an ajax call
-function loadTraj(infra) {
+function getTraj() {
+
     const url = baseURL + 'infrastructures';
 
     // We will have to take into account the infra.
@@ -83,8 +82,8 @@ function loadTraj(infra) {
     })
         .done(function( data ) {
             // DEBUG
-            trajectories = [{'name': 'traj1-'+infra.name, 'description': 'asdasdasd'}, {'name': 'traj2-'+infra.name, 'description': '123123'}, {'name': 'traj3-'+infra.name, 'description': 'Lorem Ipsum'}];
-            console.log(trajectories);
+            trajectories = [{'name': 'traj1-'+selectedInfra.name, 'description': 'asdasdasd'}, {'name': 'traj2-'+selectedInfra.name, 'description': '123123'}, {'name': 'traj3-'+selectedInfra.name, 'description': 'Lorem Ipsum'}];
+            addTraj()
         })
         .fail( function(xhr, textStatus, errorThrown) {
             alert("Error, please reload the website.");
@@ -94,15 +93,42 @@ function loadTraj(infra) {
 
 }
 
-function verifyTrajName(e) {
+function addTraj() {
+    console.log(trajectories);
 
-    const idx = trajectories.map(function(e) { return e.name; }).indexOf(e.value);
-
-    if (idx != -1) {
-        document.getElementById('overrideTraj').style.display = '';
-        overrideTraj = true;
-    } else {
-        document.getElementById('overrideTraj').style.display = 'none';
-        overrideTraj = false;
+    // Remove all options
+    var select = document.getElementById("trajData");
+    var length = select.options.length;
+    for (i = 0; i < length; i++) {
+        select.options[i] = null;
     }
+
+    trajectories.forEach(infra => {
+        $('#trajData').append($('<option>', {
+            value: infra.name,
+            text: infra.name
+        }))
+    })
+
+    document.getElementById('descTraj').style.display = '';
+    document.getElementById('textDescTraj').innerHTML = trajectories[0]['description'];
+
+    selectedTraj = trajectories[0];
 }
+
+function updateDescriptionTraj(e) {
+
+    const trajName = e.options[e.selectedIndex].value;
+
+    const idx = trajectories.map(function(e) { return e.name; }).indexOf(trajName);
+
+    selectedTraj = trajectories[idx];
+
+    document.getElementById('textDescTraj').innerHTML = selectedTraj['description'];
+
+}
+
+function dataSelected() {
+    window.alert('Infrastructure: ' + selectedInfra.name + '\nTrajectories: ' + selectedTraj.name);
+}
+
