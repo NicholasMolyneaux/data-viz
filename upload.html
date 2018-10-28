@@ -104,14 +104,18 @@
                 <form>
                     <div class="form-group">
                         <label for="selectInfra">Select Infrastructure</label>
-                        <select class="form-control" id="selectInfra">
+                        <select class="form-control" id="selectInfra" onchange="updateDescriptionInfra(this)">
                         </select>
                     </div>
                     <div class="form-group" id="descInfra" style="display: none;">
                         <span>Description:</span><br>
                         <span class="text-muted" id="textDescInfra"></span>
                     </div>
-
+                    <div class="form-group">
+                        <label for="inputNameTraj">Name of the Trajectory data</label>
+                        <input type="text" class="form-control" id="inputNameTraj" placeholder="Enter Name">
+                        <small class="form-text text-muted">Make sure that it's not an existing one. Otherwise, we will replace it.</small>
+                    </div>
                     <div class="form-group">
                         <label for="inputDescriptionTraj">Description of the Trajectory data</label>
                         <textarea class="form-control" id="inputDescriptionTraj" rows="2"></textarea>

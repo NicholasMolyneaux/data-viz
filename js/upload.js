@@ -4,8 +4,6 @@ let infrastructures = null;
 
 $(document).ready(function() {
 
-    console.log("TEST")
-
     // Load the infrastructures
     loadInfra();
 
@@ -14,52 +12,49 @@ $(document).ready(function() {
 function loadInfra() {
     const url = baseURL + 'infrastructures';
 
-    var xhr = createCORSRequest('GET', url);
-    if (!xhr) {
-        alert('CORS not supported');
-        return;
-    }
 
-    // Response handlers.
-    xhr.onload = function() {
-        var text = xhr.responseText;
-        var title = getTitle(text);
-        alert('Response from CORS request to ' + url + ': ' + title);
-    };
+    $.ajax({
+        type: "GET",
+        dataType: "json",
+        url: url,
+        crossDomain : true,
+    })
+        .done(function( data ) {
+            infrastructures = data;
+            addInfra();
+        })
+        .fail( function(xhr, textStatus, errorThrown) {
+            alert("Error, please reload the website.");
+            alert(xhr.responseText);
+            alert(textStatus);
+        });
 
-    xhr.onerror = function() {
-        alert('Woops, there was an error making the request.');
-    };
-
-    xhr.send();
 }
+
 
 function addInfra() {
+    console.log(infrastructures);
+
+    infrastructures = [{'name': 'infra1', 'description': 'asdasdasd'}, {'name': 'infra2', 'description': '123123'}, {'name': 'infra3', 'description': 'Lorem Ipsum'}]
+
     infrastructures.forEach(infra => {
+        console.log(infra);
         $('#selectInfra').append($('<option>', {
-            value: infra
+            value: infra.name,
+            text: infra.name
         }))
     })
+
+    document.getElementById('descInfra').style.display = '';
+    document.getElementById('textDescInfra').innerHTML = infrastructures[0]['description'];
 }
 
-// Create the XHR object.
-function createCORSRequest(method, url) {
-    var xhr = new XMLHttpRequest();
-    if ("withCredentials" in xhr) {
-        // XHR for Chrome/Firefox/Opera/Safari.
-        xhr.open(method, url, true);
-    } else if (typeof XDomainRequest != "undefined") {
-        // XDomainRequest for IE.
-        xhr = new XDomainRequest();
-        xhr.open(method, url);
-    } else {
-        // CORS not supported.
-        xhr = null;
-    }
+function updateDescriptionInfra(e) {
 
-    xhr.setRequestHeader(
-        'X-Custom-Header', 'value'
-    );
+    const infraName = e.options[e.selectedIndex].value;
 
-    return xhr;
+    const idx = infrastructures.map(function(e) { return e.name; }).indexOf(infraName);
+
+    document.getElementById('textDescInfra').innerHTML = infrastructures[idx]['description'];
+    
 }
