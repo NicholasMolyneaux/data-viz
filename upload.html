@@ -65,8 +65,13 @@
                 <form>
                     <div class="form-group">
                         <label for="inputNameInfra">Name of the Infrastructure</label>
-                        <input type="text" class="form-control" id="inputNameInfra" placeholder="Enter Name">
+                        <input type="text" class="form-control" id="inputNameInfra" placeholder="Enter Name" onchange="verifyInfraName(this)">
                         <small class="form-text text-muted">Make sure that it's not an existing one. Otherwise, we will replace it.</small>
+                    </div>
+                    <div class="form-group" id="overrideInfra" style="display: none;">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="overrideInfraBox"> <span class="warning">Override the Infrastructure?</span>
+                        </div>
                     </div>
                     <div class="form-group">
                         <label for="inputDescriptionInfra">Description of the Infrastructure</label>
@@ -104,7 +109,7 @@
                 <form>
                     <div class="form-group">
                         <label for="selectInfra">Select Infrastructure</label>
-                        <select class="form-control" id="selectInfra" onchange="updateDescriptionInfra(this)">
+                        <select class="form-control" id="selectInfra" onchange="updateDescriptionInfraAndLoadTraj(this)">
                         </select>
                     </div>
                     <div class="form-group" id="descInfra" style="display: none;">
@@ -113,8 +118,13 @@
                     </div>
                     <div class="form-group">
                         <label for="inputNameTraj">Name of the Trajectory data</label>
-                        <input type="text" class="form-control" id="inputNameTraj" placeholder="Enter Name">
+                        <input type="text" class="form-control" id="inputNameTraj" placeholder="Enter Name" onchange="verifyTrajName(this)">
                         <small class="form-text text-muted">Make sure that it's not an existing one. Otherwise, we will replace it.</small>
+                    </div>
+                    <div class="form-group" id="overrideTraj" style="display: none;">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="overrideTrajBox"> <span class="warning">Override the Trajectories?</span>
+                        </div>
                     </div>
                     <div class="form-group">
                         <label for="inputDescriptionTraj">Description of the Trajectory data</label>

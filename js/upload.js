@@ -1,6 +1,11 @@
 const baseURL = 'http://transporsrv2.epfl.ch/db/';
 
 let infrastructures = null;
+let overrideInfra = false;
+
+let selectedInfra = null;
+let trajectories = null;
+let overrideTraj = false;
 
 $(document).ready(function() {
 
@@ -9,6 +14,7 @@ $(document).ready(function() {
 
 });
 
+// Load the infrastructure by doing an ajax call
 function loadInfra() {
     const url = baseURL + 'infrastructures';
 
@@ -21,6 +27,7 @@ function loadInfra() {
     })
         .done(function( data ) {
             infrastructures = data;
+            // Add the infra for the uploading the trajectories data
             addInfra();
         })
         .fail( function(xhr, textStatus, errorThrown) {
@@ -31,14 +38,13 @@ function loadInfra() {
 
 }
 
-
 function addInfra() {
     console.log(infrastructures);
 
-    infrastructures = [{'name': 'infra1', 'description': 'asdasdasd'}, {'name': 'infra2', 'description': '123123'}, {'name': 'infra3', 'description': 'Lorem Ipsum'}]
+    // DEBUG
+    infrastructures = [{'name': 'infra1', 'description': 'asdasdasd'}, {'name': 'infra2', 'description': '123123'}, {'name': 'infra3', 'description': 'Lorem Ipsum'}];
 
     infrastructures.forEach(infra => {
-        console.log(infra);
         $('#selectInfra').append($('<option>', {
             value: infra.name,
             text: infra.name
@@ -47,14 +53,71 @@ function addInfra() {
 
     document.getElementById('descInfra').style.display = '';
     document.getElementById('textDescInfra').innerHTML = infrastructures[0]['description'];
+
+    loadTraj(infrastructures[0]);
 }
 
-function updateDescriptionInfra(e) {
+function updateDescriptionInfraAndLoadTraj(e) {
 
     const infraName = e.options[e.selectedIndex].value;
 
     const idx = infrastructures.map(function(e) { return e.name; }).indexOf(infraName);
 
-    document.getElementById('textDescInfra').innerHTML = infrastructures[idx]['description'];
-    
+    selectedInfra = infrastructures[idx];
+
+    document.getElementById('textDescInfra').innerHTML = selectedInfra['description'];
+
+    loadTraj(selectedInfra);
+
+}
+
+// Load the infrastructure by doing an ajax call
+function loadTraj(infra) {
+    const url = baseURL + 'infrastructures';
+
+    // We will have to take into account the infra.
+
+    $.ajax({
+        type: "GET",
+        dataType: "json",
+        url: url,
+        crossDomain : true,
+    })
+        .done(function( data ) {
+            // DEBUG
+            trajectories = [{'name': 'traj1-'+infra.name, 'description': 'asdasdasd'}, {'name': 'traj2-'+infra.name, 'description': '123123'}, {'name': 'traj3-'+infra.name, 'description': 'Lorem Ipsum'}];
+            console.log(trajectories);
+        })
+        .fail( function(xhr, textStatus, errorThrown) {
+            alert("Error, please reload the website.");
+            alert(xhr.responseText);
+            alert(textStatus);
+        });
+
+}
+
+function verifyInfraName(e) {
+
+    const idx = infrastructures.map(function(e) { return e.name; }).indexOf(e.value);
+
+    if (idx != -1) {
+        document.getElementById('overrideInfra').style.display = '';
+        overrideInfra = true;
+    } else {
+        document.getElementById('overrideInfra').style.display = 'none';
+        overrideInfra = false;
+    }
+}
+
+function verifyTrajName(e) {
+
+    const idx = trajectories.map(function(e) { return e.name; }).indexOf(e.value);
+
+    if (idx != -1) {
+        document.getElementById('overrideTraj').style.display = '';
+        overrideTraj = true;
+    } else {
+        document.getElementById('overrideTraj').style.display = 'none';
+        overrideTraj = false;
+    }
 }

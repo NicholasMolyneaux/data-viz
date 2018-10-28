@@ -85,3 +85,8 @@ color: red;
     color: black;
 }
 
+.warning {
+    color: red;
+    font-weight: bold;
+}
+
