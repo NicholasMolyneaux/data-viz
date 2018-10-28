@@ -5,103 +5,204 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
-    <link rel="icon" href="./assets/img/favicon.ico">
+    <link rel="icon" href="../../favicon.ico">
 
-    <title>Data Visualization</title>
+    <title>PedeViz</title>
 
     <!-- Bootstrap core CSS -->
     <link href="./css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Custom styles for this template -->
     <link href="./css/theme.css" rel="stylesheet">
-</head>
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Press+Start+2P|Roboto" rel="stylesheet">  </head>
+
 <body>
-<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
-    <a class="navbar-brand" href="index.html">PedeViz</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a id="logo-nav" class="navbar-brand" href="./index.html">PedeViz</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
 
-    <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="./index.html">Home</a>
+
+            </li>
             <li class="nav-item active">
-                <a class="nav-link" href="index.html">Home <span class="sr-only">(current)</span></a>
+                <a class="nav-link" href="#">Upload <span class="sr-only">(current)</span></a>
+
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="description.html">Description</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="data.html">Data</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="team.html">Team</a>
-            </li>
-            <!--
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="http://example.com" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Dropdown</a>
-              <div class="dropdown-menu" aria-labelledby="dropdown01">
-                <a class="dropdown-item" href="#">Action</a>
-                <a class="dropdown-item" href="#">Another action</a>
-                <a class="dropdown-item" href="#">Something else here</a>
-              </div>
-            </li>
-            -->
         </ul>
-        <!--
-        <form class="form-inline my-2 my-lg-0">
-          <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
-          <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-        </form>
-        -->
     </div>
 </nav>
 
+<!-- Main jumbotron for a primary marketing message or call to action -->
 <div class="jumbotron">
     <div class="container">
-        <h1 class="display-4" id="title">Team</h1>
+        <h1 id="title" class="display-3">Upload</h1>
+        <br><br>
+        <p class="text-justify">In this part of this website, you can upload different files for the visulization. Please, click on one of the actions below.</p>
     </div>
 </div>
 
-<main role="main" class="container">
+<div class="container" id="accordion">
+    <div class="card">
+        <div class="card-header" id="newInfra">
+            <h5 class="mb-0">
+                <button class="btn btn-link clickableUpload" data-toggle="collapse" data-target="#detailsNewInfra" aria-expanded="true" aria-controls="detailsNewInfra" aria-expanded="false">
+                    Upload a new Infrastructure
+                </button>
+            </h5>
+        </div>
 
-    <div>
-        <!-- http://localhost:9000/db/infrastructures -->
-        <form action = "http://localhost:9000/upload" method="POST" enctype="multipart/form-data">
-            <label for="traj_location">Location:</label>
-            <input type="text" id="traj_location" name="location">
-            <label for="description">Description:</label>
-            <input type="text" id="description" name="description">
-            <label for="fileTest">Choose a file</label>
-            <input type="file" id="fileTest" name="myFile">
-            <input type="hidden" name="csrfToken" value="need-to-insert-token-properly-here"/>
-            <select name="choice">
-                <option value="test">test</option>
-                <option value="api">api</option>
-            </select>
-            <button>Send the file</button>
-        </form>
+        <div id="detailsNewInfra" class="collapse" aria-labelledby="newInfra" data-parent="#accordion">
+            <div class="card-body container">
+                <br>
+                <form>
+                    <div class="form-group">
+                        <label for="inputNameInfra">Name of the Infrastructure</label>
+                        <input type="text" class="form-control" id="inputNameInfra" placeholder="Enter Name">
+                        <small class="form-text text-muted">Make sure that it's not an existing one. Otherwise, we will replace it.</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputDescriptionInfra">Description of the Infrastructure</label>
+                        <textarea class="form-control" id="inputDescriptionInfra" rows="2"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputGraph">Graph</label>
+                        <input type="file" class="form-control-file" id="inputGraph" aria-describedby="inputGraphHelp" >
+                        <small id="inputGraphHelp" class="form-text text-muted">This file is the design of the different zones in the infrastructure.</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputWall">Walls</label>
+                        <input type="file" class="form-control-file" id="inputWall" aria-describedby="inputWallhHelp">
+                        <small id="inputWallhHelp" class="form-text text-muted">This file is the design of the different walls in the infrastructure.</small>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+                <br>
+            </div>
+        </div>
     </div>
 
-    <div>
-        <form action = "http://localhost:9000/uploadInfrastructure" method="POST" enctype="multipart/form-data">
-            <label for="infra_location">Location:</label>
-            <input type="text" id="infra_location" name="location">
-            <label for="infra_description">Description:</label>
-            <input type="text" id="infra_description" name="description">
-            <label for="infra_file_walls">Choose a walls file</label>
-            <input type="file" id="infra_file_walls" name="walls">
-            <label for="infra_file_graph">Choose a graph file</label>
-            <input type="file" id="infra_file_graph" name="graph">
-            <input type="hidden" name="csrfToken" value="need-to-insert-token-properly-here"/>
-            <select name="choice">
-                <option value="test">test</option>
-                <option value="api">api</option>
-            </select>
-            <button>Send the file</button>
-        </form>
+    <div class="card">
+        <div class="card-header" id="newTraj">
+            <h5 class="mb-0">
+                <button class="btn btn-link clickableUpload" data-toggle="collapse" data-target="#detailsNewTraj" aria-expanded="true" aria-controls="detailsNewTraj" aria-expanded="false">
+                    Upload a new set of Trajectories
+                </button>
+            </h5>
+        </div>
+
+        <div id="detailsNewTraj" class="collapse" aria-labelledby="newTraj" data-parent="#accordion">
+            <div class="card-body container">
+                <br>
+                <form>
+                    <div class="form-group">
+                        <label for="selectInfra">Select Infrastructure</label>
+                        <select class="form-control" id="selectInfra">
+                        </select>
+                    </div>
+                    <div class="form-group" id="descInfra" style="display: none;">
+                        <span>Description:</span><br>
+                        <span class="text-muted" id="textDescInfra"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="inputDescriptionTraj">Description of the Trajectory data</label>
+                        <textarea class="form-control" id="inputDescriptionTraj" rows="2"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputTraj">Trajectories</label>
+                        <input type="file" class="form-control-file" id="inputTraj" aria-describedby="inputTrajHelp">
+                        <small id="inputTrajHelp" class="form-text text-muted">Simulation file of all the trajectories.</small>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+                <br>
+            </div>
+        </div>
     </div>
 
-</main><!-- /.container -->
-<script src="./js/table-functions.js"></script>
+
+    <!--
+    <div class="card">
+        <div class="card-header" id="delInfra">
+            <h5 class="mb-0">
+                <button class="btn btn-link clickableUpload" data-toggle="collapse" data-target="#detailsDelInfra" aria-expanded="true" aria-controls="detailsDelInfra" aria-expanded="false">
+                    Delete an Infrastructure
+                </button>
+            </h5>
+        </div>
+
+        <div id="detailsDelInfra" class="collapse" aria-labelledby="newTraj" data-parent="#accordion">
+            <div class="card-body container">
+                <br>
+                <form>
+                    <div class="form-group">
+                        <label for="selectInfraDel">Select Infrastructure</label>
+                        <select class="form-control" id="selectInfraDel">
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+                <br>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header" id="delTraj">
+            <h5 class="mb-0">
+                <button class="btn btn-link clickableUpload" data-toggle="collapse" data-target="#detailsDelTraj" aria-expanded="true" aria-controls="detailsDelTraj" aria-expanded="false">
+                    Delete a set of Trajectories
+                </button>
+            </h5>
+        </div>
+
+        <div id="detailsDelTraj" class="collapse" aria-labelledby="newTraj" data-parent="#accordion">
+            <div class="card-body container">
+                <br>
+                <form>
+                    <div class="form-group">
+                        <label for="selectInfraDelTraj">Select Infrastructure</label>
+                        <select class="form-control" id="selectInfraDelTraj">
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="selectTrajDel">Select Trajectory</label>
+                        <select class="form-control" id="selectTrajDel">
+                            <option selected disabled>First, you have to select an Infrastructure</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+                <br>
+            </div>
+        </div>
+    </div>
+    -->
+
+</div>
+
+<footer class="footer">
+    <div class="container">
+        <span class="text-muted">Footer!</span>
+    </div>
+</footer>
 </body>
+
+
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
+<script src="./js/bootstrap.min.js"></script>
+<script src="./js/upload.js"></script>
 </html>
