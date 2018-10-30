@@ -20,46 +20,46 @@
 
 <body>
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <a id="logo-nav" class="navbar-brand" href="./index.html">PedeViz</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
+<div class="allExceptFooter">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a id="logo-nav" class="navbar-brand" href="./index.html">PedeViz</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item">
-                <a class="nav-link" href="./index.html">Home</a>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="./index.html">Home</a>
 
-            </li>
-            <li class="nav-item active">
-                <a class="nav-link" href="#">Upload <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="#">Upload <span class="sr-only">(current)</span></a>
 
-            </li>
-        </ul>
-    </div>
-</nav>
-
-<!-- Main jumbotron for a primary marketing message or call to action -->
-<div class="jumbotron">
-    <div class="container">
-        <h1 id="title" class="display-3">Upload</h1>
-        <br><br>
-        <p class="text-justify">In this part of this website, you can upload different files for the visulization. Please, click on one of the actions below.</p>
-    </div>
-</div>
-
-<div class="container" id="accordion">
-    <div class="card">
-        <div class="card-header" id="newInfra">
-            <h5 class="mb-0">
-                <button class="btn btn-link clickableUpload" data-toggle="collapse" data-target="#detailsNewInfra" aria-expanded="true" aria-controls="detailsNewInfra" aria-expanded="false">
-                    Upload a new Infrastructure
-                </button>
-            </h5>
+                </li>
+            </ul>
         </div>
+    </nav>
 
-        <div id="detailsNewInfra" class="collapse" aria-labelledby="newInfra" data-parent="#accordion">
+    <!-- Main jumbotron for a primary marketing message or call to action -->
+    <div class="jumbotron">
+        <div class="container">
+            <h1 id="title" class="display-3">Upload</h1>
+            <br><br>
+            <p class="text-justify">In this part of this website, you can upload different files for the visulization. Please, click on one of the actions below.</p>
+        </div>
+    </div>
+
+    <div class="container" id="accordion">
+        <div class="card">
+            <div class="card-header" id="newInfra">
+                <h5 class="mb-0">
+                    <button class="btn btn-link clickableUpload" data-toggle="collapse" data-target="#detailsNewInfra" aria-expanded="true" aria-controls="detailsNewInfra" aria-expanded="false">
+                        Upload a new Infrastructure
+                    </button>
+                </h5>
+            </div>
+            <div id="detailsNewInfra" class="collapse" aria-labelledby="newInfra" data-parent="#accordion">
             <div class="card-body container">
                 <br>
                 <form action = "http://transporsrv2.epfl.ch/api/uploadinfrastructure" method="POST" enctype="multipart/form-data">
@@ -92,18 +92,15 @@
                 <br>
             </div>
         </div>
-    </div>
-
-    <div class="card">
-        <div class="card-header" id="newTraj">
-            <h5 class="mb-0">
-                <button class="btn btn-link clickableUpload" data-toggle="collapse" data-target="#detailsNewTraj" aria-expanded="true" aria-controls="detailsNewTraj" aria-expanded="false">
-                    Upload a new set of Trajectories
-                </button>
-            </h5>
-        </div>
-
-        <div id="detailsNewTraj" class="collapse" aria-labelledby="newTraj" data-parent="#accordion">
+        <div class="card">
+            <div class="card-header" id="newTraj">
+                <h5 class="mb-0">
+                    <button class="btn btn-link clickableUpload" data-toggle="collapse" data-target="#detailsNewTraj" aria-expanded="true" aria-controls="detailsNewTraj" aria-expanded="false">
+                        Upload a new set of Trajectories
+                    </button>
+                </h5>
+            </div>
+            <div id="detailsNewTraj" class="collapse" aria-labelledby="newTraj" data-parent="#accordion">
             <div class="card-body container">
                 <br>
                 <form action="http://transporsrv2.epfl.ch/api/uploadtrajectory" method="POST" enctype="multipart/form-data" >
@@ -140,74 +137,17 @@
                 <br>
             </div>
         </div>
-    </div>
-
-
-    <!--
-    <div class="card">
-        <div class="card-header" id="delInfra">
-            <h5 class="mb-0">
-                <button class="btn btn-link clickableUpload" data-toggle="collapse" data-target="#detailsDelInfra" aria-expanded="true" aria-controls="detailsDelInfra" aria-expanded="false">
-                    Delete an Infrastructure
-                </button>
-            </h5>
-        </div>
-
-        <div id="detailsDelInfra" class="collapse" aria-labelledby="newTraj" data-parent="#accordion">
-            <div class="card-body container">
-                <br>
-                <form>
-                    <div class="form-group">
-                        <label for="selectInfraDel">Select Infrastructure</label>
-                        <select class="form-control" id="selectInfraDel">
-                        </select>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Submit</button>
-                </form>
-                <br>
-            </div>
         </div>
     </div>
-
-    <div class="card">
-        <div class="card-header" id="delTraj">
-            <h5 class="mb-0">
-                <button class="btn btn-link clickableUpload" data-toggle="collapse" data-target="#detailsDelTraj" aria-expanded="true" aria-controls="detailsDelTraj" aria-expanded="false">
-                    Delete a set of Trajectories
-                </button>
-            </h5>
-        </div>
-
-        <div id="detailsDelTraj" class="collapse" aria-labelledby="newTraj" data-parent="#accordion">
-            <div class="card-body container">
-                <br>
-                <form>
-                    <div class="form-group">
-                        <label for="selectInfraDelTraj">Select Infrastructure</label>
-                        <select class="form-control" id="selectInfraDelTraj">
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="selectTrajDel">Select Trajectory</label>
-                        <select class="form-control" id="selectTrajDel">
-                            <option selected disabled>First, you have to select an Infrastructure</option>
-                        </select>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Submit</button>
-                </form>
-                <br>
-            </div>
-        </div>
-    </div>
-    -->
-
 </div>
 
+</div>
 <footer class="footer">
     <div class="container">
         <span class="text-muted">Footer!</span>
     </div>
 </footer>
+
 </body>
 
 
