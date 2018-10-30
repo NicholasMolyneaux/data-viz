@@ -1,3 +1,5 @@
+import * as drawVoronoiArea from './drawings.js';
+
 async function drawWallsByPath(json) {
     let line = d3.line()
         .x( d => d.x)
@@ -96,26 +98,24 @@ let line = d3.line()
 
 function drawVoronoi(data) {
     let vertices = data.map( d => [d.x, d.y]);
-    let controlled_box = d3.select(".controlled-areas");
+    let svg = d3.select("svg");
     let v = d3.voronoi()
-        .extent([[Number(controlled_box.attr("x")), Number(controlled_box.attr("y"))], [
-            Number(controlled_box.attr("width")) + Number(controlled_box.attr("x")), Number(controlled_box.attr("height")) + Number(controlled_box.attr("y"))]]);
-    let voronois = d3.select("g").selectAll(".voronoi-poly").data(v.polygons(filterPointInPolygon(vertices, "controlled-areas")));
+        .extent([[Number(svg.attr("x")), Number(svg.attr("y"))], [
+            Number(svg.attr("width")) + Number(svg.attr("x")), Number(svg.attr("height")) + Number(svg.attr("y"))]]);
+    let voronois = d3.select("g").selectAll(".voronoi-poly").data(v.polygons(filterPointInPolygon(vertices, ".voronoi-area")));
     voronois.enter().append("path")
         .attr("class", "voronoi-poly")
-        .attr("d", line);
+        .attr("d", line)
+        .attr("mask", "url(#voronoi-mask)");
 }
 function deleteVoronoi() {
     d3.select("g").selectAll(".voronoi-poly").remove();
 }
 
 function filterPointInPolygon(data, polygon_id) {
-    let polygon = d3.select(`.${polygon_id}`);
-    let x1 = Number(polygon.attr("x"));
-    let y1 = Number(polygon.attr("y"));
-    let x2 = Number(polygon.attr("x")) + Number(polygon.attr("width"));
-    let y2 = Number(polygon.attr("y")) + Number(polygon.attr("height"));
-    return data.filter(d => (d[0] > x1) && (d[0] < x2) && (d[1] > y1) && (d[1] < y2));
+    let polygon = d3.select(polygon_id);
+    let polygon_array = polygon.attr("points").split(" ").map(s => s.split(",").map(n => Number(n)));
+    return data.filter(d => d3.polygonContains(polygon_array, d));
 }
 function runAnimation(json) {
     d3.json(json)
@@ -128,6 +128,7 @@ function runAnimation(json) {
             })
         });
 }
+
 function checkVoronoi(data) {
     if (d3.select("#voronoi_checkbox").property("checked")) {
         deleteVoronoi();
@@ -161,7 +162,7 @@ function checkFlow() {
 }
 
 function setVoronoiArea() {
-    console.log("ready to set voronoi area!");
+    drawVoronoiArea.clearCanvas();
 }
 
 export {drawWallsByPath, drawZones, runAnimation, checkZone, checkControl, checkFlow, setVoronoiArea};
