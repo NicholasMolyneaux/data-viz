@@ -1,4 +1,6 @@
-const baseURL = 'http://transporsrv2.epfl.ch/api/db/';
+const baseURL = 'http://transporsrv2.epfl.ch/api/';
+//const baseURL = 'http://localhost:9000/';
+
 
 let infrastructures = null;
 let trajectories = null;
@@ -24,7 +26,7 @@ $(document).ready(function() {
 
 // Load the infrastructure by doing an ajax call
 function loadInfra() {
-    const url = baseURL + 'infrastructures';
+    const url = baseURL + 'infralist';
 
     console.log(url);
 
@@ -48,7 +50,7 @@ function addInfra() {
     console.log(infrastructures);
 
     // DEBUG
-    infrastructures = [{'name': 'infra1', 'description': 'asdasdasd'}, {'name': 'infra2', 'description': '123123'}, {'name': 'infra3', 'description': 'Lorem Ipsum'}];
+    //infrastructures = [{'name': 'infra1', 'description': 'asdasdasd'}, {'name': 'infra2', 'description': '123123'}, {'name': 'infra3', 'description': 'Lorem Ipsum'}];
 
     infrastructures.forEach(infra => {
         $('#infraData').append($('<option>', {
@@ -77,19 +79,20 @@ function updateDescriptionInfra(e) {
 
 function getTraj() {
 
-    const url = baseURL + 'infrastructures';
+    const url = baseURL + 'trajlist/' + selectedInfra['name'];
 
     // We will have to take into account the infra.
 
     $.ajax({
         type: "GET",
-        //dataType: "json",
+        dataType: "json",
         url: url,
         crossDomain : true,
     })
         .done(function( data ) {
+            trajectories = data;
             // DEBUG
-            trajectories = [{'name': 'traj1-'+selectedInfra.name, 'description': 'asdasdasd'}, {'name': 'traj2-'+selectedInfra.name, 'description': '123123'}, {'name': 'traj3-'+selectedInfra.name, 'description': 'Lorem Ipsum'}];
+            //trajectories = [{'name': 'traj1-'+selectedInfra.name, 'description': 'asdasdasd'}, {'name': 'traj2-'+selectedInfra.name, 'description': '123123'}, {'name': 'traj3-'+selectedInfra.name, 'description': 'Lorem Ipsum'}];
             addTraj()
         })
         .fail( function(xhr, textStatus, errorThrown) {
@@ -109,9 +112,10 @@ function addTraj() {
     }
 
     trajectories.forEach(infra => {
+        console.log(infra);
         $('#trajData').append($('<option>', {
-            value: infra.name,
-            text: infra.name
+            value: infra,
+            text: infra
         }))
     })
 
