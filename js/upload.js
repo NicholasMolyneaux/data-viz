@@ -93,6 +93,20 @@ function loadTraj(infra) {
 
 }
 
+function verifyInfraName(e) {
+
+    const idx = infrastructures.map(function(e) { return e.name; }).indexOf(e.value);
+
+    if (idx != -1) {
+        document.getElementById('overrideInfra').style.display = '';
+        overrideTraj = true;
+    } else {
+        document.getElementById('overrideInfra').style.display = 'none';
+        overrideTraj = false;
+    }
+
+}
+
 function verifyTrajName(e) {
 
     const idx = trajectories.map(function(e) { return e.name; }).indexOf(e.value);
