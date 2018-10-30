@@ -17,6 +17,9 @@
 
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Press+Start+2P|Roboto" rel="stylesheet">
+
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
 </head>
 
 <body>
@@ -102,16 +105,18 @@
 
     <hr>
 
-    <div class="container" id="main">
+    <div class="container">
         <div class="row" id="mainViz">
-            <div class="col-xl-2 col-lg-3 order-lg-first order-last debug1">
+            <div class="col-xl-2 col-lg-3 order-lg-first order-last debug1" id="options">
+
             </div>
-            <div class="col-xl-10 col-lg-9 debug2">
+            <div class="col-xl-10 col-lg-9" id="viz">
+                <a href="#" id="fullscreen" role="button" title="fullscreen"><i class="fas fa-expand fa-lg"></i></a>
             </div>
         </div>
     </div>
-
 </div>
+
 
 <footer class="footer">
     <div class="container">
@@ -133,5 +138,13 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.3/css/bootstrap-select.min.css">
 
 <script src="./js/bootstrap.bundle.js"></script>
-<script src="./js/onLoadIndex.js"></script>
+<script src="js/index.js"></script>
+
+<!-- d3 -->
+<script src="https://d3js.org/d3.v5.min.js"></script>
+
+<!-- 2D visualization -->
+<script src="visualization/2D/functions.js"></script>
+<script src="visualization/2D/main_viz.js"></script>
+
 </html>

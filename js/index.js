@@ -6,10 +6,19 @@ let trajectories = null;
 let selectedInfra = null;
 let selectedTraj = null;
 
+let fullScreenBool = false;
+
 $(document).ready(function() {
 
     // Load the infrastructures
     loadInfra();
+
+    $("#fullscreen").on('click', function() {
+        if(IsFullScreenCurrently())
+            GoOutFullscreen();
+        else
+            GoInFullscreen($("#viz").get(0));
+    });
 
 });
 
@@ -127,4 +136,93 @@ function updateDescriptionTraj(e) {
 function dataSelected() {
     window.alert('Infrastructure: ' + selectedInfra.name + '\nTrajectories: ' + selectedTraj.name);
 }
+
+function fullScreen(e) {
+
+    e.preventDefault();
+
+    if (fullScreenBool) {
+        // Not in full screen anymore
+        fullScreenBool = false;
+
+        // Update the size of the div
+        const viz = document.getElementById("viz");
+    } else {
+        // Now in full screen
+        fullScreenBool = true;
+
+
+
+    }
+
+    console.log("LOL");
+}
+
+/* Is currently in full screen or not */
+function IsFullScreenCurrently() {
+    var full_screen_element = document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement || null;
+
+    // If no element is in full-screen
+    if(full_screen_element === null)
+        return false;
+    else
+        return true;
+}
+
+/* Get into full screen */
+function GoInFullscreen(element) {
+
+    if(element.requestFullscreen)
+        element.requestFullscreen();
+    else if(element.mozRequestFullScreen)
+        element.mozRequestFullScreen();
+    else if(element.webkitRequestFullscreen)
+        element.webkitRequestFullscreen();
+    else if(element.msRequestFullscreen)
+        element.msRequestFullscreen();
+}
+
+/* Get out of full screen */
+function GoOutFullscreen() {
+
+    // Change the button
+
+    if(document.exitFullscreen)
+        document.exitFullscreen();
+    else if(document.mozCancelFullScreen)
+        document.mozCancelFullScreen();
+    else if(document.webkitExitFullscreen)
+        document.webkitExitFullscreen();
+    else if(document.msExitFullscreen)
+        document.msExitFullscreen();
+
+}
+
+$(document).on('fullscreenchange webkitfullscreenchange mozfullscreenchange MSFullscreenChange', function() {
+    if(IsFullScreenCurrently()) {
+        document.getElementById("fullscreen").style.display = 'none';
+
+        const viz = document.getElementById("viz");
+
+        viz.style.height = "100%";
+        viz.style.width = "100%";
+        viz.style.backgroundColor = "white";
+        viz.style.padding = "0";
+
+        const svgCont = document.getElementById("svgCont");
+        svgCont.style.padding = "0";
+        svgCont.style.maxWidth = "100%";
+        svgCont.style.height = "100%";
+
+    }
+    else {
+        document.getElementById("fullscreen").style.display = '';
+
+        $("#viz").removeAttr("style");
+
+        $("#svgCont").removeAttr("style");
+
+    }
+});
+
 
