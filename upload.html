@@ -62,10 +62,10 @@
         <div id="detailsNewInfra" class="collapse" aria-labelledby="newInfra" data-parent="#accordion">
             <div class="card-body container">
                 <br>
-                <form>
+                <form action = "http://transporsrv2.epfl.ch/api/uploadinfrastructure" method="POST" enctype="multipart/form-data">
                     <div class="form-group">
                         <label for="inputNameInfra">Name of the Infrastructure</label>
-                        <input type="text" class="form-control" id="inputNameInfra" placeholder="Enter Name" onchange="verifyInfraName(this)">
+                        <input type="text" name="location" class="form-control" id="inputNameInfra" placeholder="Enter Name" onchange="verifyInfraName(this)">
                         <small class="form-text text-muted">Make sure that it's not an existing one. Otherwise, we will replace it.</small>
                     </div>
                     <div class="form-group" id="overrideInfra" style="display: none;">
@@ -75,16 +75,16 @@
                     </div>
                     <div class="form-group">
                         <label for="inputDescriptionInfra">Description of the Infrastructure</label>
-                        <textarea class="form-control" id="inputDescriptionInfra" rows="2"></textarea>
+                        <textarea class="form-control" id="inputDescriptionInfra" name="description" rows="2"></textarea>
                     </div>
                     <div class="form-group">
                         <label for="inputGraph">Graph</label>
-                        <input type="file" class="form-control-file" id="inputGraph" aria-describedby="inputGraphHelp" >
+                        <input type="file" name="graph" class="form-control-file" id="inputGraph" aria-describedby="inputGraphHelp" >
                         <small id="inputGraphHelp" class="form-text text-muted">This file is the design of the different zones in the infrastructure.</small>
                     </div>
                     <div class="form-group">
                         <label for="inputWall">Walls</label>
-                        <input type="file" class="form-control-file" id="inputWall" aria-describedby="inputWallhHelp">
+                        <input type="file" name="walls" class="form-control-file" id="inputWall" aria-describedby="inputWallhHelp">
                         <small id="inputWallhHelp" class="form-text text-muted">This file is the design of the different walls in the infrastructure.</small>
                     </div>
                     <button type="submit" class="btn btn-primary">Submit</button>
@@ -106,10 +106,10 @@
         <div id="detailsNewTraj" class="collapse" aria-labelledby="newTraj" data-parent="#accordion">
             <div class="card-body container">
                 <br>
-                <form>
+                <form action="http://transporsrv2.epfl.ch/api/uploadtrajectory" method="POST" enctype="multipart/form-data" >
                     <div class="form-group">
                         <label for="selectInfra">Select Infrastructure</label>
-                        <select class="form-control" id="selectInfra" onchange="updateDescriptionInfraAndLoadTraj(this)">
+                        <select class="form-control" name="infra" id="selectInfra" onchange="updateDescriptionInfraAndLoadTraj(this)">
                         </select>
                     </div>
                     <div class="form-group" id="descInfra" style="display: none;">
@@ -118,7 +118,7 @@
                     </div>
                     <div class="form-group">
                         <label for="inputNameTraj">Name of the Trajectory data</label>
-                        <input type="text" class="form-control" id="inputNameTraj" placeholder="Enter Name" onchange="verifyTrajName(this)">
+                        <input type="text" name="name" class="form-control" id="inputNameTraj" placeholder="Enter Name" onchange="verifyTrajName(this)">
                         <small class="form-text text-muted">Make sure that it's not an existing one. Otherwise, we will replace it.</small>
                     </div>
                     <div class="form-group" id="overrideTraj" style="display: none;">
@@ -128,11 +128,11 @@
                     </div>
                     <div class="form-group">
                         <label for="inputDescriptionTraj">Description of the Trajectory data</label>
-                        <textarea class="form-control" id="inputDescriptionTraj" rows="2"></textarea>
+                        <textarea class="form-control" name="description" id="inputDescriptionTraj" rows="2"></textarea>
                     </div>
                     <div class="form-group">
                         <label for="inputTraj">Trajectories</label>
-                        <input type="file" class="form-control-file" id="inputTraj" aria-describedby="inputTrajHelp">
+                        <input type="file" class="form-control-file" id="inputTraj" aria-describedby="inputTrajHelp", name="traj">
                         <small id="inputTrajHelp" class="form-text text-muted">Simulation file of all the trajectories.</small>
                     </div>
                     <button type="submit" class="btn btn-primary">Submit</button>

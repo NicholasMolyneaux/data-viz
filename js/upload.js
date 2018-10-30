@@ -1,4 +1,6 @@
-const baseURL = 'http://transporsrv2.epfl.ch/db/';
+const baseURL = 'http://transporsrv2.epfl.ch/api/';
+//const baseURL = 'http://localhost:9000/';
+
 
 let infrastructures = null;
 let overrideInfra = false;
@@ -16,7 +18,7 @@ $(document).ready(function() {
 
 // Load the infrastructure by doing an ajax call
 function loadInfra() {
-    const url = baseURL + 'infrastructures';
+    const url = baseURL + 'infralist';
 
 
     $.ajax({
@@ -40,7 +42,7 @@ function addInfra() {
     console.log(infrastructures);
 
     // DEBUG
-    infrastructures = [{'name': 'infra1', 'description': 'asdasdasd'}, {'name': 'infra2', 'description': '123123'}, {'name': 'infra3', 'description': 'Lorem Ipsum'}];
+    //infrastructures = [{'name': 'infra1', 'description': 'asdasdasd'}, {'name': 'infra2', 'description': '123123'}, {'name': 'infra3', 'description': 'Lorem Ipsum'}];
 
     infrastructures.forEach(infra => {
         $('#selectInfra').append($('<option>', {
@@ -69,7 +71,7 @@ function updateDescriptionInfraAndLoadTraj(e) {
 
 // Load the infrastructure by doing an ajax call
 function loadTraj(infra) {
-    const url = baseURL + 'infrastructures';
+    const url = baseURL + 'trajlist/' + infra['name'];
 
     // We will have to take into account the infra.
 
@@ -80,8 +82,9 @@ function loadTraj(infra) {
         crossDomain : true,
     })
         .done(function( data ) {
+            trajectories = data;
             // DEBUG
-            trajectories = [{'name': 'traj1-'+infra.name, 'description': 'asdasdasd'}, {'name': 'traj2-'+infra.name, 'description': '123123'}, {'name': 'traj3-'+infra.name, 'description': 'Lorem Ipsum'}];
+            //trajectories = [{'name': 'traj1-'+infra.name, 'description': 'asdasdasd'}, {'name': 'traj2-'+infra.name, 'description': '123123'}, {'name': 'traj3-'+infra.name, 'description': 'Lorem Ipsum'}];
             console.log(trajectories);
         })
         .fail( function(xhr, textStatus, errorThrown) {
