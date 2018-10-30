@@ -21,96 +21,99 @@
 
 <body>
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <a id="logo-nav" class="navbar-brand" href="./index.html">PedeViz</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
+<div class="allExceptFooter">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a id="logo-nav" class="navbar-brand" href="./index.html">PedeViz</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
-                <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="./upload.html">Upload</a>
-            </li>
-        </ul>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="./upload.html">Upload</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main jumbotron for a primary marketing message or call to action -->
+    <div class="jumbotron">
+        <div class="container">
+            <h1 id="title" class="display-3">PedeViz</h1>
+            <br><br>
+            <p class="text-justify">Lorem Ipsum [...] Explicative text goes here! Donec id elit non mi porta gravida at eget
+                metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit
+                amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.</>
+            <p><a id="learnMoreButton" class="btn btn-primary btn-lg" href="#" role="button">Learn more &raquo;</a></p>
+        </div>
     </div>
-</nav>
 
-<!-- Main jumbotron for a primary marketing message or call to action -->
-<div class="jumbotron">
     <div class="container">
-        <h1 id="title" class="display-3">PedeViz</h1>
-        <br><br>
-        <p class="text-justify">Lorem Ipsum [...] Explicative text goes here! Donec id elit non mi porta gravida at eget
-            metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit
-            amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.</>
-        <p><a id="learnMoreButton" class="btn btn-primary btn-lg" href="#" role="button">Learn more &raquo;</a></p>
-    </div>
-</div>
-
-<div class="container">
-    <div class="card border-light" id="loadCard">
-        <div class="card-header">
-            Load the data
-        </div>
-        <div class="row">
-            <div class="col-6">
-                <div class="card border-dark">
-                    <div class="card-body container">
-                        <h6 class="card-title">Choose an Infrastructure</h6>
-                        <form>
-                            <div class="form-group">
-                                <select class="custom-select" id="infraData" onchange="updateDescriptionInfra(this)">
-                                </select>
-                            </div>
-                            <div class="form-group" id="descInfra" style="display: none;">
-                                <span>Description:</span><br>
-                                <span class="text-muted" id="textDescInfra"></span>
-                            </div>
-                        </form>
-                        <button class="btn btn-primary" onclick="getTraj()">Choose</button>
+        <div class="card border-light" id="loadCard">
+            <div class="card-header">
+                Load the data
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <div class="card border-dark">
+                        <div class="card-body container">
+                            <h6 class="card-title">Choose an Infrastructure</h6>
+                            <form>
+                                <div class="form-group">
+                                    <select class="custom-select" id="infraData" onchange="updateDescriptionInfra(this)">
+                                    </select>
+                                </div>
+                                <div class="form-group" id="descInfra" style="display: none;">
+                                    <span>Description:</span><br>
+                                    <span class="text-muted" id="textDescInfra"></span>
+                                </div>
+                            </form>
+                            <button class="btn btn-primary" onclick="getTraj()">Choose</button>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-6">
-                <div class="card border-dark">
-                    <div class="card-body container">
-                        <h6 class="card-title">Choose a Trajectory data</h6>
-                        <form>
-                            <div class="form-group">
-                                <select class="form-control" id="trajData" onchange="updateDescriptionTraj(this)">
-                                    <option selected disabled>Select an Infrastructure first.</option>
-                                </select>
-                            </div>
-                            <div class="form-group" id="descTraj" style="display: none;">
-                                <span>Description:</span><br>
-                                <span class="text-muted" id="textDescTraj"></span>
-                            </div>
-                        </form>
-                        <button class="btn btn-primary" onclick="dataSelected()">Choose</button>
+                <div class="col-6">
+                    <div class="card border-dark">
+                        <div class="card-body container">
+                            <h6 class="card-title">Choose a Trajectory data</h6>
+                            <form>
+                                <div class="form-group">
+                                    <select class="form-control" id="trajData" onchange="updateDescriptionTraj(this)">
+                                        <option selected disabled>Select an Infrastructure first.</option>
+                                    </select>
+                                </div>
+                                <div class="form-group" id="descTraj" style="display: none;">
+                                    <span>Description:</span><br>
+                                    <span class="text-muted" id="textDescTraj"></span>
+                                </div>
+                            </form>
+                            <button class="btn btn-primary" onclick="dataSelected()">Choose</button>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
-<hr>
+    <hr>
 
-<div class="container-fluid preFooter" id="main">
-    <div class="row" id="mainViz">
-        <div class="col-xl-2 col-lg-3 order-lg-first order-last debug1">
-        </div>
-        <div class="col-xl-10 col-lg-9 debug2">
+    <div class="container" id="main">
+        <div class="row" id="mainViz">
+            <div class="col-xl-2 col-lg-3 order-lg-first order-last debug1">
+            </div>
+            <div class="col-xl-10 col-lg-9 debug2">
+            </div>
         </div>
     </div>
+
 </div>
 
-<footer class="footerBottom">
+<footer class="footer">
     <div class="container">
         <span class="text-muted">Footer!</span>
     </div>

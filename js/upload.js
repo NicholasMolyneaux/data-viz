@@ -1,4 +1,4 @@
-const baseURL = 'http://transporsrv2.epfl.ch/db/';
+const baseURL = 'http://transporsrv2.epfl.ch/api/db/';
 
 let infrastructures = null;
 let overrideInfra = false;
