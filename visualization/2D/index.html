@@ -5,22 +5,28 @@
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
     <meta name="description" content="Intro to d3.js">
 
-    <title>Intro - Semin Kwak</title>
-
-    <h1>Pedviz test (semin)</h1>
-    <!-- SVG container -->
-
-
     <!-- Load d3.js -->
     <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script src="https://d3js.org/d3-voronoi.v1.min.js"></script>
+    <script src="https://d3js.org/d3-polygon.v1.min.js"></script>
 
     <!-- CSS -->
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+<title>Intro - Semin Kwak</title>
+
+<h1>Pedviz test (semin)</h1>
+<input type = "checkbox" id = "voronoi_checkbox"> Voronoi
+<input type = "checkbox" id = "zone_checkbox"> Zone
+<input type = "checkbox" id = "control_checkbox"> Control area
+<input type = "checkbox" id = "flow_checkbox"> Flow gate <br>
+<button id = "voronoi_area"> Make voronoi area </button> <br>
+
+<!-- SVG container -->
+<svg class = "container" width = 500 height = 500></svg>
 
 <!-- Execute main script -->
-<script type="text/javascript" src="functions.js"></script>
-<script type="text/javascript" src="main.js"></script>
+<script type="module" src="main.js"></script>
 </body>
 </html>
