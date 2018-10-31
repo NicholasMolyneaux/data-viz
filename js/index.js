@@ -10,10 +10,14 @@ let selectedTraj = null;
 
 let fullScreenBool = false;
 
+let fancyViz = false;
+
 $(document).ready(function() {
 
     // Load the infrastructures
     loadInfra();
+
+    viz2D();
 
     $("#fullscreen").on('click', function() {
         if(IsFullScreenCurrently())
@@ -21,6 +25,17 @@ $(document).ready(function() {
         else
             GoInFullscreen($("#viz").get(0));
     });
+
+    /*$("#threeDButton").on('click', function() {
+        if(fancyViz)
+        {
+            fancyViz = false;
+            viz2D();
+        } else {
+            fancyViz = true;
+            viz3D();
+        }
+    });*/
 
 });
 
