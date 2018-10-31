@@ -1,23 +1,27 @@
-import * as myModule from './functions.js';
-let svg = d3.select("svg");
-
-svg
+let svg = d3.select("#viz")
+    .append("svg")
+    .attr("class", "container")
+    .attr("id", "svgCont")
+    .attr("width", "500")
+    .attr("height", "500")
     .attr("viewBox", "4 0 27 27")
     .call(d3.zoom().on("zoom", () => svg.attr("transform", d3.event.transform)))
     .append("g");
 
 // check box behavior
-document.querySelector("#zone_checkbox").addEventListener('click', myModule.checkZone);
-document.querySelector("#control_checkbox").addEventListener('click', myModule.checkControl);
-document.querySelector("#flow_checkbox").addEventListener('click', myModule.checkFlow);
+document.querySelector("#zone_checkbox").addEventListener('click', checkZone);
+document.querySelector("#control_checkbox").addEventListener('click', checkControl);
+document.querySelector("#flow_checkbox").addEventListener('click', checkFlow);
 
 // voronoi button
-document.querySelector("#voronoi_area").addEventListener('click', myModule.setVoronoiArea);
+document.querySelector("#voronoi_area").addEventListener('click', setVoronoiArea);
 
 // Read json data and draw frameworks (walls and zones)
-myModule.drawWallsByPath("../../data/small/walls.json");
-myModule.drawZones("../../data/small/graph.json");
+drawWallsByPath("../../data/small/walls.json");
+drawZones("../../data/small/graph.json");
+
+drawVoronoiArea();
 
 //Pedestrians
-myModule.runAnimation("../../data/small/pedestrians_clean.json");
+runAnimation("../../data/small/pedestrians_clean.json");
 

@@ -1,5 +1,3 @@
-import * as drawVoronoiArea from './drawings.js';
-
 async function drawWallsByPath(json) {
     let line = d3.line()
         .x( d => d.x)
@@ -162,7 +160,5 @@ function checkFlow() {
 }
 
 function setVoronoiArea() {
-    drawVoronoiArea.clearCanvas();
+    clearCanvas();
 }
-
-export {drawWallsByPath, drawZones, runAnimation, checkZone, checkControl, checkFlow, setVoronoiArea};
