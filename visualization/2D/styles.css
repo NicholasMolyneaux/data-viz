@@ -9,10 +9,17 @@ body {
     font-weight: bolder;
 }
 
+.voronoi-poly {
+    stroke-width: 0.1;
+    stroke: black;
+    fill: none;
+
+}
 .the-walls {
     vector-effect: non-scaling-stroke;
     stroke: black;
     stroke-width: 2;
+    fill: none;
 }
 
 .the-zones {
@@ -20,6 +27,7 @@ body {
     stroke: gray;
     stroke-width: 2;
     fill: none;
+    opacity: 0;
 }
 
 .controlled-areas {
@@ -27,24 +35,32 @@ body {
     stroke: red;
     stroke-width: 1;
     fill: none;
+    opacity: 0;
 }
 
 .flow-gates {
     vector-effect: non-scaling-stroke;
     stroke: blue;
     stroke-width: 1;
-}
-
-.ped-trajectory {
-    vector-effect: non-scaling-stroke;
-    stroke: gray;
-    stroke-width: 2;
-    fill: none;
-    opacity: 0.1;
+    opacity: 0;
 }
 
 .ped-individual {
     vector-effect: non-scaling-stroke;
     r: 0.15;
     fill: red;
+}
+
+.ped-trajectory {
+    vector-effect: non-scaling-stroke;
+    stroke: gray;
+    stroke-width: 1;
+    fill: none;
+}
+
+.voronoi-area {
+    vector-effect: non-scaling-stroke;
+    stroke: blue;
+    stroke-width: 2;
+    fill: none;
 }
