@@ -2,6 +2,8 @@ function drawGraph(id) {
 
     setBaseOptions(id);
 
+    console.log(graphOptions);
+
     if (graphOptions[id].type == 'histogram') {
         hist(id, 'start');
     }

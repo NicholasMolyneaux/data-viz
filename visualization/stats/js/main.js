@@ -38,8 +38,8 @@ function main(error, trajectories, OD, histograms) {
     update_info();
 
     // DEBUG
-    //graphOptions['graph0'] = {'data': histData['tt'], 'type': 'histogram'};
-    //drawGraph('graph0');
+    graphOptions['graph0'] = {'data': histData['tt'], 'type': 'histogram', 'xAxis': 'Travel Time [s]'};
+    drawGraph('graph0');
 }
 
 function fetchDataAndDraw() {
