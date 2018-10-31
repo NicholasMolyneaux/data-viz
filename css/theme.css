@@ -1,9 +1,6 @@
 /* General CSS */
 
 body {
-    #padding-top: 3.8rem;
-
-    #font-family: 'Ubuntu', sans-serif;
     font-family: 'Roboto', sans-serif;
     height: 100%;
 }
@@ -116,6 +113,28 @@ h1 {
 
 #fullscreen:hover {
     transform: scale(1.2);
+}
+
+.opt-graphs {
+    box-sizing: content-box;
+    padding: 10px;
+    border: 2px solid black;
+    background-color: #cccccc;
+}
+
+.optFS {
+    box-sizing: content-box;
+    padding: 10px;
+    border: 2px solid black;
+    background-color: #cccccc;
+    width: 60%;
+}
+
+.col-centered{
+    float: none;
+    margin: 0 auto;
+    position: relative;
+    bottom: 100px;
 }
 
 #threeD {

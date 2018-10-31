@@ -219,7 +219,7 @@ function GoOutFullscreen() {
 
 $(document).on('fullscreenchange webkitfullscreenchange mozfullscreenchange MSFullscreenChange', function() {
     if(IsFullScreenCurrently()) {
-        document.getElementById("fullscreen").style.display = 'none';
+        document.getElementById("fullscreen").innerHTML = "<i class=\"fas fa-compress fa-2x\"></i>";
 
         const viz = document.getElementById("viz");
 
@@ -228,18 +228,40 @@ $(document).on('fullscreenchange webkitfullscreenchange mozfullscreenchange MSFu
         viz.style.backgroundColor = "white";
         viz.style.padding = "0";
 
+
         const svgCont = document.getElementById("svgCont");
         svgCont.style.padding = "0";
         svgCont.style.maxWidth = "100%";
         svgCont.style.height = "100%";
+        svgCont.setAttribute("viewBox", "2.5 0 30 30")
+
+        const row = document.createElement("div");
+        row.setAttribute("class", "row");
+
+        const div = document.createElement("div");
+        div.setAttribute("class", "optFS rounded col-lg-10 col-centered");
+        div.setAttribute("id", "optFullScreen");
+        div.innerHTML = "Hello, I'm the future options for the Full Screen! =)"//document.getElementById("options").innerHTML;
+
+        row.appendChild(div);
+        viz.appendChild(row);
+
 
     }
     else {
-        document.getElementById("fullscreen").style.display = '';
+        document.getElementById("fullscreen").innerHTML = "<i class=\"fas fa-expand fa-lg\"></i>";
 
         $("#viz").removeAttr("style");
 
         $("#svgCont").removeAttr("style");
+
+        const svgCont = document.getElementById("svgCont");
+        svgCont.setAttribute("viewBox", "4 0 27 27")
+
+        let elem = document.getElementById("optFullScreen");
+        elem.parentElement.removeChild(elem);
+
+
 
     }
 });
