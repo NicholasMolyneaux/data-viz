@@ -24,6 +24,7 @@ svg.append("mask")
     .append("polygon")
     .attr("points", voronoi_area.map(p => p.join(",")).join(" "))
     .attr("fill", "white");
+
 svg.append("polygon")
     .attr("class", "voronoi-area")
     .attr("points", voronoi_area.map(p => p.join(",")).join(" "));
