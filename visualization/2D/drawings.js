@@ -16,13 +16,13 @@ function drawVoronoiArea() {
         [20.038000106811523, 14.48381233215332],
         [19.983999252319336, 12.21581268310546]];
 
-    svg.append("mask")
+    svg.select("g").append("mask")
         .attr("id", "voronoi-mask")
         .append("polygon")
         .attr("points", voronoi_area.map(p => p.join(",")).join(" "))
         .attr("fill", "white");
 
-    svg.append("polygon")
+    svg.select("g").append("polygon")
         .attr("class", "voronoi-area")
         .attr("points", voronoi_area.map(p => p.join(",")).join(" "));
 }

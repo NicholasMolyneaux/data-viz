@@ -1,11 +1,11 @@
 let svg = d3.select("#viz")
     .append("svg")
+    .call(d3.zoom().on("zoom", () => svg.attr("transform", d3.event.transform)))
     .attr("class", "container")
     .attr("id", "svgCont")
     .attr("width", "500")
     .attr("height", "500")
     .attr("viewBox", "4 0 27 27")
-    .call(d3.zoom().on("zoom", () => svg.attr("transform", d3.event.transform)))
     .append("g");
 
 // check box behavior
