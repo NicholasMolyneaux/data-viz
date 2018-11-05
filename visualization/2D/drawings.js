@@ -1,36 +1,27 @@
-function drawVoronoiArea() {
+let svg = d3.select("#viz")
+    .append("svg")
+    .call(d3.zoom().on("zoom", () => svg.attr("transform", d3.event.transform)))
+    .attr("class", "container")
+    .attr("id", "svgCont")
+    .attr("width", "500")
+    .attr("height", "500")
+    .attr("viewBox", "4 0 27 27");
 
-    let svg = d3.select("#viz").select("svg");
+let structure_layer = svg.append("g");
+let voronoi_layer = svg.append("g");
+let pedes_layer = svg.append("g");
 
-    svg.on("mousedown", function() {
-        console.log("clicked!");
-        console.log(`x coordinate: ${d3.mouse(this)[0]}, y coordinate: ${d3.mouse(this)[1]}`);
-    });
+// Read json data and draw frameworks (walls and zones)
+drawWallsByPath("../../data/small/walls.json", structure_layer);
+drawZones("../../data/small/graph.json", structure_layer);
 
-// HARD CODING
+drawVoronoiArea(voronoi_layer);
 
-    let voronoi_area = [[17.33799934387207, 11.62181282043457],
-        [14.961999893188477, 12.377812385559082],
-        [14.961999893188477, 14.375812530517578],
-        [17.607999801635742, 16.265811920166016],
-        [20.038000106811523, 14.48381233215332],
-        [19.983999252319336, 12.21581268310546]];
+//Pedestrians
+runAnimation("../../data/small/pedestrians_clean.json", voronoi_layer, pedes_layer);
 
-    svg.select("g").append("mask")
-        .attr("id", "voronoi-mask")
-        .append("polygon")
-        .attr("points", voronoi_area.map(p => p.join(",")).join(" "))
-        .attr("fill", "white");
 
-    svg.select("g").append("polygon")
-        .attr("class", "voronoi-area")
-        .attr("points", voronoi_area.map(p => p.join(",")).join(" "));
-}
 
-function clearCanvas() {
-    console.log("clearing voronoi_area");
-    d3.select('voronoi_area').remove();
-}
 
 
 //export {clearCanvas};

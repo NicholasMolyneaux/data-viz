@@ -1,28 +1,30 @@
-async function drawWallsByPath(json) {
+let line = d3.line()
+    .x(d => d[0])
+    .y(d => d[1]);
+
+async function drawWallsByPath(json, svg) {
     let line = d3.line()
         .x( d => d.x)
         .y( d => d.y)
         .curve(d3.curveMonotoneX);
     const wall = await d3.json(json);
     // Draw walls
-    let group_walls = d3.select("g");
     let data = Array.prototype.concat.apply([], wall["walls"].map( (w)  =>
         [{'x': w.x1, 'y': w.y1}, {'x': w.x2, 'y': w.y2}]
     ));
 
-    group_walls.append("path")
+    svg.append("path")
         .attr("class", "the-walls")
         .attr("d", line(data));
     d3.select("#wallMask").append("path")
         .attr("d", line(data))
         .attr("fill", "white");
 }
-async function drawWalls(json) {
+async function drawWalls(json, svg) {
     const wall = await d3.json(json);
     // Draw walls
-    let group_walls = d3.select("g");
     wall["walls"].map( (w)  => {
-        group_walls.append("line")
+        svg.append("line")
             .attr("class", "the-walls")
             .attr("x1", w["x1"])
             .attr("y1", w["y1"])
@@ -30,11 +32,10 @@ async function drawWalls(json) {
             .attr("y2", w["y2"]);
     }) ;
 }
-async function drawZones(json) {
+async function drawZones(json, svg) {
     const graph = await d3.json(json);
-    let group_zones = d3.select("g");
     graph["nodes"].map( (g) => {
-        group_zones.append("rect")
+        svg.append("rect")
             .attr("class", "the-zones")
             .attr("x", g["x1"])
             .attr("y", g["y1"])
@@ -43,9 +44,8 @@ async function drawZones(json) {
     });
 
     // Draw controlled area
-    let controlled_areas = d3.select("g");
     graph["controlled_areas"].map( (c) => {
-        controlled_areas.append("rect")
+        svg.append("rect")
             .attr("class", "controlled-areas")
             .attr("x", c["x1"] )
             .attr("y", c["y1"] )
@@ -54,9 +54,8 @@ async function drawZones(json) {
     } );
 
     // Draw flow gate?
-    let flow_gates = d3.select("g");
     graph["flow_gates"].map( f => {
-        flow_gates.append("line")
+        svg.append("line")
             .attr("class", "flow-gates")
             .attr("x1", f["start_pos_x"] )
             .attr("y1", f["start_pos_y"] )
@@ -64,10 +63,9 @@ async function drawZones(json) {
             .attr("y2", f["end_pos_y"] );
     } );
 }
-function updatePosition(time_series_data) {
+function updatePosition(time_series_data, svg) {
     // Update circles (pedestrians)
-    let svg_g = d3.select("g");
-    let pedes = svg_g.selectAll(".ped-individual").data(time_series_data, d => d.id);
+    let pedes = svg.selectAll(".ped-individual").data(time_series_data, d => d.id);
     pedes.enter().append("circle")
         .attr("class", "ped-individual")
         .merge(pedes)
@@ -90,53 +88,186 @@ function updatePosition(time_series_data) {
     //     });
     // pedes_path.exit().remove();
 }
-let line = d3.line()
-    .x(d => d[0])
-    .y(d => d[1]);
 
-function drawVoronoi(data) {
+//TODO: map to true rgb. gray scale now.
+function drawVoronoi(data, svg) {
     let vertices = data.map( d => [d.x, d.y]);
-    let svg = d3.select("svg");
+    let canvas = d3.select("svg");
     let v = d3.voronoi()
-        .extent([[Number(svg.attr("x")), Number(svg.attr("y"))], [
-            Number(svg.attr("width")) + Number(svg.attr("x")), Number(svg.attr("height")) + Number(svg.attr("y"))]]);
-    let voronois = d3.select("g").selectAll(".voronoi-poly").data(v.polygons(filterPointInPolygon(vertices, ".voronoi-area")));
+        .extent([[Number(canvas.attr("x")), Number(canvas.attr("y"))], [
+            Number(canvas.attr("width")) + Number(canvas.attr("x")), Number(canvas.attr("height")) + Number(canvas.attr("y"))]]);
+    let voronoi_polygons = v.polygons(filterPointInPolygon(vertices, ".voronoi-area"));
+    let areas = voronoi_polygons.map(d => d3.polygonArea(d));
+    let tot_area = Number(canvas.attr("height"))*Number(canvas.attr("width"));
+    let normalized_areas = areas.map(d => d/(tot_area)*255);
+    let voronois = svg.selectAll(".voronoi-poly").data(voronoi_polygons);
     voronois.enter().append("path")
         .attr("class", "voronoi-poly")
         .attr("d", line)
+        .style("fill", (d,i)=>`rgb(${normalized_areas[i]},${normalized_areas[i]},${normalized_areas[i]})`)
         .attr("mask", "url(#voronoi-mask)");
 }
-function deleteVoronoi() {
-    d3.select("g").selectAll(".voronoi-poly").remove();
-}
+function drawVoronoiArea(svg) {
+//
+//     var dragging = false, drawing = false, startPoint;
+//     var svg = d3.select('body').append('svg')
+//         .attr('height', 1000)
+//         .attr('width', 1000);
+//     var points = [], g;
+// // behaviors
+//     var dragger = d3.behavior.drag()
+//         .on('drag', handleDrag)
+//         .on('dragend', function(d){
+//             dragging = false;
+//         });
+//     svg.on('mouseup', function(){
+//         if(dragging) return;
+//         drawing = true;
+//         startPoint = [d3.mouse(this)[0], d3.mouse(this)[1]];
+//         if(svg.select('g.drawPoly').empty()) g = svg.append('g').attr('class', 'drawPoly');
+//         if(d3.event.target.hasAttribute('is-handle')) {
+//             closePolygon();
+//             return;
+//         };
+//         points.push(d3.mouse(this));
+//         g.select('polyline').remove();
+//         var polyline = g.append('polyline').attr('points', points)
+//             .style('fill', 'none')
+//             .attr('stroke', '#000');
+//         for(var i = 0; i < points.length; i++) {
+//             g.append('circle')
+//                 .attr('cx', points[i][0])
+//                 .attr('cy', points[i][1])
+//                 .attr('r', 4)
+//                 .attr('fill', 'yellow')
+//                 .attr('stroke', '#000')
+//                 .attr('is-handle', 'true')
+//                 .style({cursor: 'pointer'});
+//         }
+//     });
+//     function closePolygon() {
+//         svg.select('g.drawPoly').remove();
+//         var g = svg.append('g');
+//         g.append('polygon')
+//             .attr('points', points)
+//             .style('fill', getRandomColor());
+//         for(var i = 0; i < points.length; i++) {
+//             var circle = g.selectAll('circles')
+//                 .data([points[i]])
+//                 .enter()
+//                 .append('circle')
+//                 .attr('cx', points[i][0])
+//                 .attr('cy', points[i][1])
+//                 .attr('r', 4)
+//                 .attr('fill', '#FDBC07')
+//                 .attr('stroke', '#000')
+//                 .attr('is-handle', 'true')
+//                 .style({cursor: 'move'})
+//                 .call(dragger);
+//         }
+//         points.splice(0);
+//         drawing = false;
+//     }
+//     svg.on('mousemove', function() {
+//         if(!drawing) return;
+//         var g = d3.select('g.drawPoly');
+//         g.select('line').remove();
+//         var line = g.append('line')
+//             .attr('x1', startPoint[0])
+//             .attr('y1', startPoint[1])
+//             .attr('x2', d3.mouse(this)[0] + 2)
+//             .attr('y2', d3.mouse(this)[1])
+//             .attr('stroke', '#53DBF3')
+//             .attr('stroke-width', 1);
+//     })
+//     function handleDrag() {
+//         if(drawing) return;
+//         var dragCircle = d3.select(this), newPoints = [], circle;
+//         dragging = true;
+//         var poly = d3.select(this.parentNode).select('polygon');
+//         var circles = d3.select(this.parentNode).selectAll('circle');
+//         dragCircle
+//             .attr('cx', d3.event.x)
+//             .attr('cy', d3.event.y);
+//         for (var i = 0; i < circles[0].length; i++) {
+//             circle = d3.select(circles[0][i]);
+//             newPoints.push([circle.attr('cx'), circle.attr('cy')]);
+//         }
+//         poly.attr('points', newPoints);
+//     }
+//     function getRandomColor() {
+//         var letters = '0123456789ABCDEF'.split('');
+//         var color = '#';
+//         for (var i = 0; i < 6; i++) {
+//             color += letters[Math.floor(Math.random() * 16)];
+//         }
+//         return color;
+//     }
+//
+//     //
+//     svg.on("mousedown", function() {
+//         console.log("clicked!");
+//         console.log(`x coordinate: ${d3.mouse(this)[0]}, y coordinate: ${d3.mouse(this)[1]}`);
+//     });
 
+// HARD CODING
+
+    let voronoi_area = [[17.33799934387207, 11.62181282043457],
+        [14.961999893188477, 12.377812385559082],
+        [14.961999893188477, 14.375812530517578],
+        [17.607999801635742, 16.265811920166016],
+        [20.038000106811523, 14.48381233215332],
+        [19.983999252319336, 12.21581268310546]];
+
+    svg.append("mask")
+        .attr("id", "voronoi-mask")
+        .append("polygon")
+        .attr("points", voronoi_area.map(p => p.join(",")).join(" "))
+        .attr("fill", "white");
+
+    svg.append("polygon")
+        .attr("class", "voronoi-area")
+        .attr("points", voronoi_area.map(p => p.join(",")).join(" "));
+}
+function clearCanvas() {
+    console.log("clearing voronoi_area");
+    d3.select('voronoi_area').remove();
+}
+function deleteVoronoi(svg) {
+    svg.selectAll(".voronoi-poly").remove();
+}
 function filterPointInPolygon(data, polygon_id) {
     let polygon = d3.select(polygon_id);
     let polygon_array = polygon.attr("points").split(" ").map(s => s.split(",").map(n => Number(n)));
     return data.filter(d => d3.polygonContains(polygon_array, d));
 }
-function runAnimation(json) {
+function runAnimation(json, voronoi_layer, pedes_layer) {
     d3.json(json)
         .then(data => {
             data.map( each_time => {
                 d3.timeout( () => {
-                    updatePosition(each_time.data);
-                    checkVoronoi(each_time.data);
+                    checkVoronoi(each_time.data, voronoi_layer);
+                    updatePosition(each_time.data, pedes_layer);
                 }, each_time.time * 1000);
             })
         });
 }
-
-function checkVoronoi(data) {
+function checkVoronoi(data, svg) {
     if (d3.select("#voronoi_checkbox").property("checked")) {
-        deleteVoronoi();
-        drawVoronoi(data);
+        deleteVoronoi(svg);
+        drawVoronoi(data, svg);
     } else {
-        deleteVoronoi();
+        deleteVoronoi(svg);
     }
 }
-
 //checkboxes
+function toggleZone(checkbox, target) {
+    if (d3.select(checkbox).property("checked")) {
+        d3.selectAll(target).style("opacity", 1);
+    } else {
+        d3.selectAll(target).style("opacity", 0);
+    }
+}
 function checkZone() {
     if (d3.select("#zone_checkbox").property("checked")) {
         d3.selectAll(".the-zones").style("opacity", 1);
@@ -158,7 +289,6 @@ function checkFlow() {
         d3.selectAll(".flow-gates").style("opacity", 0);
     }
 }
-
 function setVoronoiArea() {
     clearCanvas();
 }
