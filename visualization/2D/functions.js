@@ -92,20 +92,36 @@ function updatePosition(time_series_data, svg) {
 //TODO: map to true rgb. gray scale now.
 function drawVoronoi(data, svg) {
     let vertices = data.map( d => [d.x, d.y]);
-    let canvas = d3.select("svg");
+    let rect = rectangleContainPolygon(".voronoi-area");
+    let rect_area = (rect[1][0]-rect[0][0])*(rect[1][1]-rect[0][1]);
     let v = d3.voronoi()
-        .extent([[Number(canvas.attr("x")), Number(canvas.attr("y"))], [
-            Number(canvas.attr("width")) + Number(canvas.attr("x")), Number(canvas.attr("height")) + Number(canvas.attr("y"))]]);
+        .extent(rect);
     let voronoi_polygons = v.polygons(filterPointInPolygon(vertices, ".voronoi-area"));
     let areas = voronoi_polygons.map(d => d3.polygonArea(d));
-    let tot_area = Number(canvas.attr("height"))*Number(canvas.attr("width"));
-    let normalized_areas = areas.map(d => d/(tot_area)*255);
+    let normalized_areas = areas.map(d => d/rect_area);
     let voronois = svg.selectAll(".voronoi-poly").data(voronoi_polygons);
     voronois.enter().append("path")
         .attr("class", "voronoi-poly")
         .attr("d", line)
-        .style("fill", (d,i)=>`rgb(${normalized_areas[i]},${normalized_areas[i]},${normalized_areas[i]})`)
+        .style("fill", (d,i)=> pedQosColor(normalized_areas[i]))
         .attr("mask", "url(#voronoi-mask)");
+}
+
+function pedQosColor(p) {
+    let color;
+    if (p >= 0.7788)
+        color = "rgb(0,0,255)";
+    else if (p >= 0.5577 && p < 0.7788)
+        color = "rgb(0,255,255)";
+    else if (p >= 0.3341 && p < 0.5577)
+        color = "rgb(0,255,0)";
+    else if (p >= 0.2236 && p < 0.3341)
+        color = "rgb(255,255,0)";
+    else if (p >= 0.1106 && p < 0.2236)
+        color = "rgb(255,128,0)";
+    else
+        color = "rgb(255,0,0)";
+    return color;
 }
 function drawVoronoiArea(svg) {
 //
@@ -237,10 +253,22 @@ function deleteVoronoi(svg) {
     svg.selectAll(".voronoi-poly").remove();
 }
 function filterPointInPolygon(data, polygon_id) {
-    let polygon = d3.select(polygon_id);
-    let polygon_array = polygon.attr("points").split(" ").map(s => s.split(",").map(n => Number(n)));
+    let polygon_array = polygonIDToArray(polygon_id);
     return data.filter(d => d3.polygonContains(polygon_array, d));
 }
+
+function polygonIDToArray(polygon_id) {
+    let polygon = d3.select(polygon_id);
+    let polygon_array = polygon.attr("points").split(" ").map(s => s.split(",").map(n => Number(n)));
+    return polygon_array;
+}
+function rectangleContainPolygon(polygon_id) {
+    let polygon_array = polygonIDToArray(polygon_id);
+    let x_coordinates = polygon_array.map(d => d[0]);
+    let y_coordinates = polygon_array.map(d => d[1]);
+    return [[d3.min(x_coordinates), d3.min(y_coordinates)], [d3.max(x_coordinates), d3.max(y_coordinates)]];
+}
+
 function runAnimation(json, voronoi_layer, pedes_layer) {
     d3.json(json)
         .then(data => {
