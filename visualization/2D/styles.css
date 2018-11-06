@@ -60,7 +60,7 @@ body {
 
 .voronoi-area {
     vector-effect: non-scaling-stroke;
-    stroke: blue;
+    stroke: black;
     stroke-width: 2;
     fill: none;
 }

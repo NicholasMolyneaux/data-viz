@@ -7,18 +7,23 @@ let svg = d3.select("#viz")
     .attr("height", "500")
     .attr("viewBox", "4 0 27 27");
 
-let structure_layer = svg.append("g");
-let voronoi_layer = svg.append("g");
-let pedes_layer = svg.append("g");
+let structure_layer = svg.append("g")
+    .attr("class", "structure_layer");
+let voronoi_poly_layer = svg.append("g")
+    .attr("class", "voronoi_poly_layer");
+let voronoi_clip_layer = svg.append("g")
+    .attr("class", "voronoi_clip_layer");
+let pedes_layer = svg.append("g")
+    .attr("class", "pedes_layer");
 
 // Read json data and draw frameworks (walls and zones)
 drawWallsByPath("../../data/small/walls.json", structure_layer);
 drawZones("../../data/small/graph.json", structure_layer);
 
-drawVoronoiArea(voronoi_layer);
+drawVoronoiArea(voronoi_clip_layer);
 
 //Pedestrians
-runAnimation("../../data/small/pedestrians_clean.json", voronoi_layer, pedes_layer);
+runAnimation("../../data/small/pedestrians_clean.json", voronoi_poly_layer, pedes_layer);
 
 
 

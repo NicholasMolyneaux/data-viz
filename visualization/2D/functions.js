@@ -93,31 +93,30 @@ function updatePosition(time_series_data, svg) {
 function drawVoronoi(data, svg) {
     let vertices = data.map( d => [d.x, d.y]);
     let rect = rectangleContainPolygon(".voronoi-area");
-    let rect_area = (rect[1][0]-rect[0][0])*(rect[1][1]-rect[0][1]);
     let v = d3.voronoi()
         .extent(rect);
-    let voronoi_polygons = v.polygons(filterPointInPolygon(vertices, ".voronoi-area"));
+    let clip = polygonIDToArray(".voronoi-area");
+    let voronoi_polygons = v.polygons(filterPointInPolygon(vertices, ".voronoi-area")).map(p => d3.polygonClip(clip, p));
     let areas = voronoi_polygons.map(d => d3.polygonArea(d));
-    let normalized_areas = areas.map(d => d/rect_area);
     let voronois = svg.selectAll(".voronoi-poly").data(voronoi_polygons);
     voronois.enter().append("path")
         .attr("class", "voronoi-poly")
         .attr("d", line)
-        .style("fill", (d,i)=> pedQosColor(normalized_areas[i]))
+        .style("fill", (d,i)=> pedLosColor(areas[i]))
         .attr("mask", "url(#voronoi-mask)");
 }
 
-function pedQosColor(p) {
+function pedLosColor(p) {
     let color;
-    if (p >= 0.7788)
+    if (p >= 3.24)
         color = "rgb(0,0,255)";
-    else if (p >= 0.5577 && p < 0.7788)
+    else if (p >= 2.32 && p < 3.24)
         color = "rgb(0,255,255)";
-    else if (p >= 0.3341 && p < 0.5577)
+    else if (p >= 1.39 && p < 2.32)
         color = "rgb(0,255,0)";
-    else if (p >= 0.2236 && p < 0.3341)
+    else if (p >= 0.93 && p < 1.39)
         color = "rgb(255,255,0)";
-    else if (p >= 0.1106 && p < 0.2236)
+    else if (p >= 0.46 && p < 0.93)
         color = "rgb(255,128,0)";
     else
         color = "rgb(255,0,0)";
@@ -269,23 +268,23 @@ function rectangleContainPolygon(polygon_id) {
     return [[d3.min(x_coordinates), d3.min(y_coordinates)], [d3.max(x_coordinates), d3.max(y_coordinates)]];
 }
 
-function runAnimation(json, voronoi_layer, pedes_layer) {
+function runAnimation(json, voronoi_poly_layer , pedes_layer) {
     d3.json(json)
         .then(data => {
             data.map( each_time => {
                 d3.timeout( () => {
-                    checkVoronoi(each_time.data, voronoi_layer);
+                    checkVoronoi(each_time.data, voronoi_poly_layer);
                     updatePosition(each_time.data, pedes_layer);
                 }, each_time.time * 1000);
             })
         });
 }
-function checkVoronoi(data, svg) {
+function checkVoronoi(data, voronoi_poly_layer) {
     if (d3.select("#voronoi_checkbox").property("checked")) {
-        deleteVoronoi(svg);
-        drawVoronoi(data, svg);
+        deleteVoronoi(voronoi_poly_layer);
+        drawVoronoi(data, voronoi_poly_layer);
     } else {
-        deleteVoronoi(svg);
+        deleteVoronoi(voronoi_poly_layer);
     }
 }
 //checkboxes
