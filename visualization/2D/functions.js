@@ -17,18 +17,25 @@ async function drawWallsByPath(json) {
         .attr("d", line(data))
         .attr("fill", "white");
 }
-async function drawWalls(json) {
-    const wall = await d3.json(json);
-    // Draw walls
-    let group_walls = d3.select("g");
-    wall["walls"].map( (w)  => {
-        group_walls.append("line")
-            .attr("class", "the-walls")
-            .attr("x1", w["x1"])
-            .attr("y1", w["y1"])
-            .attr("x2", w["x2"])
-            .attr("y2", w["y2"]);
-    }) ;
+async function drawWalls(url) {
+    fetch(url).then(response => {
+        return response.json();
+    }).then(wall => {
+        console.log(wall);
+        //const wall= d3.json(json);
+        // Draw walls
+        let group_walls = d3.select("g");
+        wall.map( (w)  => {
+            group_walls.append("line")
+                .attr("class", "the-walls")
+                .attr("x1", w["x1"])
+                .attr("y1", w["y1"])
+                .attr("x2", w["x2"])
+                .attr("y2", w["y2"]);
+        })
+    }).catch(err => {
+        console.log(err)
+    });
 }
 async function drawZones(json) {
     const graph = await d3.json(json);
@@ -115,16 +122,21 @@ function filterPointInPolygon(data, polygon_id) {
     let polygon_array = polygon.attr("points").split(" ").map(s => s.split(",").map(n => Number(n)));
     return data.filter(d => d3.polygonContains(polygon_array, d));
 }
-function runAnimation(json) {
-    d3.json(json)
-        .then(data => {
-            data.map( each_time => {
+async function runAnimation(url) {
+    fetch(url).then(response => {
+        return response.json();
+    }).then(traj => {
+        console.log(traj);
+            traj.map( each_time => {
                 d3.timeout( () => {
+                    console.log(each_time);
                     updatePosition(each_time.data);
                     checkVoronoi(each_time.data);
-                }, each_time.time * 1000);
+                }, (each_time.time) * 1000);
             })
-        });
+        }).catch(err => {
+        console.log(err)
+    });
 }
 
 function checkVoronoi(data) {

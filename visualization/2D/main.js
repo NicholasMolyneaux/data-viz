@@ -4,7 +4,7 @@ let svg = d3.select("#viz")
     .attr("id", "svgCont")
     .attr("width", "500")
     .attr("height", "500")
-    .attr("viewBox", "4 0 27 27")
+    .attr("viewBox", "0 0 100 100")
     .call(d3.zoom().on("zoom", () => svg.attr("transform", d3.event.transform)))
     .append("g");
 
@@ -17,11 +17,14 @@ document.querySelector("#flow_checkbox").addEventListener('click', checkFlow);
 document.querySelector("#voronoi_area").addEventListener('click', setVoronoiArea);
 
 // Read json data and draw frameworks (walls and zones)
-drawWallsByPath("../../data/small/walls.json");
+//d3.json('http://transporsrv2.epfl.ch/api/infra/walls/lausannwpiw', function(data) {
+ //   console.log(data);
+  //  drawWalls(data)});
+drawWalls("http://transporsrv2.epfl.ch/api/infra/walls/denhaag");//"../../data/small/walls.json");
 drawZones("../../data/small/graph.json");
 
 drawVoronoiArea();
 
 //Pedestrians
-runAnimation("../../data/small/pedestrians_clean.json");
+runAnimation("http://transporsrv2.epfl.ch/api/trajectoriesbytime/denhaag/test0");
 
