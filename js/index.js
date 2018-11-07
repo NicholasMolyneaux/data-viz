@@ -17,7 +17,7 @@ $(document).ready(function() {
     // Load the infrastructures
     loadInfra();
 
-    viz2D();
+    //viz2D();
 
     $("#fullscreen").on('click', function() {
         if(IsFullScreenCurrently())
@@ -89,7 +89,6 @@ function updateDescriptionInfra(e) {
     selectedInfra = infrastructures[idx];
 
     document.getElementById('textDescInfra').innerHTML = selectedInfra['description'];
-
 }
 
 function getTraj() {
@@ -106,6 +105,7 @@ function getTraj() {
     })
         .done(function( data ) {
             trajectories = data;
+            console.log(trajectories);
             // DEBUG
             //trajectories = [{'name': 'traj1-'+selectedInfra.name, 'description': 'asdasdasd'}, {'name': 'traj2-'+selectedInfra.name, 'description': '123123'}, {'name': 'traj3-'+selectedInfra.name, 'description': 'Lorem Ipsum'}];
             addTraj()
@@ -138,22 +138,33 @@ function addTraj() {
     document.getElementById('textDescTraj').innerHTML = trajectories[0]['description'];
 
     selectedTraj = trajectories[0];
+    console.log(selectedTraj);
 }
 
 function updateDescriptionTraj(e) {
+    console.log("updateDescriptionTraj");
 
     const trajName = e.options[e.selectedIndex].value;
+    function isSelectedTraj(traj){return traj === trajName}
 
-    const idx = trajectories.map(function(e) { return e.name; }).indexOf(trajName);
+    //console.log(trajName);
+    //console.log(trajectories);
+    //console.log();
+    const idx = trajectories.findIndex(isSelectedTraj);//trajectories.map(function(e) { return e.name; }).indexOf(trajName);
+
+    //console.log(idx);
 
     selectedTraj = trajectories[idx];
 
-    document.getElementById('textDescTraj').innerHTML = selectedTraj['description'];
+    console.log(selectedTraj);
 
+    document.getElementById('textDescTraj').innerHTML = selectedTraj['description'];
 }
 
+
 function dataSelected() {
-    window.alert('Infrastructure: ' + selectedInfra.name + '\nTrajectories: ' + selectedTraj.name);
+    window.alert('Infrastructure: ' + selectedInfra.name + '\nTrajectories: ' + selectedTraj);
+    viz2D(selectedInfra.name, selectedTraj);
 }
 
 function fullScreen(e) {

@@ -37,40 +37,55 @@ async function drawWalls(url) {
         console.log(err)
     });
 }
-async function drawZones(json) {
-    const graph = await d3.json(json);
+async function drawZones(url) {
+    fetch(url).then(response => {
+        return response.json();
+    }).then(graph => {
     let group_zones = d3.select("g");
-    graph["nodes"].map( (g) => {
+    graph.map((g) => {
         group_zones.append("rect")
             .attr("class", "the-zones")
             .attr("x", g["x1"])
             .attr("y", g["y1"])
-            .attr("width", g["x2"]-g["x1"])
-            .attr("height", g["y3"]-g["y2"]);
+            .attr("width", g["x2"] - g["x1"])
+            .attr("height", g["y3"] - g["y2"]);
     });
-
-    // Draw controlled area
-    let controlled_areas = d3.select("g");
-    graph["controlled_areas"].map( (c) => {
-        controlled_areas.append("rect")
-            .attr("class", "controlled-areas")
-            .attr("x", c["x1"] )
-            .attr("y", c["y1"] )
-            .attr("width", c["x2"] - c["x1"])
-            .attr("height", c["y3"] - c["y2"]);
-    } );
-
-    // Draw flow gate?
-    let flow_gates = d3.select("g");
-    graph["flow_gates"].map( f => {
-        flow_gates.append("line")
-            .attr("class", "flow-gates")
-            .attr("x1", f["start_pos_x"] )
-            .attr("y1", f["start_pos_y"] )
-            .attr("x2", f["end_pos_x"] )
-            .attr("y2", f["end_pos_y"] );
-    } );
+});
 }
+
+async function drawControlledAreas(url) {
+    fetch(url).then(response => {
+        return response.json();
+    }).then(graph => {
+        let controlled_areas = d3.select("g");
+        graph["controlled_areas"].map((c) => {
+            controlled_areas.append("rect")
+                .attr("class", "controlled-areas")
+                .attr("x", c["x1"])
+                .attr("y", c["y1"])
+                .attr("width", c["x2"] - c["x1"])
+                .attr("height", c["y3"] - c["y2"]);
+        });
+    });
+}
+
+async function drawGates(url) {
+    // Draw flow gate?
+    fetch(url).then(response => {
+        return response.json();
+    }).then(graph => {
+        let flow_gates = d3.select("g");
+        graph["flow_gates"].map(f => {
+            flow_gates.append("line")
+                .attr("class", "flow-gates")
+                .attr("x1", f["start_pos_x"])
+                .attr("y1", f["start_pos_y"])
+                .attr("x2", f["end_pos_x"])
+                .attr("y2", f["end_pos_y"]);
+        });
+    });
+}
+
 function updatePosition(time_series_data) {
     // Update circles (pedestrians)
     let svg_g = d3.select("g");

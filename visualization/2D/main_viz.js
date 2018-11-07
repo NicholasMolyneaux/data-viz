@@ -1,4 +1,4 @@
-function viz2D() {
+function viz2D(infra, traj) {
 
     let svg = d3.select("#viz")
         .append("svg")
@@ -19,14 +19,13 @@ function viz2D() {
     document.querySelector("#voronoi_area").addEventListener('click', setVoronoiArea);
 
     // Read json data and draw frameworks (walls and zones)
-    drawWallsByPath("./data/small/walls.json");
-    drawZones("./data/small/graph.json");
+    drawWalls("http://transporsrv2.epfl.ch/api/infra/walls/"+infra);
+    drawZones("http://transporsrv2.epfl.ch/api/infra/zones/"+infra);
 
     drawVoronoiArea();
 
     //Pedestrians
-    runAnimation("./data/small/pedestrians_clean.json");
-
+    runAnimation("http://transporsrv2.epfl.ch/api/trajectoriesbytime/"+infra+"/"+traj);
 }
 
 
