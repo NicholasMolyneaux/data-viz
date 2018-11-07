@@ -64,3 +64,14 @@ body {
     stroke-width: 2;
     fill: none;
 }
+.drawing_pannel {
+    vector-effect: non-scaling-stroke;
+    stroke: none;
+    fill: none;
+}
+
+.voronoi-pre-circle {
+    vector-effect: non-scaling-stroke;
+    r: 0.15;
+    fill: black;
+}

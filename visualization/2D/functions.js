@@ -122,131 +122,10 @@ function pedLosColor(p) {
         color = "rgb(255,0,0)";
     return color;
 }
-function drawVoronoiArea(svg) {
-//
-//     var dragging = false, drawing = false, startPoint;
-//     var svg = d3.select('body').append('svg')
-//         .attr('height', 1000)
-//         .attr('width', 1000);
-//     var points = [], g;
-// // behaviors
-//     var dragger = d3.behavior.drag()
-//         .on('drag', handleDrag)
-//         .on('dragend', function(d){
-//             dragging = false;
-//         });
-//     svg.on('mouseup', function(){
-//         if(dragging) return;
-//         drawing = true;
-//         startPoint = [d3.mouse(this)[0], d3.mouse(this)[1]];
-//         if(svg.select('g.drawPoly').empty()) g = svg.append('g').attr('class', 'drawPoly');
-//         if(d3.event.target.hasAttribute('is-handle')) {
-//             closePolygon();
-//             return;
-//         };
-//         points.push(d3.mouse(this));
-//         g.select('polyline').remove();
-//         var polyline = g.append('polyline').attr('points', points)
-//             .style('fill', 'none')
-//             .attr('stroke', '#000');
-//         for(var i = 0; i < points.length; i++) {
-//             g.append('circle')
-//                 .attr('cx', points[i][0])
-//                 .attr('cy', points[i][1])
-//                 .attr('r', 4)
-//                 .attr('fill', 'yellow')
-//                 .attr('stroke', '#000')
-//                 .attr('is-handle', 'true')
-//                 .style({cursor: 'pointer'});
-//         }
-//     });
-//     function closePolygon() {
-//         svg.select('g.drawPoly').remove();
-//         var g = svg.append('g');
-//         g.append('polygon')
-//             .attr('points', points)
-//             .style('fill', getRandomColor());
-//         for(var i = 0; i < points.length; i++) {
-//             var circle = g.selectAll('circles')
-//                 .data([points[i]])
-//                 .enter()
-//                 .append('circle')
-//                 .attr('cx', points[i][0])
-//                 .attr('cy', points[i][1])
-//                 .attr('r', 4)
-//                 .attr('fill', '#FDBC07')
-//                 .attr('stroke', '#000')
-//                 .attr('is-handle', 'true')
-//                 .style({cursor: 'move'})
-//                 .call(dragger);
-//         }
-//         points.splice(0);
-//         drawing = false;
-//     }
-//     svg.on('mousemove', function() {
-//         if(!drawing) return;
-//         var g = d3.select('g.drawPoly');
-//         g.select('line').remove();
-//         var line = g.append('line')
-//             .attr('x1', startPoint[0])
-//             .attr('y1', startPoint[1])
-//             .attr('x2', d3.mouse(this)[0] + 2)
-//             .attr('y2', d3.mouse(this)[1])
-//             .attr('stroke', '#53DBF3')
-//             .attr('stroke-width', 1);
-//     })
-//     function handleDrag() {
-//         if(drawing) return;
-//         var dragCircle = d3.select(this), newPoints = [], circle;
-//         dragging = true;
-//         var poly = d3.select(this.parentNode).select('polygon');
-//         var circles = d3.select(this.parentNode).selectAll('circle');
-//         dragCircle
-//             .attr('cx', d3.event.x)
-//             .attr('cy', d3.event.y);
-//         for (var i = 0; i < circles[0].length; i++) {
-//             circle = d3.select(circles[0][i]);
-//             newPoints.push([circle.attr('cx'), circle.attr('cy')]);
-//         }
-//         poly.attr('points', newPoints);
-//     }
-//     function getRandomColor() {
-//         var letters = '0123456789ABCDEF'.split('');
-//         var color = '#';
-//         for (var i = 0; i < 6; i++) {
-//             color += letters[Math.floor(Math.random() * 16)];
-//         }
-//         return color;
-//     }
-//
-//     //
-//     svg.on("mousedown", function() {
-//         console.log("clicked!");
-//         console.log(`x coordinate: ${d3.mouse(this)[0]}, y coordinate: ${d3.mouse(this)[1]}`);
-//     });
 
-// HARD CODING
 
-    let voronoi_area = [[17.33799934387207, 11.62181282043457],
-        [14.961999893188477, 12.377812385559082],
-        [14.961999893188477, 14.375812530517578],
-        [17.607999801635742, 16.265811920166016],
-        [20.038000106811523, 14.48381233215332],
-        [19.983999252319336, 12.21581268310546]];
-
-    svg.append("mask")
-        .attr("id", "voronoi-mask")
-        .append("polygon")
-        .attr("points", voronoi_area.map(p => p.join(",")).join(" "))
-        .attr("fill", "white");
-
-    svg.append("polygon")
-        .attr("class", "voronoi-area")
-        .attr("points", voronoi_area.map(p => p.join(",")).join(" "));
-}
-function clearCanvas() {
-    console.log("clearing voronoi_area");
-    d3.select('voronoi_area').remove();
+function clearCanvas(voronoi_clip_canvas) {
+    voronoi_clip_canvas.selectAll("*").remove();
 }
 function deleteVoronoi(svg) {
     svg.selectAll(".voronoi-poly").remove();
@@ -317,5 +196,35 @@ function checkFlow() {
     }
 }
 function setVoronoiArea() {
-    clearCanvas();
+    let svg = d3.select("svg");
+    let voronoi_clip_canvas = d3.select(".voronoi_clip_layer");
+    clearCanvas(voronoi_clip_canvas);
+
+    svg.on("click", function () {
+        let mouse = d3.mouse(this);
+        voronoi_clip_canvas.append("circle")
+            .attr("class", "voronoi-pre-circle")
+            .attr("cx", mouse[0])
+            .attr("cy", mouse[1]);
+        if (d3.event.shiftKey) {
+            let pre_circles = Array.from(document.getElementsByClassName('voronoi-pre-circle')).map(d => [Number(d.attributes.cx.value), Number(d.attributes.cy.value)]);
+            drawVoronoiArea(voronoi_clip_canvas, pre_circles);
+            console.log(`mouse click with shift at ${mouse[0]} and ${mouse[1]}`);
+
+        }
+
+    })
+}
+
+function drawVoronoiArea(svg, polygon) {
+
+    svg.append("mask")
+        .attr("id", "voronoi-mask")
+        .append("polygon")
+        .attr("points", polygon.map(p => p.join(",")).join(" "))
+        .attr("fill", "white");
+
+    svg.append("polygon")
+        .attr("class", "voronoi-area")
+        .attr("points", polygon.map(p => p.join(",")).join(" "));
 }
