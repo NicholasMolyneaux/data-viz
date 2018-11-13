@@ -137,7 +137,7 @@ function filterPointInPolygon(data, polygon_id) {
     let polygon_array = polygon.attr("points").split(" ").map(s => s.split(",").map(n => Number(n)));
     return data.filter(d => d3.polygonContains(polygon_array, d));
 }
-async function runAnimation(url) {
+async function runAnimation(url, tmin, tmax) {
     fetch(url).then(response => {
         return response.json();
     }).then(traj => {
@@ -147,7 +147,7 @@ async function runAnimation(url) {
                     console.log(each_time);
                     updatePosition(each_time.data);
                     checkVoronoi(each_time.data);
-                }, (each_time.time) * 1000);
+                }, (each_time.time-tmin) * 1000);
             })
         }).catch(err => {
         console.log(err)

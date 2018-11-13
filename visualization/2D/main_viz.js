@@ -1,12 +1,18 @@
-function viz2D(infra, traj) {
+function viz2D(infra, traj, xmin, xmax, ymin, ymax, tmin, tmax) {
+
+    const margin = 0.01*(xmax-xmin);
+    const ratio = (ymax-ymin)/(xmax-xmin);
+    const pixelWidth = 900;
+
+    console.log(margin, ratio, pixelWidth);
 
     let svg = d3.select("#viz")
         .append("svg")
         .attr("class", "container")
         .attr("id", "svgCont")
-        .attr("width", "500")
-        .attr("height", "500")
-        .attr("viewBox", "4 0 27 27")
+        .attr("width", pixelWidth)
+        .attr("height", (ratio * pixelWidth))
+        .attr("viewBox", `${xmin} ${ymin} ${xmax} ${ymax}`)
         .call(d3.zoom().on("zoom", () => svg.attr("transform", d3.event.transform)))
         .append("g");
 
@@ -25,7 +31,7 @@ function viz2D(infra, traj) {
     drawVoronoiArea();
 
     //Pedestrians
-    runAnimation("http://transporsrv2.epfl.ch/api/trajectoriesbytime/"+infra+"/"+traj);
+    runAnimation("http://transporsrv2.epfl.ch/api/trajectoriesbytime/"+infra+"/"+traj, tmin, tmax);
 }
 
 

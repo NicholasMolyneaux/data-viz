@@ -72,7 +72,7 @@ function addInfra() {
             value: infra.name,
             text: infra.name
         }))
-    })
+    });
 
     document.getElementById('descInfra').style.display = '';
     document.getElementById('textDescInfra').innerHTML = infrastructures[0]['description'];
@@ -126,13 +126,13 @@ function addTraj() {
         select.options[i] = null;
     }
 
-    trajectories.forEach(infra => {
-        console.log(infra);
+    trajectories.forEach(traj => {
+        console.log(traj['name']);
         $('#trajData').append($('<option>', {
-            value: infra,
-            text: infra
+            value: traj.name,
+            text: traj.name
         }))
-    })
+    });
 
     document.getElementById('descTraj').style.display = '';
     document.getElementById('textDescTraj').innerHTML = trajectories[0]['description'];
@@ -144,8 +144,9 @@ function addTraj() {
 function updateDescriptionTraj(e) {
     console.log("updateDescriptionTraj");
 
+    console.log(e);
     const trajName = e.options[e.selectedIndex].value;
-    function isSelectedTraj(traj){return traj === trajName}
+    function isSelectedTraj(traj){return traj.name === trajName}
 
     //console.log(trajName);
     //console.log(trajectories);
@@ -163,8 +164,11 @@ function updateDescriptionTraj(e) {
 
 
 function dataSelected() {
-    window.alert('Infrastructure: ' + selectedInfra.name + '\nTrajectories: ' + selectedTraj);
-    viz2D(selectedInfra.name, selectedTraj);
+    console.log(selectedTraj);
+    //window.alert('Infrastructure: ' + selectedInfra.name + '\nTrajectories: ' + selectedTraj);
+    console.log(selectedInfra.name, selectedTraj, selectedInfra.xmin, selectedInfra.xmax, selectedInfra.ymin, selectedInfra.ymax);
+
+    viz2D(selectedInfra.name, selectedTraj.name, selectedInfra.xmin, selectedInfra.xmax, selectedInfra.ymin, selectedInfra.ymax, selectedTraj.tmin, selectedTraj.tmax);
 }
 
 function fullScreen(e) {
@@ -180,9 +184,6 @@ function fullScreen(e) {
     } else {
         // Now in full screen
         fullScreenBool = true;
-
-
-
     }
 
     console.log("LOL");
