@@ -217,14 +217,21 @@ function setVoronoiArea() {
 }
 
 function drawVoronoiArea(svg, polygon) {
-
+    clearCanvas(svg);
+    let polygon_hull = d3.polygonHull(polygon);
+    polygon_hull.map(d => {
+        svg.append("circle")
+            .attr("class", "voronoi-pre-circle")
+            .attr("cx", d[0])
+            .attr("cy", d[1]);
+    });
     svg.append("mask")
         .attr("id", "voronoi-mask")
         .append("polygon")
-        .attr("points", polygon.map(p => p.join(",")).join(" "))
+        .attr("points", polygon_hull.map(p => p.join(",")).join(" "))
         .attr("fill", "white");
 
     svg.append("polygon")
         .attr("class", "voronoi-area")
-        .attr("points", polygon.map(p => p.join(",")).join(" "));
+        .attr("points", polygon_hull.map(p => p.join(",")).join(" "));
 }
