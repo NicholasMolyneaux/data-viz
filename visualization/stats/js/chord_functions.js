@@ -113,7 +113,7 @@ function arcTween(oldLayout, arc) {
     };
 }
 
-function labelTween(oldLayout) {
+/*function labelTween(oldLayout) {
     //this function will be called once per update cycle
 
     //Create a key:value version of the old layout's groups array
@@ -144,7 +144,7 @@ function labelTween(oldLayout) {
             return arc( tween(t) );
         };
     };
-}
+}*/
 
 
 function updateChordDiagram(canvas, chord, arc, ribbon, colors, matrix, keys, last_layout, geom) {
@@ -197,6 +197,9 @@ function updateChordDiagram(canvas, chord, arc, ribbon, colors, matrix, keys, la
         });
 
 
+
+    //console.log(last_layout);
+    console.log(groups);
     groups.select("text")
         .each(function(d) {
             d.angle = (d.startAngle + d.endAngle) / 2;
@@ -259,13 +262,17 @@ function updateChordDiagram(canvas, chord, arc, ribbon, colors, matrix, keys, la
             });
         }
 
+        console.log("old groups");
+        console.log(oldGroups);
+
         return function(d, i) {
             return function(t) {
                 let oldAngle = oldGroups[d.index].angle;
-                console.log(oldAngle, d.angle);
-                return "rotate(" + (oldAngle + (d.angle-oldAngle)*t * 180 / Math.PI - 90) + ")" +
+                //console.log(oldAngle, d.angle);
+                //console.log(oldAngle, d.angle, (oldAngle + (d.angle-oldAngle)*t * 180 / Math.PI - 90));
+                return "rotate(" + (oldAngle*180/Math.PI + (d.angle-oldAngle)*t * 180 / Math.PI - 90) + ")" +
                 "translate(" + (geom.r0 + 75) + ")" +
-                (d.angle > Math.PI ? "rotate(180)" : "")
+                ((oldAngle + (d.angle-oldAngle)*t) > Math.PI ? "rotate(180)" : "")
             }
         }
     }
