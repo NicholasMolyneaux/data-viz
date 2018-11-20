@@ -1,3 +1,25 @@
+let click_zone_active = false;
+let connect_info;
+let findDestinationFromSource = function(source_id) {
+    connect_info.map(a => {
+        let from = a["node"];
+        if (a["node"] === source_id) {
+            return a["connected_to"];
+        }
+    });
+};
+let determineOD = function(id) {
+    // check activate the click or not and change the state
+    if (click_zone_active) {
+        // check there is destination
+        let destination = findDestinationFromSource(id);
+
+    }
+    else {
+        click_zone_active = true
+    }
+
+};
 let line = d3.line()
     .x(d => d[0])
     .y(d => d[1]);
@@ -35,18 +57,46 @@ async function drawWalls(json, svg) {
 async function drawZones(json, svg) {
     const graph = await d3.json(json);
     graph["nodes"].map( (g) => {
-        svg.append("rect")
+        // Append zones
+        let node = svg.append("rect")
             .attr("class", "the-zones")
+            .attr("id", g["name"])
             .attr("x", g["x1"])
             .attr("y", g["y1"])
             .attr("width", g["x2"]-g["x1"])
             .attr("height", g["y3"]-g["y2"]);
+
+        // Control zones
+        node.on("click", function () {
+                determineOD(this.getAttribute("id"));
+            });
+
     });
+    // Draw invisible arrows
+    // connect_info = graph["connectivity"];
+    // graph["connectivity"].map( a => {
+    //     let from = a["node"];
+    //     let to = a["connected_to"];
+    //     if (!(to.length == 0)) {
+    //         let from_center = centerOfRect(d3.selectAll(".the-zones").filter(`#${from}`));
+    //         to.map( d => {
+    //             let to_center = centerOfRect(d3.selectAll(".the-zones").filter(`#${d}`));
+    //             svg.append("line")
+    //                 .attr("class", "the-flow-lines")
+    //                 .attr("id", `${from}:${d}`)
+    //                 .attr("x1", from_center["x"])
+    //                 .attr("y1", from_center["y"])
+    //                 .attr("x2", to_center["x"])
+    //                 .attr("y2", to_center["y"]);
+    //         })
+    //     }
+    // });
 
     // Draw controlled area
     graph["controlled_areas"].map( (c) => {
         svg.append("rect")
             .attr("class", "controlled-areas")
+            .attr("id", c["name"])
             .attr("x", c["x1"] )
             .attr("y", c["y1"] )
             .attr("width", c["x2"] - c["x1"])
@@ -63,11 +113,20 @@ async function drawZones(json, svg) {
             .attr("y2", f["end_pos_y"] );
     } );
 }
+
+
+function centerOfRect(rect) {
+    let x_center = Number(rect.attr("x")) + Number(rect.attr("width"))/2;
+    let y_center = Number(rect.attr("y")) + Number(rect.attr("height"))/2;
+    return {"x": x_center, "y": y_center};
+}
+
 function updatePosition(time_series_data, svg) {
     // Update circles (pedestrians)
     let pedes = svg.selectAll(".ped-individual").data(time_series_data, d => d.id);
     pedes.enter().append("circle")
         .attr("class", "ped-individual")
+        .attr("id", d => d.id)
         .merge(pedes)
         .attr("cx", d => d.x)
         .attr("cy", d => d.y);
@@ -96,14 +155,23 @@ function drawVoronoi(data, svg) {
     let v = d3.voronoi()
         .extent(rect);
     let clip = polygonIDToArray(".voronoi-area");
-    let voronoi_polygons = v.polygons(filterPointInPolygon(vertices, ".voronoi-area")).map(p => d3.polygonClip(clip, p));
+    let data_in_voronoi_area = filterPointInPolygon(data, ".voronoi-area");
+    let voronoi_polygons = v.polygons(data_in_voronoi_area.map(d => [d.x, d.y])).map(p => d3.polygonClip(clip, p));
     let areas = voronoi_polygons.map(d => d3.polygonArea(d));
+    let publish_json = encodeJson(data_in_voronoi_area, areas);
+    publish(publish_json);
     let voronois = svg.selectAll(".voronoi-poly").data(voronoi_polygons);
     voronois.enter().append("path")
         .attr("class", "voronoi-poly")
         .attr("d", line)
         .style("fill", (d,i)=> pedLosColor(areas[i]))
         .attr("mask", "url(#voronoi-mask)");
+}
+function encodeJson(data, areas) {
+    return data.map((d,i) => {return {"id": d["id"], "density": 1/areas[i]}});
+}
+function publish(json) {
+    console.log(json);
 }
 
 function pedLosColor(p) {
@@ -123,7 +191,6 @@ function pedLosColor(p) {
     return color;
 }
 
-
 function clearCanvas(voronoi_clip_canvas) {
     voronoi_clip_canvas.selectAll("*").remove();
 }
@@ -132,7 +199,7 @@ function deleteVoronoi(svg) {
 }
 function filterPointInPolygon(data, polygon_id) {
     let polygon_array = polygonIDToArray(polygon_id);
-    return data.filter(d => d3.polygonContains(polygon_array, d));
+    return data.filter(d => d3.polygonContains(polygon_array, [d.x, d.y]));
 }
 
 function polygonIDToArray(polygon_id) {
