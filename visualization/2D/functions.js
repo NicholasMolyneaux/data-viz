@@ -17,6 +17,7 @@ async function drawWallsByPath(json) {
         .attr("d", line(data))
         .attr("fill", "white");
 }
+
 async function drawWalls(url) {
     fetch(url).then(response => {
         return response.json();
@@ -94,7 +95,8 @@ function updatePosition(time_series_data) {
         .attr("class", "ped-individual")
         .merge(pedes)
         .attr("cx", d => d.x)
-        .attr("cy", d => d.y);
+        .attr("cy", d => d.y)
+        .attr("r", 0.15);
     pedes.exit().remove();
 
     // Update path of each pedestrian
