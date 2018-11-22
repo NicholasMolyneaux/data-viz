@@ -1,23 +1,59 @@
 /* General CSS */
 
+/* If the screen size is 601px wide or more, set the font-size of <div> to 80px */
+@media screen and (min-width: 601px) {
+    body {
+        font-size: 16px;
+    }
+
+    #title {
+        font-size: 60px;
+    }
+
+    #logo-nav {
+        font-size: 25px;
+    }
+}
+
+/* If the screen size is 600px wide or less, set the font-size of <div> to 30px */
+@media screen and (max-width: 600px) and (min-width: 260px) {
+    body {
+        font-size: 14px;
+    }
+
+    #title {
+        font-size: 30px;
+    }
+
+    #logo-nav {
+        font-size: 4vw;
+    }
+}
+
+/* If the screen size is 600px wide or less, set the font-size of <div> to 30px */
+@media screen and (max-width: 261px) {
+    body {
+        font-size: 14px;
+    }
+
+    #title {
+        font-size: 20px;
+    }
+
+    #logo-nav {
+        font-size: 3vw;
+    }
+}
+
 body {
     font-family: 'Roboto', sans-serif;
     height: 100%;
+    #font-size: 2vw;
 }
 
-h1 {
-    text-shadow: 0 1px 0 #ccc,
-    0 2px 0 #c9c9c9,
-    0 3px 0 #bbb,
-    0 4px 0 #b9b9b9,
-    0 5px 0 #aaa,
-    0 6px 1px rgba(0,0,0,.1),
-    0 0 5px rgba(0,0,0,.1),
-    0 1px 3px rgba(0,0,0,.3),
-    0 3px 5px rgba(0,0,0,.2),
-    0 5px 10px rgba(0,0,0,.25),
-    0 10px 10px rgba(0,0,0,.2),
-    0 20px 20px rgba(0,0,0,.15);
+@font-face {
+    font-family: "DeadKansas";
+    src: url("../assets/font/DeadKansas.ttf") format('truetype');
 }
 
 .jumbotron {
@@ -25,14 +61,13 @@ h1 {
 }
 
 #title {
-    font-family: 'Press Start 2P', cursive;
-    font-size: 60px;
-    text-align:center;
+    font-family: "DeadKansas";
+    text-align: center;
 }
 
 #logo-nav {
-    font-family: 'Press Start 2P', cursive;
-    font-size: 25px;
+    font-family: "DeadKansas";
+    letter-spacing: 1px;
 }
 
 #learnMoreButton {
@@ -159,17 +194,6 @@ h1 {
     color: #000000;
 }
 
-#threeDButton:hover {
-    text-decoration:none;
-
-    animation-name: spinner;
-    animation-timing-function: linear;
-    animation-iteration-count: infinite;
-    animation-duration: 3s;
-    transform-style: preserve-3d;
-    text-align:center;
-}
-
 @keyframes spinner {
     from {
         transform: rotateY(0deg);
@@ -249,10 +273,37 @@ h1 {
     stroke-width: 1;
     fill: none;
 }
+.the-flow-lines {
+    vector-effect: non-scaling-stroke;
+    stroke: gray;
+    stroke-width: 1;
+    fill: none;
+}
 
 .voronoi-area {
     vector-effect: non-scaling-stroke;
-    stroke: blue;
+    stroke: black;
     stroke-width: 2;
     fill: none;
+}
+
+.drawing_pannel {
+    vector-effect: non-scaling-stroke;
+    stroke: none;
+    fill: none;
+}
+
+.voronoi-pre-circle {
+    vector-effect: non-scaling-stroke;
+    r: 0.15;
+    fill: black;
+}
+
+#viz {
+    padding: -10px;
+    #background-color: red;
+}
+
+#svgCont {
+    padding: 0px;
 }
