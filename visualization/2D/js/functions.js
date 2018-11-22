@@ -247,19 +247,13 @@ function rectangleContainPolygon(polygon_id) {
     return [[d3.min(x_coordinates), d3.min(y_coordinates)], [d3.max(x_coordinates), d3.max(y_coordinates)]];
 }
 
-function runAnimation(url, voronoi_poly_layer , pedes_layer, tmin, tmax) {
-    fetch(url).then(response => {
-        return response.json();
-    }).then(data => {
-        data.map( each_time => {
-            d3.timeout( () => {
-                checkVoronoi(each_time.data, voronoi_poly_layer);
-                updatePosition(each_time.data, pedes_layer);
-            }, (each_time.time-tmin) * 1000);
-        })
-    }).catch(err => {
-        console.log(err)
-    });
+function runAnimation(data, voronoi_poly_layer , pedes_layer, tmin, tmax) {
+    data.map( each_time => {
+        d3.timeout( () => {
+            checkVoronoi(each_time.data, voronoi_poly_layer);
+            updatePosition(each_time.data, pedes_layer);
+        }, (each_time.time-tmin) * 1000);
+    })
 }
 function checkVoronoi(data, voronoi_poly_layer) {
     if (d3.select("#voronoi_checkbox").property("checked")) {

@@ -51,7 +51,7 @@
             <br><br>
             <p class="text-justify">Lorem Ipsum [...] Explicative text goes here! Donec id elit non mi porta gravida at eget
                 metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit
-                amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.</>
+                amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.</p>
             <p><a id="learnMoreButton" class="btn btn-primary btn-lg" href="#" role="button">Learn more &raquo;</a></p>
         </div>
     </div>
@@ -59,7 +59,7 @@
     <div class="container">
         <div class="card border-light" id="loadCard">
             <div class="card-header">
-                Load the data
+                <h2>Load the data</h2>
             </div>
             <div class="row">
                 <div class="col-6">
@@ -103,56 +103,69 @@
         </div>
     </div>
 
-    <hr>
+    <!--<div id="rest" style="display: none;">-->
+    <div id="VizCont" style="display: none;">
+        <hr>
 
-    <div id="VizCont" class="container">
-        <div class="row justify-content-center" id="mainViz">
-            <div class="col-xl-2 col-lg-3 order-lg-first order-last opt-graphs" id="options">
+        <div class="container">
+            <div class="row justify-content-center" id="mainViz">
+                <div class="col-xl-2 col-lg-3 order-lg-first order-last opt-graphs" id="options">
 
-            <!--<div class="col-xl-2 col-lg-3 order-lg-first order-last opt-graphs" id="options">-->
-                <h4 class="subtitle">Options:</h4>
-                <br>
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="voronoi_checkbox">
-                    <label class="form-check-label" for="voronoi_checkbox">Draw Voronoi</label>
-                </div>
-                <br>
-                <span>Show</span>
-                <div class="form-check">
+                <!--<div class="col-xl-2 col-lg-3 order-lg-first order-last opt-graphs" id="options">-->
+                    <h4 class="subtitle">Options:</h4>
+                    <br>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="voronoi_checkbox">
+                        <label class="form-check-label" for="voronoi_checkbox">Draw Voronoi</label>
+                    </div>
+                    <br>
+                    <span>Show</span>
+                    <div class="form-check">
 
-                    <div class="row">
-                        <div class="col-sm-9 order-last">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="zone_checkbox" onclick="checkZone()">
-                                <label class="form-check-label" for="zone_checkbox">Zones</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="control_checkbox" onclick="checkControl()">
-                                <label class="form-check-label" for="control_checkbox">Control Areas</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="flow_checkbox" onclick="checkFlow()">
-                                <label class="form-check-label" for="flow_checkbox">Flow Gates</label>
+                        <div class="row">
+                            <div class="col-sm-9 order-last">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="zone_checkbox" onclick="checkZone()">
+                                    <label class="form-check-label" for="zone_checkbox">Zones</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="control_checkbox" onclick="checkControl()">
+                                    <label class="form-check-label" for="control_checkbox">Control Areas</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="flow_checkbox" onclick="checkFlow()">
+                                    <label class="form-check-label" for="flow_checkbox">Flow Gates</label>
+                                </div>
                             </div>
                         </div>
                     </div>
+                    <br>
+                    <div class="col text-center">
+                        <button class="btn btn-primary" id="control_area" onclick="setVoronoiArea()">Draw Control Area</button>
+                    </div>
                 </div>
-                <br>
-                <div class="col text-center">
-                    <button class="btn btn-primary" id="control_area" onclick="setVoronoiArea()">Draw Control Area</button>
+                <div class="col-xl-9 col-lg-8" id="viz">
+                    <a id="fullscreen" role="button" title="fullscreen"><i class="fas fa-expand fa-lg"></i></a>
+                    <a id="threeDButton" role="button"><p id="threeD">3D</p></a>
                 </div>
-            </div>
-            <div class="col-xl-9 col-lg-8" id="viz">
-                <a id="fullscreen" role="button" title="fullscreen"><i class="fas fa-expand fa-lg"></i></a>
-                <a id="threeDButton" role="button"><h2 id="threeD">3D</h2></a>
             </div>
         </div>
+
+        <hr>
     </div>
+    <div id="StatsCont" style="display: none;">
 
-    <hr>
+        <h1>Statistics</h1>
 
-    <div id="StatsCont" class="container">
+        <h2>OD Chord Diagram</h2>
 
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-12" id="ODCont">
+
+                </div>
+            </div>
+        </div>
     </div>
 
 
@@ -189,9 +202,15 @@
 <script src="https://d3js.org/d3-polygon.v1.min.js"></script>
 <script src="js/d3-polygon-clip.js"></script>
 
+<!-- All visualization -->
+<script src="js/viz.js"></script>
+
 <!-- 2D visualization -->
 <script src="visualization/2D/js/functions.js"></script>
-<script src="visualization/2D/js/main_viz.js"></script>
+
+<!-- Chord diagram -->
+<script src="visualization/stats/js/chord_functions.js"></script>
+<script src="visualization/stats/js/chord.js"></script>
 
 <!-- 3D visualization -->
 <!--<script src="visualization/3D/js/debug.js"></script>

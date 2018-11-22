@@ -1,8 +1,6 @@
 //import {chordKey, arcTween, chordTween} from "./chord_functions.js";
 
-fetch('http://transporsrv2.epfl.ch/api/summary/lausannetest5/test1').then(response => {
-    return response.json();
-}).then(data => {
+function staticChord(data) {
 
     //////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////// Static data processing ///////////////////////////////////
@@ -15,9 +13,15 @@ fetch('http://transporsrv2.epfl.ch/api/summary/lausannetest5/test1').then(respon
     // Creation of the full OD matrix. First the data is gropued by OD using D3's nest function. Then the data is stored
     // into a OD matrix (two dimensional array).
     const groupedData = d3.nest()
-        .key(function(d) {return getVisibleName(d.o)})
-        .key(function(d) {return getVisibleName(d.d)})
-        .rollup(function(d) {return d.length;})
+        .key(function (d) {
+            return getVisibleName(d.o)
+        })
+        .key(function (d) {
+            return getVisibleName(d.d)
+        })
+        .rollup(function (d) {
+            return d.length;
+        })
         .entries(data);
 
     let odMatrix = Array.from(Array(keys.length), () => Array(keys.length).fill(0));
@@ -32,25 +36,26 @@ fetch('http://transporsrv2.epfl.ch/api/summary/lausannetest5/test1').then(respon
     //////////////////////////////////// General chord settings //////////////////////////////////
     //////////////////////////////////////////////////////////////////////////////////////////////
 
-    // canvas size and chord diagram radii
-    const w = 980,
-        h = 800,
-        r1 = h / 2,
-        r0 = r1 - 110;
+    const svgUp = d3.select("#containerForOD");
 
-    const geom = {"w": w, "h": h, "r1" : h/2, "r0": r1-110};
+    const w = svgUp.node().getBoundingClientRect().width,
+        h = svgUp.node().getBoundingClientRect().height;
+
+    const r1 = h/2;
+    const r0 = r1-110;
+
+    const geom = {"w": w, "h": h, "r1": h / 2, "r0": r1 - 110};
 
     const chord = d3.chord()
         .padAngle(0.05)
         //.sortSubgroups(d3.descending)
         .sortChords(d3.descending);
 
-
     const arc = d3.arc()
         .innerRadius(r0)
         .outerRadius(r0 + 20)
         .startAngle(d => d.startAngle)
-        .endAngle(d => d.endAngle );
+        .endAngle(d => d.endAngle);
 
 
     const ribbon = d3.ribbon()
@@ -64,24 +69,23 @@ fetch('http://transporsrv2.epfl.ch/api/summary/lausannetest5/test1').then(respon
     //////////////////////////////////// Static chord diagram ////////////////////////////////////
     //////////////////////////////////////////////////////////////////////////////////////////////
 
-    const svgStatic = d3.select("body").append("svg")
-        .attr("width", w)
-        .attr("height", h)
-        .append("svg:g")
-        .attr("id", "circle")
-        .attr("transform", "translate(" + w / 2 + "," + h / 2 + ")");
+    const svg = d3.select("#circle");
 
-    svgStatic.append("circle")
+    svg.append("circle")
         .attr("r", r0 + 20);
 
+    updateChordDiagram(svg, chord, arc, ribbon, colors, odMatrix, keys, null, geom);
+}
 
-    updateChordDiagram(svgStatic, chord, arc, ribbon, colors, odMatrix, keys, null, geom);
-
+function dynamicChord(data) {
 
     //////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////// Dynamic data processing //////////////////////////////////
     //////////////////////////////////////////////////////////////////////////////////////////////
 
+    // Set of keys computed from the grouped od zones.
+    const keys = Array.from(new Set(data.map(v => getVisibleName(v.o)).concat(data.map(v => getVisibleName(v.d)))));
+    //const keys = Array("left", "top", "right", "bottom")
 
 
     // Creation of time dependent OD matrix. An Array contains one OD matrix per time interval. Created in the same way
@@ -92,11 +96,17 @@ fetch('http://transporsrv2.epfl.ch/api/summary/lausannetest5/test1').then(respon
 
     let odPerTime = Array();
 
-    for (let t = startTime; t <= endTime; t+=timeInterval) {
+    for (let t = startTime; t <= endTime; t += timeInterval) {
         const odData = d3.nest()
-            .key(function(d) {return getVisibleName(d.o)})
-            .key(function(d) {return getVisibleName(d.d)})
-            .rollup(function(d) {return d.length;})
+            .key(function (d) {
+                return getVisibleName(d.o)
+            })
+            .key(function (d) {
+                return getVisibleName(d.d)
+            })
+            .rollup(function (d) {
+                return d.length;
+            })
             .entries(data.filter(p => p.en <= t && t <= p.ex));
 
         let odMatrix = Array.from(Array(keys.length), () => Array(keys.length).fill(0));
@@ -111,18 +121,44 @@ fetch('http://transporsrv2.epfl.ch/api/summary/lausannetest5/test1').then(respon
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////// General chord settings //////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////////////
+
+    const svgUp = d3.select("#containerForOD");
+
+    const w = svgUp.node().getBoundingClientRect().width,
+        h = svgUp.node().getBoundingClientRect().height;
+    const r1 = h/2;
+    const r0 = r1-110;
+
+    const geom = {"w": w, "h": h, "r1": h / 2, "r0": r1 - 110};
+
+    const chord = d3.chord()
+        .padAngle(0.05)
+        //.sortSubgroups(d3.descending)
+        .sortChords(d3.descending);
+
+    const arc = d3.arc()
+        .innerRadius(r0)
+        .outerRadius(r0 + 20)
+        .startAngle(d => d.startAngle)
+        .endAngle(d => d.endAngle);
+
+
+    const ribbon = d3.ribbon()
+        .radius(r0)
+        .startAngle(d => d.startAngle)
+        .endAngle(d => d.endAngle);
+
+    const colors = d3.scaleOrdinal(d3.schemeRdYlGn[11]);
+
+    //////////////////////////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////// Dynamic chord diagram //////////////////////////////////
     //////////////////////////////////////////////////////////////////////////////////////////////
 
+    const svg = d3.select("#circle");
 
-    const svgDynamic = d3.select("body").append("svg")
-        .attr("width", w)
-        .attr("height", h)
-        .append("svg:g")
-        .attr("id", "circle")
-        .attr("transform", "translate(" + w / 2 + "," + h / 2 + ")");
-
-    svgDynamic.append("circle")
+    svg.append("circle")
         .attr("r", r0 + 20);
 
     let currentTimeIndex = 0;
@@ -134,15 +170,11 @@ fetch('http://transporsrv2.epfl.ch/api/summary/lausannetest5/test1').then(respon
         if (currentTimeIndex >= odPerTime.length) {
             clearInterval(chordAnimation);
         } else {
-            last_layout = updateChordDiagram(svgDynamic, chord, arc, ribbon, colors, odPerTime[currentTimeIndex], keys, last_layout, geom);
+            last_layout = updateChordDiagram(svg, chord, arc, ribbon, colors, odPerTime[currentTimeIndex], keys, last_layout, geom);
             currentTimeIndex += 1;
         }
     }
 
     chordAnimation = setInterval(animateChordDiagram, 1000);
-
-    // End of chord diagrams
-}).catch(err => {
-    console.log(err)
-});
+}
 

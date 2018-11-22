@@ -8,6 +8,8 @@ let trajectories = null;
 let selectedInfra = null;
 let selectedTraj = null;
 
+let infraSelected = false;
+
 let fullScreenBool = false;
 
 let fancyViz = false;
@@ -93,6 +95,8 @@ function updateDescriptionInfra(e) {
 
 function getTraj() {
 
+    infraSelected = true;
+
     const url = baseURL + 'trajlist/' + selectedInfra['name'];
 
     // We will have to take into account the infra.
@@ -108,7 +112,9 @@ function getTraj() {
             console.log(trajectories);
             // DEBUG
             //trajectories = [{'name': 'traj1-'+selectedInfra.name, 'description': 'asdasdasd'}, {'name': 'traj2-'+selectedInfra.name, 'description': '123123'}, {'name': 'traj3-'+selectedInfra.name, 'description': 'Lorem Ipsum'}];
-            addTraj()
+            addTraj();
+            document.getElementById("VizCont").style.display = "";
+            prepViz2D(selectedInfra.name, selectedInfra.xmin, selectedInfra.xmax, selectedInfra.ymin, selectedInfra.ymax);
         })
         .fail( function(xhr, textStatus, errorThrown) {
             alert("Error, please reload the website.");
@@ -138,7 +144,6 @@ function addTraj() {
     document.getElementById('textDescTraj').innerHTML = trajectories[0]['description'];
 
     selectedTraj = trajectories[0];
-    console.log(selectedTraj);
 }
 
 function updateDescriptionTraj(e) {
@@ -164,11 +169,37 @@ function updateDescriptionTraj(e) {
 
 
 function dataSelected() {
-    console.log(selectedTraj);
-    //window.alert('Infrastructure: ' + selectedInfra.name + '\nTrajectories: ' + selectedTraj);
-    console.log(selectedInfra.name, selectedTraj, selectedInfra.xmin, selectedInfra.xmax, selectedInfra.ymin, selectedInfra.ymax);
 
-    viz2D(selectedInfra.name, selectedTraj.name, selectedInfra.xmin, selectedInfra.xmax, selectedInfra.ymin, selectedInfra.ymax, selectedTraj.tmin, selectedTraj.tmax);
+    if (!infraSelected) {
+        window.alert("Please, choose an infrastructure first.")
+    } else {
+        // Show the rest of the webpage
+        document.getElementById("StatsCont").style.display = "";
+
+        const urlSummary = "http://transporsrv2.epfl.ch/api/summary/"+selectedInfra.name+"/"+selectedTraj.name;;
+
+        fetch(urlSummary).then(response => {
+            return response.json();
+        }).then(data => {
+
+            prepareChord(data);
+        }).catch(err => {
+            console.log(err)
+        });
+
+        const urlTraj = "http://transporsrv2.epfl.ch/api/trajectoriesbytime/"+selectedInfra.name+"/"+selectedTraj.name;
+
+        fetch(urlTraj).then(response => {
+            return response.json();
+        }).then(data => {
+            runViz2D(data, selectedTraj.tmin, selectedTraj.tmax);
+
+            staticChord(data);
+
+        }).catch(err => {
+            console.log(err)
+        });
+    }
 }
 
 function fullScreen(e) {
