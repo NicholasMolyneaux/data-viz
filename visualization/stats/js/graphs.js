@@ -1,48 +1,38 @@
 function drawGraph(id) {
 
-    setBaseOptions(id);
+    graphOptions[id]['nbrBins'] = 20;
+    graphOptions[id]['showNumbers'] = false;
+    graphOptions[id]['yAxis'] = "Count";
+    graphOptions[id]['yAxisValue'] = 'count';
+    graphOptions[id]['fontSize'] = 20;
+    graphOptions[id]['counterColor'] = 1;
+    graphOptions[id]['colors'] = ['#0000FF'];
+    graphOptions[id]['colorIndex'] = {'color1': 0};
+    graphOptions[id]['yMin'] = null;
+    graphOptions[id]['yMax'] = null;
+    graphOptions[id]['xMin'] = null;
+    graphOptions[id]['xMax'] = null;
+    graphOptions[id]['binsData'] = {};
 
-    console.log(graphOptions);
-
-    if (graphOptions[id].type == 'histogram') {
-        hist(id, 'start');
-    }
-
-}
-
-function setBaseOptions(id) {
-    if (graphOptions[id].type == 'histogram') {
-
-        graphOptions[id]['nbrBins'] = 20;
-        graphOptions[id]['showNumbers'] = false;
-        graphOptions[id]['yAxis'] = "Count";
-        graphOptions[id]['yAxisValue'] = 'count';
-        graphOptions[id]['fontSize'] = 20;
-        graphOptions[id]['counterColor'] = 1;
-        graphOptions[id]['colors'] = ['#0000FF'];
-        graphOptions[id]['colorIndex'] = {'color1': 0};
-        graphOptions[id]['yMin'] = null;
-        graphOptions[id]['yMax'] = null;
-        graphOptions[id]['xMin'] = null;
-        graphOptions[id]['xMax'] = null;
-        graphOptions[id]['binsData'] = {};
-    }
+    hist(id, 'start');
 }
 
 function hist(id, state) {
     // State is used for the transitions
 
+    console.log("GOOO");
+
     const transLength = 1000;
 
     const vizId = "viz_" + id;
-
-    document.getElementById("stats_" + id).style.display = "";
 
     // A formatter for counts.
     const formatCount = d3.format(",.0f");
     const formatCountPerc = d3.format(",.1f");
 
     const ttDiv = d3.select("#" + vizId);
+
+    console.log(document.getElementById(vizId));
 
     let margin = {top: 20, right: 20, bottom: 0, left: 0};
 

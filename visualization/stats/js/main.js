@@ -25,14 +25,10 @@ let graphDivs = new Array();
 let graphOptions = new Object();
 
 queue()
-    .defer(d3.json, dataFolder + "small/sim_results_simulation_trajectories.json")
-    .defer(d3.json, dataFolder + "small/sim_results_ped_IDS_per_OD.json")
     .defer(d3.json, dataFolder + "factice/hist.json")
     .await(main);
 
-function main(error, trajectories, OD, histograms) {
-    pedestrianPaths = trajectories;
-    ODPed = OD;
+function main(error, histograms) {
     histData = histograms;
 
     update_info();

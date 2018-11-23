@@ -199,7 +199,20 @@ function dataSelected() {
         }).catch(err => {
             console.log(err)
         });
+
+        fetch("data/factice/hist.json").then(response => {
+            return response.json();
+        }).then(hist => {
+            addHistograms(hist);
+
+        }).catch(err => {
+            console.log(err)
+        });
+
     }
+
+
+
 }
 
 function fullScreen(e) {

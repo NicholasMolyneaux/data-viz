@@ -58,5 +58,34 @@ function prepareChord(data) {
     dynamicChord(data);
 }
 
+// Options specific to a graph. key = graphID (Data + other options)
+let graphOptions = new Object();
+
+function addHistograms(hist) {
+
+    $.get('visualization/stats/templates/graph.mst', function(graph) {
+        var rendered = Mustache.render(graph, {id: 'tt'});
+        $('#TTContainer').append(rendered);
+    }).then(() => {
+        graphOptions['tt'] = {'data': hist['tt'], 'xAxis': 'Travel Time [s]'};
+
+        drawGraph('tt');
+    });
+
+
+
+    $.get('visualization/stats/templates/graph.mst', function(graph) {
+        var rendered = Mustache.render(graph, {id: 'speed'});
+        $('#speedContainer').append(rendered);
+    }).then(() => {
+
+        graphOptions['speed'] = {'data': hist['density'], 'xAxis': 'Speed [m/s]'};
+
+        drawGraph('speed');
+
+    });
+
+}
+
 
 

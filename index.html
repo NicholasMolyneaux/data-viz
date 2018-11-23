@@ -45,7 +45,7 @@
     </nav>
 
     <!-- Main jumbotron for a primary marketing message or call to action -->
-    <div class="jumbotron jumbotron-fluid">
+    <div class="jumbotron jumbotron-fluid mainTitle">
         <div class="container">
             <h1 id="title">The Walking Data</h1>
             <br><br>
@@ -103,8 +103,8 @@
         </div>
     </div>
 
-    <!--<div id="rest" style="display: none;">-->
     <div id="VizCont" style="display: none;">
+    <!--<div id="VizCont">-->
         <hr>
 
         <div class="container">
@@ -153,9 +153,13 @@
 
         <hr>
     </div>
-    <div id="StatsCont" style="display: none;">
 
-        <h1>Statistics</h1>
+    <div id="StatsCont" style="display: none;">
+    <!--<div id="StatsCont">-->
+
+        <div class="container jumbotron">
+            <h1 id="statsTitle">Statistics</h1>
+        </div>
 
         <h2>OD Chord Diagram</h2>
 
@@ -164,8 +168,27 @@
                 <div class="col-12" id="ODCont">
 
                 </div>
+                <div class="col-12 opt-graphs">
+                    <p>The options for the OD chord diagrams will be shown here.</p>
+
+                </div>
             </div>
         </div>
+
+        <br>
+
+        <h2>Travel Time</h2>
+
+        <div class="container" id="TTContainer">
+        </div>
+
+        <br>
+
+        <h2>Speed</h2>
+
+        <div class="container" id="speedContainer">
+        </div>
+
     </div>
 
 
@@ -200,7 +223,9 @@
 <script src="https://d3js.org/d3.v5.min.js"></script>
 <script src="https://d3js.org/d3-voronoi.v1.min.js"></script>
 <script src="https://d3js.org/d3-polygon.v1.min.js"></script>
+<script src="http://d3js.org/queue.v1.min.js"></script>
 <script src="js/d3-polygon-clip.js"></script>
+<script src='js/d3-tip.js'></script>
 
 <!-- All visualization -->
 <script src="js/viz.js"></script>
@@ -211,6 +236,14 @@
 <!-- Chord diagram -->
 <script src="visualization/stats/js/chord_functions.js"></script>
 <script src="visualization/stats/js/chord.js"></script>
+
+<!-- Histograms -->
+<script src="visualization/stats/js/graphs.js"></script>
+<script src="js/mustache.min.js"></script>
+<script src="js/html2canvas.min.js"></script>
+<script src="js/saveSvgAsPng.js"></script>
+<script src="js/FileSaver.min.js"></script>
+
 
 <!-- 3D visualization -->
 <!--<script src="visualization/3D/js/debug.js"></script>

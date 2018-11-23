@@ -1,12 +1,11 @@
-<div class="row justify-content-center" id="stats_{{ id }}" style="display: none;">
+<div class="row justify-content-center" id="stats_{{ id }}">
     <div class="col-lg-9" id="{{ id }}">
             <div class="graph col" id="viz_{{ id }}">
         </div>
     </div>
     <div class="col-lg-2 col-10 opt-graphs">
-        <!--<h4 class="subtitle">Options:</h4>-->
-        <h4 class="subtitle">Options:</h4>
-        <br>
+        <!--<h4 class="subtitle">Options:</h4>
+        <br>-->
         <label for="nbrBins_{{ id }}">Number of Bins:</label>
         <div class="row">
             <div class="col-lg-8 col-md-10 col-10 sliderDiv">
