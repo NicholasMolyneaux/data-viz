@@ -1,16 +1,71 @@
 function loadPedestrians() {
 
-    fetch(dataFolder + "small/pedestrians_clean.json")
+    const infraName = "lausannetest5";
+    const TrajName = "test1";
+
+    const url = "http://transporsrv2.epfl.ch/api/trajectoriesbytime/"+infraName+"/"+TrajName;
+
+    fetch(url)
         .then(response => response.json())
         .then(json => {
-                json.forEach((item, index) => {
-                    setTimeout(() => {
-                        animatePedestrians(item)
-                    }, INTERVAL * index);
-                })
-            }
-        )
+            interpolateAndAnimate(json);
+        })
 }
+
+function intersection(o1, o2) {
+    return Object.keys(o1).filter({}.hasOwnProperty.bind(o2));
+}
+
+function interpolateAndAnimate(json) {
+
+    console.log(json[0]);
+    console.log(json[10]);
+
+    const arrayToObject = (array) =>
+        array.reduce((obj, item) => {
+            obj[item.id] = item
+            return obj
+        }, {});
+
+    const delta = 0.1;
+
+    let interpJson = [];
+
+    for(let i=0; i<json.length-1; i++) {
+        interpJson.push(json[i]);
+
+        const init = arrayToObject(json[i].data);
+        const final = arrayToObject(json[i+1].data);
+
+        const inter = intersection(init, final);
+
+        for(let j=1; j<=INTERP; j++) {
+            let interpObj = new Object();
+            interpObj['time'] = json[i].time + delta/(INTERP+1)*j
+
+            let data = [];
+            for(let k=0; k<inter.length; k++) {
+                const id = inter[k];
+                let obj = new Object();
+                obj['id'] = init[id]['id'];
+                obj['x'] = (final[id]['x']-init[id]['x'])/(INTERP+1)*j + init[id]['x'];
+                obj['y'] = (final[id]['y']-init[id]['y'])/(INTERP+1)*j + init[id]['y'];
+                data.push(obj);
+            }
+            interpObj['data'] = data;
+            interpJson.push(interpObj);
+        }
+    }
+
+    interpJson.forEach((item, index) => {
+        setTimeout(() => {
+            animatePedestrians(item)
+        }, CUSTOMINTERVAL * index);
+    })
+
+}
+
+
 
 function animatePedestrians(json) {
 
@@ -30,7 +85,8 @@ function animatePedestrians(json) {
             updatePosition(ped);
         } else {
             // Create a pedestrian
-            createPedestrian(ped);
+            //createPedestrian(ped);
+            createZombie(ped);
         }
 
     });
@@ -62,7 +118,6 @@ function createPedestrian(ped) {
     console.log("Create Pedestrian with ID " + ped.id);
     dctPed[ped.id] = new Object();
 
-
     loader.load( modelsFolder + 'minecraft-char.glb', gltf => {
 
         // Bounding box to get the size of the object
@@ -92,6 +147,80 @@ function createPedestrian(ped) {
 
 }
 
+function createZombie(ped) {
+
+    console.log("Create Zombie with ID " + ped.id);
+    dctPed[ped.id] = new Object();
+
+    let gender = 'male';
+
+    if (Math.random() > 0.5) {
+        gender = 'female';
+    }
+
+    const nbr = Math.floor(Math.random() * 3) + 1;
+
+    const texture = Math.floor(Math.random() * 10) + 1;
+
+    const proba = Math.random();
+
+    let anim = "lunwalk";
+
+    if (proba < 0.2) {
+        anim = "crawl";
+    } else if (proba < 0.6) {
+        anim = "walk";
+    }
+
+    loader.load(modelsFolder + '3DRT/zombie_' + gender + nbr + '_text' + texture + '_' + anim + '.glb', function (gltf) {
+
+        let object = gltf.scene;
+
+        object.traverse(function (child) {
+            if (child.isMesh) {
+
+                child.castShadow = true;
+                child.receiveShadow = true;
+            }
+        });
+
+        // Bounding box to get the size of the object
+        var box = new THREE.Box3().setFromObject(object);
+        var size = box.getSize();
+
+        // Define the ration and scale the minecraft steve
+        var ratio = peopleHeight / size.y;
+        console.log("ratio = " + ratio);
+        object.scale.set(ratio, ratio, ratio);
+
+        // Animation of the object
+        object.mixer = new THREE.AnimationMixer( object );
+
+        mixers.push( object.mixer );
+        var action = object.mixer.clipAction( gltf.animations[0]);
+        action.play();
+
+        clocks.push(new THREE.Clock());
+
+        // Set the position
+        gltf.scene.position.set(ped.x-avg[0],0,ped.y-avg[1]);
+
+        gltf.scene.matrixWorldNeedsUpdate = true;
+        gltf.scene.updateMatrixWorld();
+
+        // Add the pedestrian to dct
+        dctPed[ped.id] = gltf.scene;
+
+        // Add the object to the scene
+        scene.add( gltf.scene );
+
+    }, undefined, function ( e ) {
+        console.error( e );
+    } );
+
+
+}
+
 function updatePosition(ped) {
     if (dctPed[ped.id].hasOwnProperty("position")) {
 
@@ -115,6 +244,8 @@ function updatePosition(ped) {
         } else {
             angle = Math.atan(direction[1]/direction[0]) + Math.PI/2;
         }
+
+        angle = angle - Math.PI/2;
 
         dctPed[ped.id].position.set(newX, 0, newY);
         if (norm > 0) {

@@ -5,7 +5,7 @@
  *  - Ammo.js https://github.com/kripken/ammo.js
  *
  * MMDPhysics calculates physics with Ammo(Bullet based JavaScript Physics engine)
- * for MMD model loaded by THREE.MMDLoader.
+ * for MMD models loaded by THREE.MMDLoader.
  *
  * TODO
  *  - Physics in Worker

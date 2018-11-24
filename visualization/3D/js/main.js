@@ -2,7 +2,7 @@ console.clear();
 
 // Various folders
 const assetsFolder = "./assets/";
-const modelsFolder = "./model/";
+const modelsFolder = "./models/";
 const dataFolder = "./data/";
 
 let container, stats, controls, raycaster;
@@ -24,11 +24,22 @@ let walls = [];
 // Pedestrians
 let loader = new THREE.GLTFLoader();
 let dctPed = new Object();
+let mixers = [];
 
 let mouse = new THREE.Vector2(), INTERSECTED;
 let SELECTED = new Object();
 
-const INTERVAL = 10;
+const INTERP = 4;
+const INTSECOND = 100;
+const INTERVAL = INTSECOND/(INTERP+1);
+
+const FACTOR = 2;
+
+const CUSTOMINTERVAL = INTERVAL/FACTOR;
+
+console.log(FACTOR);
+
+let clocks = [];
 
 init();
 
@@ -56,14 +67,18 @@ function init() {
     light.position.set( 0, 1, 0 );
     scene.add( light );
 
-    // model
+    // models
     loadAndBuildWalls();
+
 
     // Load pedestrians
     loadPedestrians();
 
     // Load one pedestrian (DEBUG PURPOSE)
     //loadMinecraft();
+
+    // Load one zombie (DEBUG PURPOSE)
+    //loadZombie();
 
     // Add axes (DEBUG PURPOSE)
     //var worldAxis = new THREE.AxesHelper(20);
@@ -104,7 +119,14 @@ function onWindowResize() {
 
 function animate() {
     requestAnimationFrame( animate );
-    render()
+
+    if ( mixers.length > 0 ) {
+        for ( var i = 0; i < mixers.length; i ++ ) {
+            mixers[i].update( FACTOR*clocks[i].getDelta() );
+        }
+    }
+
+    render();
     //console.log(camera.position)
     stats.update();
 

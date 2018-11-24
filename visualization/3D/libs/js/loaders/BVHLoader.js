@@ -53,7 +53,7 @@ THREE.BVHLoader.prototype = {
 		*/
 		function readBvh( lines ) {
 
-			// read model structure
+			// read models structure
 
 			if ( nextLine( lines ) !== 'HIERARCHY' ) {
 

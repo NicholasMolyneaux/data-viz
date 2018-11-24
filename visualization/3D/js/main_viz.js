@@ -3,7 +3,7 @@ function viz3D() {
 
     // Various folders
     const assetsFolder = "./assets/";
-    const modelsFolder = "./model/";
+    const modelsFolder = "./models/";
     const dataFolder = "./data/";
 
     let container, stats, controls, raycaster;
@@ -57,7 +57,7 @@ function viz3D() {
         light.position.set(0, 1, 0);
         scene.add(light);
 
-        // model
+        // models
         loadAndBuildWalls();
 
         // Load pedestrians

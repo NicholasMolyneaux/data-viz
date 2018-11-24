@@ -190,7 +190,7 @@ function Cloth( w, h ) {
 
 
 	// While many systems use shear and bend springs,
-	// the relaxed constraints model seems to be just fine
+	// the relaxed constraints models seems to be just fine
 	// using structural springs.
 	// Shear
 	// var diagonalDist = Math.sqrt(restDistance * restDistance * 2);

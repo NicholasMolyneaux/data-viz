@@ -127,9 +127,13 @@ function addShapes( shape, x, y, z, rx, ry, rz, s ) {
 
 function loadAndBuildWalls() {
 
-    fetch(dataFolder + "small/walls.json")
+    const infraName = "lausannetest5";
+
+    const url = "http://transporsrv2.epfl.ch/api/infra/walls/" + infraName;
+
+    fetch(url)
         .then(response => response.json())
-        .then(json => buildWalls(json.walls));
+        .then(json => buildWalls(json));
 
 }
 
@@ -137,9 +141,10 @@ function buildWalls(jsonWalls) {
 
     jsonWalls.forEach(function(w) {
 
-        var length = Math.max(Math.abs(w.x1-w.x2), Math.abs(w.y1-w.y2));
+        var length = Math.max(Math.abs(parseFloat(w.x1)-parseFloat(w.x2)), Math.abs(parseFloat(w.y1)-parseFloat(w.y2)));
 
-        var vector = [w.x2-w.x1, w.y2-w.y1];
+        var vector = [parseFloat(w.x2)-parseFloat(w.x1), parseFloat(w.y2)-parseFloat(w.y1)];
+
         var norm = Math.sqrt(Math.pow(vector[0],2) + Math.pow(vector[1],2));
         vector[0] /= norm;
         vector[1] /= norm;
@@ -169,8 +174,8 @@ function buildWalls(jsonWalls) {
 
         cube.rotateY(angle);
 
-        cube.position.x = (w.x2+w.x1)/2;
-        cube.position.z = (w.y2+w.y1)/2;
+        cube.position.x = (parseFloat(w.x2)+parseFloat(w.x1))/2;
+        cube.position.z = (parseFloat(w.y2)+parseFloat(w.y1))/2;
         cube.position.y = wallHeight/2;
         // Add more information to the object
         cube.length = length;
@@ -182,18 +187,24 @@ function buildWalls(jsonWalls) {
 
     });
 
-    // Add the corners for the floor and ceiling
 
-    const corners = buildOuterShell(jsonWalls.filter(w => w.type === 0));
+
+    // Add the corners for the floor and ceiling
+    const corners = buildOuterShell(jsonWalls.filter(w => w.wtype === "0"));
+
+    console.log(corners);
 
     avg[0] = avg[0]/walls.length;
     avg[1] = avg[1]/walls.length;
+
+    console.log(avg);
 
     walls.forEach(c => {
 
         c.position.x -= avg[0];
         c.position.z -= avg[1];
 
+        // DEBUG
         //var worldAxis = new THREE.AxesHelper(1);
         //c.add(worldAxis);
 

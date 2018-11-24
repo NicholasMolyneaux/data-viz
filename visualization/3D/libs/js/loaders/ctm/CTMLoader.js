@@ -126,7 +126,7 @@ THREE.CTMLoader.prototype.load = function ( url, callback, parameters ) {
 							scope.createModel( ctmFile, callback );
 
 							var e = Date.now();
-							console.log( "model load time [worker]: " + ( e - e1 ) + " ms, total: " + ( e - s ) );
+							console.log( "models load time [worker]: " + ( e - e1 ) + " ms, total: " + ( e - s ) );
 
 						}
 
@@ -247,7 +247,7 @@ THREE.CTMLoader.prototype.createModel = function ( file, callback ) {
 
 	var geometry = new Model();
 
-	// compute vertex normals if not present in the CTM model
+	// compute vertex normals if not present in the CTM models
 	if ( geometry.attributes.normal === undefined ) {
 
 		geometry.computeVertexNormals();

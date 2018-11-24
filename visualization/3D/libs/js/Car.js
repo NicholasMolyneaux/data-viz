@@ -2,10 +2,10 @@
  * @author alteredq / http://alteredqualia.com/
  * @author Lewy Blue https://github.com/looeee
  *
- * The model is expected to follow real world car proportions. You can try unusual car types
+ * The models is expected to follow real world car proportions. You can try unusual car types
  * but your results may be unexpected. Scaled models are also not supported.
  *
- * Defaults are rough estimates for a real world scale car model
+ * Defaults are rough estimates for a real world scale car models
  *
  */
 

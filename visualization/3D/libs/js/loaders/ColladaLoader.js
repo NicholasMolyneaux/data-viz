@@ -2912,7 +2912,7 @@ THREE.ColladaLoader.prototype = {
 
 					var parentVisualElement = targetElement.parentElement;
 
-					// connect the joint of the kinematics model with the element in the visual scene
+					// connect the joint of the kinematics models with the element in the visual scene
 
 					connect( axis.jointIndex, parentVisualElement );
 
@@ -3416,7 +3416,7 @@ THREE.ColladaLoader.prototype = {
 						// corresponding controller. In this case, we have to create a dummy boneInverse matrix
 						// for the respective bone. This bone won't affect any vertices, because there are no skin indices
 						// and weights defined for it. But we still have to add the bone to the sorted bone list in order to
-						// ensure a correct animation of the model.
+						// ensure a correct animation of the models.
 
 						boneInverse = new THREE.Matrix4();
 

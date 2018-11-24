@@ -450,7 +450,7 @@ var o3dgc = (function () {
     };
     // AdaptiveBitModel class 
     module.AdaptiveBitModel = function () {
-        // initialization to equiprobable model
+        // initialization to equiprobable models
         this.m_updateCycle = 4;
         this.m_bitsUntilUpdate = 4;
         this.m_bit0Prob = (1 << (local.O3DGC_AC_BM_LENGTH_SHIFT - 1)) >>> 0;
@@ -476,7 +476,7 @@ var o3dgc = (function () {
         // compute scaled bit 0 probability
         var scale = Math.floor(0x80000000 / this.m_bitCount);
         this.m_bit0Prob = (this.m_bit0Count * scale) >>> (31 - local.O3DGC_AC_BM_LENGTH_SHIFT);
-        // set frequency of model updates
+        // set frequency of models updates
         this.m_updateCycle = (5 * this.m_updateCycle) >>> 2;
         if (this.m_updateCycle > 64) {
             this.m_updateCycle = 64;
@@ -529,7 +529,7 @@ var o3dgc = (function () {
                 this.m_decoderTable[++s] = this.m_dataSymbols - 1;
             }
         }
-        // set frequency of model updates
+        // set frequency of models updates
         this.m_updateCycle = (5 * this.m_updateCycle) >>> 2;
         max_cycle = ((this.m_dataSymbols + 6) << 3) >>> 0;
         if (this.m_updateCycle > max_cycle) {
@@ -556,7 +556,7 @@ var o3dgc = (function () {
             Console.log("invalid number of data symbols");
             return module.O3DGC_ERROR_AC;
         }
-        if (this.m_dataSymbols !== number_of_symbols) { // assign memory for data model
+        if (this.m_dataSymbols !== number_of_symbols) { // assign memory for data models
             this.m_dataSymbols = number_of_symbols;
             this.m_lastSymbol = this.m_dataSymbols - 1;
             // define size of table for fast decoding
@@ -579,7 +579,7 @@ var o3dgc = (function () {
                 this.m_decoderTable = {};
             }
         }
-        this.Reset(); // initialize model
+        this.Reset(); // initialize models
         return module.O3DGC_OK;
     };
     // ArithmeticDecoder class
@@ -677,7 +677,7 @@ var o3dgc = (function () {
             this.RenormDecInterval(); // renormalization
         }
         if (--M.m_bitsUntilUpdate === 0) {
-            M.Update(); // periodic model update
+            M.Update(); // periodic models update
         }
         return bit; // return data bit value
     };
@@ -725,7 +725,7 @@ var o3dgc = (function () {
         }
         ++M.m_symbolCount[s];
         if (--M.m_symbolsUntilUpdate === 0) {
-            M.Update(false); // periodic model update
+            M.Update(false); // periodic models update
         }
         return s;
     };

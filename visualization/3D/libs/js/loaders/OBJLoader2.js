@@ -58,7 +58,7 @@ THREE.OBJLoader2 = (function () {
 	};
 
 	/**
-	 * Set the name of the model.
+	 * Set the name of the models.
 	 * @memberOf THREE.OBJLoader2
 	 *
 	 * @param {string} modelName

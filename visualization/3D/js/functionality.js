@@ -65,9 +65,9 @@ function followPedestrian() {
         let pos = SELECTED.getWorldPosition();
         let rot = SELECTED.getWorldQuaternion();
 
-        camera.position.set(pos.x, pos.y, pos.z);
+        camera.position.set(pos.x, 0.9*peopleHeight, pos.z);
         camera.quaternion.copy( rot );
-        camera.rotateY(Math.PI);
+        camera.rotateY(Math.PI/2);
         camera.aspect = 1;
 
         controls.enabled = false;

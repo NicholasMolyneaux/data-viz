@@ -30,7 +30,7 @@ THREE.SimplifyModifier = function () {};
 	function computeEdgeCollapseCost( u, v ) {
 
 		// if we collapse edge uv by moving u to v then how
-		// much different will the model change, i.e. the "error".
+		// much different will the models change, i.e. the "error".
 
 		var edgelength = v.position.distanceTo( u.position );
 		var curvature = 0;

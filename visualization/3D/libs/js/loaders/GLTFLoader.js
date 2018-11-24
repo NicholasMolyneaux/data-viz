@@ -42,7 +42,7 @@ THREE.GLTFLoader = ( function () {
 			}
 
 			// Tells the LoadingManager to track an extra item, which resolves after
-			// the model is fully loaded. This means the count of items loaded will
+			// the models is fully loaded. This means the count of items loaded will
 			// be incorrect, but ensures manager.onLoad() does not fire early.
 			scope.manager.itemStart( url );
 
@@ -786,7 +786,7 @@ THREE.GLTFLoader = ( function () {
 			 * normally be defined by MeshStandardMaterial.
 			 *
 			 * This method allows GLTFSpecularGlossinessMaterials to be cloned in the process of
-			 * loading a glTF model, but cloning later (e.g. by the user) would require these changes
+			 * loading a glTF models, but cloning later (e.g. by the user) would require these changes
 			 * AND also updating `.onBeforeRender` on the parent mesh.
 			 *
 			 * @param  {THREE.ShaderMaterial} source
@@ -1655,7 +1655,7 @@ THREE.GLTFLoader = ( function () {
 		// avoid having more than one THREE.Mesh with the same name, count
 		// references and rename instances below.
 		//
-		// Example: CesiumMilkTruck sample model reuses "Wheel" meshes.
+		// Example: CesiumMilkTruck sample models reuses "Wheel" meshes.
 		for ( var nodeIndex = 0, nodeLength = nodeDefs.length; nodeIndex < nodeLength; nodeIndex ++ ) {
 
 			var nodeDef = nodeDefs[ nodeIndex ];

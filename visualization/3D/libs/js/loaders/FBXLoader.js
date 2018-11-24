@@ -152,7 +152,7 @@ THREE.FBXLoader = ( function () {
 
 		},
 
-		// Parses FBXTree.Connections which holds parent-child connections between objects (e.g. material -> texture, model->geometry )
+		// Parses FBXTree.Connections which holds parent-child connections between objects (e.g. material -> texture, models->geometry )
 		// and details the connection type
 		parseConnections: function () {
 
@@ -474,7 +474,7 @@ THREE.FBXLoader = ( function () {
 			var name = materialNode.attrName;
 			var type = materialNode.ShadingModel;
 
-			// Case where FBX wraps shading model in property object.
+			// Case where FBX wraps shading models in property object.
 			if ( typeof type === 'object' ) {
 
 				type = type.value;
@@ -1260,7 +1260,7 @@ THREE.FBXLoader = ( function () {
 
 		},
 
-		// parse the model node for transform data
+		// parse the models node for transform data
 		getTransformData: function ( model, modelNode ) {
 
 			var transformData = {};
@@ -1572,8 +1572,8 @@ THREE.FBXLoader = ( function () {
 
 			}, null );
 
-			// Assume one model and get the preRotation from that
-			// if there is more than one model associated with the geometry this may cause problems
+			// Assume one models and get the preRotation from that
+			// if there is more than one models associated with the geometry this may cause problems
 			var modelNode = modelNodes[ 0 ];
 
 			var transformData = {};
@@ -1618,7 +1618,7 @@ THREE.FBXLoader = ( function () {
 
 				geo.addAttribute( 'skinWeight', new THREE.Float32BufferAttribute( buffers.vertexWeights, 4 ) );
 
-				// used later to bind the skeleton to the model
+				// used later to bind the skeleton to the models
 				geo.FBX_Deformer = skeleton;
 
 			}
@@ -2257,7 +2257,7 @@ THREE.FBXLoader = ( function () {
 
 			if ( THREE.NURBSCurve === undefined ) {
 
-				console.error( 'THREE.FBXLoader: The loader relies on THREE.NURBSCurve for any nurbs present in the model. Nurbs will show up as empty geometry.' );
+				console.error( 'THREE.FBXLoader: The loader relies on THREE.NURBSCurve for any nurbs present in the models. Nurbs will show up as empty geometry.' );
 				return new THREE.BufferGeometry();
 
 			}
@@ -2370,7 +2370,7 @@ THREE.FBXLoader = ( function () {
 		},
 
 		// parse nodes in FBXTree.Objects.AnimationCurveNode
-		// each AnimationCurveNode holds data for an animation transform for a model (e.g. left arm rotation )
+		// each AnimationCurveNode holds data for an animation transform for a models (e.g. left arm rotation )
 		// and is referenced by an AnimationLayer
 		parseAnimationCurveNodes: function () {
 
@@ -2522,7 +2522,7 @@ THREE.FBXLoader = ( function () {
 
 									if ( ! node.transform ) node.transform = new THREE.Matrix4();
 
-									// if the animated model is pre rotated, we'll have to apply the pre rotations to every
+									// if the animated models is pre rotated, we'll have to apply the pre rotations to every
 									// animation value as well
 									if ( 'PreRotation' in rawModel ) node.preRotation = rawModel.PreRotation.value;
 									if ( 'PostRotation' in rawModel ) node.postRotation = rawModel.PostRotation.value;
@@ -2548,7 +2548,7 @@ THREE.FBXLoader = ( function () {
 									var morpherID = connections.get( deformerID ).parents[ 0 ].ID;
 									var geoID = connections.get( morpherID ).parents[ 0 ].ID;
 
-									// assuming geometry is not used in more than one model
+									// assuming geometry is not used in more than one models
 									var modelID = connections.get( geoID ).parents[ 0 ].ID;
 
 									var rawModel = fbxTree.Objects.Model[ modelID ];

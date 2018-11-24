@@ -9,7 +9,7 @@
  * MMDLoader creates Three.js Objects from MMD resources as
  * PMD, PMX, VMD, and VPD files.
  *
- * PMD/PMX is a model data format, VMD is a motion data format
+ * PMD/PMX is a models data format, VMD is a motion data format
  * VPD is a posing data format used in MMD(Miku Miku Dance).
  *
  * MMD official site
@@ -83,7 +83,7 @@ THREE.MMDLoader = ( function () {
 			// Should I detect by seeing header?
 			if ( modelExtension !== 'pmd' && modelExtension !== 'pmx' ) {
 
-				if ( onError ) onError( new Error( 'THREE.MMDLoader: Unknown model file extension .' + modelExtension + '.' ) );
+				if ( onError ) onError( new Error( 'THREE.MMDLoader: Unknown models file extension .' + modelExtension + '.' ) );
 
 				return;
 
@@ -124,7 +124,7 @@ THREE.MMDLoader = ( function () {
 		/**
 		 * Loads mode file and motion file(s) as an object containing
 		 * a THREE.SkinnedMesh and a THREE.AnimationClip.
-		 * Tracks of THREE.AnimationClip are fitting to the model.
+		 * Tracks of THREE.AnimationClip are fitting to the models.
 		 *
 		 * @param {string} modelUrl - url to Model(.pmd or .pmx) file
 		 * @param {string|Array{string}} vmdUrl - url(s) to animation(.vmd) file

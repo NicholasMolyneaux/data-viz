@@ -781,7 +781,7 @@ THREE.MMDAnimationHelper = ( function () {
 		 *    Calculating IK, Grant, and Physics after mixer animation can break
 		 *    the cache coherency.
 		 *
-		 * 2. Applying Grant two or more times without reset the posing breaks model.
+		 * 2. Applying Grant two or more times without reset the posing breaks models.
 		 */
 		_saveBones: function ( mesh ) {
 
