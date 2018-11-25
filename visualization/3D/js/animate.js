@@ -1,7 +1,7 @@
 function loadPedestrians() {
 
     const infraName = "lausannetest5";
-    const TrajName = "test1";
+    const TrajName = "test4";
 
     const url = "http://transporsrv2.epfl.ch/api/trajectoriesbytime/"+infraName+"/"+TrajName;
 
@@ -85,8 +85,11 @@ function animatePedestrians(json) {
             updatePosition(ped);
         } else {
             // Create a pedestrian
-            //createPedestrian(ped);
-            createZombie(ped);
+            if (STYLE == "normal") {
+                createPedestrian(ped);
+            } else if (STYLE == "TWD") {
+                createZombie(ped);
+            }
         }
 
     });
@@ -114,6 +117,61 @@ function deletePedestrian(listIds) {
 }
 
 function createPedestrian(ped) {
+
+    console.log("Create Pedestrian with ID " + ped.id);
+    dctPed[ped.id] = new Object();
+
+    loader.load( modelsFolder + 'pedestrian.glb', gltf => {
+
+        let object = gltf.scene;
+
+        object.traverse(function (child) {
+            if (child.isMesh) {
+
+                child.castShadow = true;
+                child.receiveShadow = true;
+            }
+        });
+
+        // Bounding box to get the size of the object
+        var box = new THREE.Box3().setFromObject(object);
+        var size = box.getSize();
+
+        // Define the ration and scale the minecraft steve
+        var ratio = peopleHeight / size.y;
+        console.log("ratio = " + ratio);
+        object.scale.set(ratio, ratio, ratio);
+
+        // Animation of the object
+        object.mixer = new THREE.AnimationMixer( object );
+
+        mixers.push( object.mixer );
+        var action = object.mixer.clipAction( gltf.animations[0]);
+        action.play();
+
+        clocks.push(new THREE.Clock());
+
+        // Set the position
+        gltf.scene.position.set(ped.x-avg[0],0,ped.y-avg[1]);
+
+        gltf.scene.matrixWorldNeedsUpdate = true;
+        gltf.scene.updateMatrixWorld();
+
+        // Add the pedestrian to dct
+        dctPed[ped.id] = gltf.scene;
+
+        // Add the object to the scene
+        scene.add( gltf.scene );
+
+
+    }, undefined, function ( e ) {
+        console.error( e );
+    } );
+
+}
+
+
+function createSteve(ped) {
 
     console.log("Create Pedestrian with ID " + ped.id);
     dctPed[ped.id] = new Object();
@@ -245,7 +303,9 @@ function updatePosition(ped) {
             angle = Math.atan(direction[1]/direction[0]) + Math.PI/2;
         }
 
-        angle = angle - Math.PI/2;
+        if (STYLE == "TWD") {
+            angle = angle - Math.PI/2;
+        }
 
         dctPed[ped.id].position.set(newX, 0, newY);
         if (norm > 0) {

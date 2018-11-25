@@ -45,6 +45,9 @@ init();
 
 animate();
 
+//const STYLE = "normal";
+const STYLE = "TWD";
+
 function init() {
 
     // Set Camera position

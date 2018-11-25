@@ -67,7 +67,12 @@ function followPedestrian() {
 
         camera.position.set(pos.x, 0.9*peopleHeight, pos.z);
         camera.quaternion.copy( rot );
-        camera.rotateY(Math.PI/2);
+
+        if (STYLE == "normal") {
+            camera.rotateY(Math.PI);
+        } else if(STYLE == "TWD") {
+            camera.rotateY(Math.PI/2);
+        }
         camera.aspect = 1;
 
         controls.enabled = false;
