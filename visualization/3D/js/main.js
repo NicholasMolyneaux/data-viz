@@ -45,8 +45,8 @@ init();
 
 animate();
 
-//const STYLE = "normal";
-const STYLE = "TWD";
+const STYLE = "normal";
+//const STYLE = "TWD";
 
 function init() {
 
