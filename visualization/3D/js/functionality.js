@@ -26,13 +26,17 @@ function hideWalls() {
 }
 
 function onDocumentMouseMove( event ) {
+    event.stopPropagation();
     event.preventDefault();
     mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
     mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
 }
 
 function onDocumentMouseDown( event ) {
+
+    event.stopPropagation();
     event.preventDefault();
+
     mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
     mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
 
@@ -55,8 +59,6 @@ function onDocumentMouseDown( event ) {
         followPedestrian();
 
     }
-
-    event.stopImmediatePropagation();
 }
 
 function followPedestrian() {
@@ -86,6 +88,8 @@ function followPedestrian() {
 
 function onKeyPress( event ) {
 
+    event.preventDefault();
+
     if (event.code === "Space") {
 
         // Reset camera and controls
@@ -93,6 +97,7 @@ function onKeyPress( event ) {
         controls.target.set( 0,0,0 );
         controls.enabled = true;
         controls.update();
+        controls.reset();
 
         SELECTED = new Object();
 
