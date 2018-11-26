@@ -223,8 +223,11 @@ function createZombie(ped) {
         object.traverse(function (child) {
             if (child.isMesh) {
 
+                console.log(child.material);
+
                 child.castShadow = true;
                 child.receiveShadow = true;
+                child.material.refractionRatio = 0.5;
             }
         });
 

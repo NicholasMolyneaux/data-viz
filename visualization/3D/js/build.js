@@ -233,7 +233,13 @@ function addTWDLights(scene, zones) {
 
         console.log(xPos, yPos);
 
-        let light = new THREE.PointLight( 0xbbbbff, Math.random()/2, 10 );
+        let color = 0xEDEEFF;
+
+        if(Math.random() > 0.9) {
+            color = 0x671B1F;
+        }
+
+        let light = new THREE.PointLight( color, Math.random(), 10 );
         light.position.set( xPos, wallHeight, yPos);
         scene.add( light );
 

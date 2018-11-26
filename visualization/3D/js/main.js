@@ -32,7 +32,7 @@ const INTERP = 4;
 const INTSECOND = 100;
 const INTERVAL = INTSECOND/(INTERP+1);
 
-const FACTOR = 2;
+const FACTOR = 1;
 
 const CUSTOMINTERVAL = INTERVAL/FACTOR;
 
@@ -117,7 +117,7 @@ function init() {
     } else if (STYLE == "TWD") {
         scene.background = new THREE.Color(0x000000);
 
-        light = new THREE.HemisphereLight( 0xbbbbff, 0x444422, 0.01 );
+        light = new THREE.HemisphereLight( 0xffffff, 0x444422, 0.0001 );
         light.position.set( 0, wallHeight, 0 );
         light.castShadow = true;
         scene.add( light );
