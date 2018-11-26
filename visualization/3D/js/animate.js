@@ -1,17 +1,3 @@
-function loadPedestrians() {
-
-    const infraName = "lausannetest5";
-    const TrajName = "test4";
-
-    const url = "http://transporsrv2.epfl.ch/api/trajectoriesbytime/"+infraName+"/"+TrajName;
-
-    fetch(url)
-        .then(response => response.json())
-        .then(json => {
-            interpolateAndAnimate(json);
-        })
-}
-
 function intersection(o1, o2) {
     return Object.keys(o1).filter({}.hasOwnProperty.bind(o2));
 }

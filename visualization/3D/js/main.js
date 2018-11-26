@@ -3,7 +3,6 @@ console.clear();
 // Various folders
 const assetsFolder = "./assets/";
 const modelsFolder = "./models/";
-const dataFolder = "./data/";
 
 let container, stats, controls, raycaster;
 let camera, scene, renderer, light;
@@ -40,13 +39,39 @@ const CUSTOMINTERVAL = INTERVAL/FACTOR;
 console.log(FACTOR);
 
 let clocks = [];
+let lights = [];
 
-init();
+//const STYLE = "normal";
+const STYLE = "TWD";
 
-animate();
+const infraName = "lausannetest5";
+const TrajName = "test4";
 
-const STYLE = "normal";
-//const STYLE = "TWD";
+let wallsData = null;
+let zonesData = null;
+let trajData = null;
+
+fetch("http://transporsrv2.epfl.ch/api/infra/walls/" + infraName)
+    .then(response => response.json())
+    .then(json => {
+        wallsData = json;
+    });
+
+fetch("http://transporsrv2.epfl.ch/api/infra/zones/" + infraName)
+    .then(response => response.json())
+    .then(json => {
+        zonesData = json;
+    });
+
+fetch("http://transporsrv2.epfl.ch/api/trajectoriesbytime/"+infraName+"/"+TrajName)
+    .then(response => response.json())
+    .then(json => {
+        trajData = json;
+    })
+    .then(() => {
+        init();
+        animate();
+    });
 
 function init() {
 
@@ -59,23 +84,16 @@ function init() {
     controls.target.set( 0,0,0 );
     controls.update();
 
-    // Background
+    // New scene
     scene = new THREE.Scene();
-    scene.background = new THREE.Color(0xffffff);
     camera.lookAt(scene.position);
 
-
-    // Light
-    light = new THREE.HemisphereLight( 0xbbbbff, 0x444422 );
-    light.position.set( 0, 1, 0 );
-    scene.add( light );
-
     // models
-    loadAndBuildWalls();
+    buildWalls(wallsData);
 
 
     // Load pedestrians
-    loadPedestrians();
+    interpolateAndAnimate(trajData);
 
     // Load one pedestrian (DEBUG PURPOSE)
     //loadMinecraft();
@@ -86,6 +104,27 @@ function init() {
     // Add axes (DEBUG PURPOSE)
     //var worldAxis = new THREE.AxesHelper(20);
     //scene.add(worldAxis);
+
+    // Light
+    if (STYLE == "normal") {
+        scene.background = new THREE.Color(0xffffff);
+
+        light = new THREE.HemisphereLight( 0xbbbbff, 0x444422 );
+        light.position.set( 0, wallHeight, 0 );
+        light.castShadow = true;
+        scene.add( light );
+
+    } else if (STYLE == "TWD") {
+        scene.background = new THREE.Color(0x000000);
+
+        light = new THREE.HemisphereLight( 0xbbbbff, 0x444422, 0.01 );
+        light.position.set( 0, wallHeight, 0 );
+        light.castShadow = true;
+        scene.add( light );
+
+        addTWDLights(scene, zonesData);
+    }
+
 
     raycaster = new THREE.Raycaster();
 
@@ -132,6 +171,22 @@ function animate() {
     render();
     //console.log(camera.position)
     stats.update();
+
+    for (var i=0; i<lights.length; i++) {
+        const proba = Math.random();
+
+        if (proba > 0.995) {
+            // Change the state of the light
+
+            if (lights[i]['on'] & Math.random() > 0.8) {
+                lights[i].light.intensity = 0.1;
+                lights[i]['on'] = false;
+            } else {
+                lights[i].light.intensity = Math.random();
+                lights[i]['on'] = true;
+            }
+        }
+    }
 
     //console.log(camera.position);
 }
