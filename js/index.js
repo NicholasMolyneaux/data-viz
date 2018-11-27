@@ -135,7 +135,6 @@ function addTraj() {
     }
 
     trajectories.forEach(traj => {
-        console.log(traj['name']);
         $('#trajData').append($('<option>', {
             value: traj.name,
             text: traj.name
