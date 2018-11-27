@@ -88,7 +88,8 @@ function setVoronoiArea() {
             voronoi_clip_canvas.append("circle")
                 .attr("class", "voronoi-pre-circle")
                 .attr("cx", mouse[0])
-                .attr("cy", mouse[1]);
+                .attr("cy", mouse[1])
+                .attr("r", 0.15);
         })
 
     } else if (stateControlAreaButton == 'drawing') {
@@ -138,7 +139,8 @@ function drawVoronoiArea(svg, polygon) {
         svg.append("circle")
             .attr("class", "voronoi-pre-circle")
             .attr("cx", d[0])
-            .attr("cy", d[1]);
+            .attr("cy", d[1])
+            .attr("r", 0.15);
     });
     svg.append("mask")
         .attr("id", "voronoi-mask")

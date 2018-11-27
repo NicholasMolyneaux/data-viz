@@ -92,7 +92,6 @@ function drawZones(zones, svg) {
 
 function drawGates(gates, svg) {
 
-    console.log("ASD");
     // Draw flow gate?
     gates.map( f => {
         svg.append("line")

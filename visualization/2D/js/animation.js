@@ -6,7 +6,8 @@ function updatePosition(time_series_data, svg) {
         .attr("id", d => d.id)
         .merge(pedes)
         .attr("cx", d => d.x)
-        .attr("cy", d => d.y);
+        .attr("cy", d => d.y)
+        .attr("r", 0.25);
     pedes.exit().remove();
 
     // Update path of each pedestrian

@@ -282,7 +282,6 @@ h1, h2 {
 
 .ped-individual {
     vector-effect: non-scaling-stroke;
-    r: 0.15;
     fill: red;
 }
 
@@ -314,7 +313,6 @@ h1, h2 {
 
 .voronoi-pre-circle {
     vector-effect: non-scaling-stroke;
-    r: 0.15;
     fill: black;
 }
 
