@@ -14,6 +14,8 @@ let fullScreenBool = false;
 
 let fancyViz = false;
 
+let optionsShown = false;
+
 $(document).ready(function() {
 
     // Load the infrastructures
@@ -278,30 +280,18 @@ $(document).on('fullscreenchange webkitfullscreenchange mozfullscreenchange MSFu
         document.getElementById("fullscreen").innerHTML = "<i class=\"fas fa-compress fa-2x\"></i>";
 
         const viz = document.getElementById("viz");
-
         viz.style.height = "100%";
         viz.style.width = "100%";
         viz.style.backgroundColor = "white";
         viz.style.padding = "0";
 
-
         const svgCont = document.getElementById("svgCont");
         svgCont.style.padding = "0";
         svgCont.style.maxWidth = "100%";
         svgCont.style.height = "100%";
-        svgCont.setAttribute("viewBox", "2.5 0 30 30")
 
-        const row = document.createElement("div");
-        row.setAttribute("class", "row");
-
-        const div = document.createElement("div");
-        div.setAttribute("class", "optFS rounded col-lg-10 col-centered");
-        div.setAttribute("id", "optFullScreen");
-        div.innerHTML = "Hello, I'm the future options for the Full Screen! =)"//document.getElementById("options").innerHTML;
-
-        row.appendChild(div);
-        viz.appendChild(row);
-
+        document.getElementById("dragOpt").style.top = 10 + "px";
+        document.getElementById("dragOpt").style.left = 10 + "px";
 
     }
     else {
@@ -311,15 +301,50 @@ $(document).on('fullscreenchange webkitfullscreenchange mozfullscreenchange MSFu
 
         $("#svgCont").removeAttr("style");
 
-        const svgCont = document.getElementById("svgCont");
-        svgCont.setAttribute("viewBox", "4 0 27 27")
-
-        let elem = document.getElementById("optFullScreen");
-        elem.parentElement.removeChild(elem);
-
-
+        document.getElementById("dragOpt").style.top = 10 + "px";
+        document.getElementById("dragOpt").style.left = 10 + "px";
 
     }
 });
+
+function appendOptions() {
+    $.get('./assets/templates/options.mst', function(opts) {
+        var rendered = Mustache.render(opts);
+
+        $('#viz').append(rendered);
+
+        document.getElementById("dragOpt").style.display = "none";
+
+        document.getElementById("dragOpt").style.top = 10 + "px";
+        document.getElementById("dragOpt").style.left = 10 + "px";
+
+        $( function() {
+            $( "#dragOpt" ).draggable(
+                {
+                    containment: $( "body" )
+                });
+        } );
+    });
+
+
+}
+
+$('#optionsButton').click(() => {
+    if (optionsShown) {
+        document.getElementById("optionsButton").innerHTML = "<i class=\"fas fa-plus fa-lg\"></i>";
+        document.getElementById("dragOpt").style.display = "none";
+
+        optionsShown = false;
+    } else {
+        document.getElementById("optionsButton").innerHTML = "<i class=\"fas fa-minus fa-lg\"></i>";
+        document.getElementById("dragOpt").style.display = "";
+
+        optionsShown = true;
+    }
+});
+
+
+
+
 
 

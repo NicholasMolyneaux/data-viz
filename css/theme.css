@@ -141,15 +141,27 @@ h1, h2 {
 /* Index CSS */
 
 #fullscreen {
+    cursor: pointer;
     position:absolute;
     bottom:5px;
     right:10px;
     color: #000000;
-
 }
 
-#fullscreen:hover {
+#optionsButton {
+    cursor: pointer;
+    position:absolute;
+    top:5px;
+    left:10px;
+    color: #000000;
+}
+
+#fullscreen:hover, #threeD:hover, #optionsButton:hover {
     transform: scale(1.2);
+}
+
+.min-opt {
+    padding: 0;
 }
 
 .opt-graphs {
@@ -159,12 +171,16 @@ h1, h2 {
     background-color: #cccccc;
 }
 
-.optFS {
+.optOnGraph {
+    position:absolute;
     box-sizing: content-box;
     padding: 10px;
     border: 2px solid black;
     background-color: #cccccc;
-    width: 60%;
+    z-index:2;
+    top: 0;
+    left: 0;
+    cursor: move;
 }
 
 .col-centered{
@@ -175,6 +191,7 @@ h1, h2 {
 }
 
 #threeD {
+    cursor: pointer;
     font-size: 20px;
     text-shadow: 0 1px 0 #ccc,
     0 2px 0 #c9c9c9,
@@ -195,15 +212,6 @@ h1, h2 {
     top:5px;
     right:10px;
     color: #000000;
-}
-
-@keyframes spinner {
-    from {
-        transform: rotateY(0deg);
-    }
-    to {
-        transform: rotateY(-360deg);
-    }
 }
 
 #statsTitle {
@@ -317,6 +325,7 @@ h1, h2 {
 
 #svgCont {
     padding: 0px;
+    z-index: 1;
 }
 
 /* Chord Diagram */

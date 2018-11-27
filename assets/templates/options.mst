@@ -1,0 +1,40 @@
+<div class="optOnGraph rounded" id="dragOpt">
+    <div class="row">
+        <div class="col-2">
+            <span>Show</span>
+        </div>
+        <div class="col-10">
+            <div class="row">
+                <div class="col-3 min-opt">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="zone_checkbox" onclick="checkZone()">
+                        <label class="form-check-label" for="zone_checkbox">Zones</label>
+                    </div>
+                </div>
+                <div class="col-3 min-opt">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="control_checkbox" onclick="checkControl()">
+                        <label class="form-check-label" for="control_checkbox">Control Areas</label>
+                    </div>
+                </div>
+                <div class="col-3 min-opt">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="flow_checkbox" onclick="checkFlow()">
+                        <label class="form-check-label" for="flow_checkbox">Flow Gates</label>
+                    </div>
+                </div>
+                <div class="col-3 min-opt">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="voronoi_checkbox">
+                        <label class="form-check-label" for="voronoi_checkbox">Density</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <br>
+    <div class="col text-center">
+        <button class="btn btn-primary" id="control_area" onclick="setVoronoiArea()">Draw Control Area</button>
+    </div>
+</div>

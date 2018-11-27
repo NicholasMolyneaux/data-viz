@@ -4,19 +4,17 @@ function prepViz2D(infra, xmin, xmax, ymin, ymax) {
     const ratio = (ymax-ymin)/(xmax-xmin);
     const pixelWidth = 900;
 
-    var optHeight = $("#options").outerHeight();
 
     let svg = d3.select("#viz")
         .append("svg")
         .attr("class", "container")
         .attr("id", "svgCont")
         .attr("width", pixelWidth)
-        .attr("height", Math.max(optHeight, parseInt(ratio * pixelWidth)))
-        //.attr("width", pixelWidth)
-        //.attr("height", (ratio * pixelWidth))
+        .attr("height", parseInt(ratio * pixelWidth) + 100)
         .attr("viewBox", `${xmin-1} ${ymin} ${xmax} ${ymax}`)
         .call(d3.zoom().on("zoom", () => svg.attr("transform", d3.event.transform)))
-        .append('g')
+
+    svg.append('g')
         .attr("id", "subSvgCont");
 
     let structure_layer = svg.append("g")
@@ -24,7 +22,12 @@ function prepViz2D(infra, xmin, xmax, ymin, ymax) {
 
     // Read json data and draw frameworks (walls and zones)
     drawStructures("http://transporsrv2.epfl.ch/api/infra/", infra, structure_layer);
+
+    appendOptions();
+
 }
+
+
 
 function runViz2D(data, tmin, tmax) {
 

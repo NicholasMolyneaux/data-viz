@@ -91,14 +91,16 @@ function drawZones(zones, svg) {
 }
 
 function drawGates(gates, svg) {
+
+    console.log("ASD");
     // Draw flow gate?
     gates.map( f => {
         svg.append("line")
             .attr("class", "flow-gates")
-            .attr("x1", f["start_pos_x"] )
-            .attr("y1", f["start_pos_y"] )
-            .attr("x2", f["end_pos_x"] )
-            .attr("y2", f["end_pos_y"] );
+            .attr("x1", f["x1"] )
+            .attr("y1", f["y1"] )
+            .attr("x2", f["x2"] )
+            .attr("y2", f["y2"] );
     } );
 }
 

@@ -107,48 +107,18 @@
     <!--<div id="VizCont">-->
         <hr>
 
-        <div class="container">
+        <div class="container" id="bigCont">
             <div class="row justify-content-center" id="mainViz">
-                <div class="col-xl-2 col-lg-3 order-lg-first order-last opt-graphs" id="options">
 
-                <!--<div class="col-xl-2 col-lg-3 order-lg-first order-last opt-graphs" id="options">-->
-                    <h4 class="subtitle">Options:</h4>
-                    <br>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="voronoi_checkbox">
-                        <label class="form-check-label" for="voronoi_checkbox">Draw Voronoi</label>
-                    </div>
-                    <br>
-                    <span>Show</span>
-                    <div class="form-check">
-
-                        <div class="row">
-                            <div class="col-sm-9 order-last">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="zone_checkbox" onclick="checkZone()">
-                                    <label class="form-check-label" for="zone_checkbox">Zones</label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="control_checkbox" onclick="checkControl()">
-                                    <label class="form-check-label" for="control_checkbox">Control Areas</label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="flow_checkbox" onclick="checkFlow()">
-                                    <label class="form-check-label" for="flow_checkbox">Flow Gates</label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <br>
-                    <div class="col text-center">
-                        <button class="btn btn-primary" id="control_area" onclick="setVoronoiArea()">Draw Control Area</button>
-                    </div>
-                </div>
-                <div class="col-xl-9 col-lg-8" id="viz">
+                <div class="col" id="viz">
                     <a id="fullscreen" role="button" title="fullscreen"><i class="fas fa-expand fa-lg"></i></a>
                     <a id="threeDButton" role="button"><p id="threeD">3D</p></a>
+                    <a id="optionsButton" role="button" title="Options"><i class="fas fa-plus fa-lg"></i></a>
+
                 </div>
+
             </div>
+
         </div>
 
         <hr>
@@ -215,6 +185,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.3/js/bootstrap-select.min.js"></script>
 <link rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.3/css/bootstrap-select.min.css">
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
 
 <script src="./js/bootstrap.bundle.js"></script>
 <script src="js/index.js"></script>
