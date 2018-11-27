@@ -73,10 +73,12 @@ function addShapes( shape, x, y, z, rx, ry, rz, s ) {
     texture.repeat.set(1,1);
 
     // Create the material
-    var material = new THREE.MeshLambertMaterial({ map : texture });
+    var material = new THREE.MeshPhongMaterial({ map : texture });
 
     // Create the geometry
     var geometry = new THREE.ShapeBufferGeometry( shape );
+    geometry.computeFaceNormals();
+    geometry.computeVertexNormals();
 
     // Create the Mesh
     topFloor = new THREE.Mesh( geometry, material );
@@ -122,18 +124,6 @@ function addShapes( shape, x, y, z, rx, ry, rz, s ) {
     ceiling.rotation.set( rx+Math.PI/2, ry, rz );
     ceiling.scale.set( s, s, s );
     scene.add( ceiling );
-
-}
-
-function loadAndBuildWalls() {
-
-    const infraName = "lausannetest5";
-
-    const url = "http://transporsrv2.epfl.ch/api/infra/walls/" + infraName;
-
-    fetch(url)
-        .then(response => response.json())
-        .then(json => buildWalls(json));
 
 }
 
@@ -192,12 +182,8 @@ function buildWalls(jsonWalls) {
     // Add the corners for the floor and ceiling
     const corners = buildOuterShell(jsonWalls.filter(w => w.wtype === "0"));
 
-    console.log(corners);
-
     avg[0] = avg[0]/walls.length;
     avg[1] = avg[1]/walls.length;
-
-    console.log(avg);
 
     walls.forEach(c => {
 
@@ -226,5 +212,39 @@ function buildWalls(jsonWalls) {
     centered_corners.push(centered_corners[0]);
 
     buildFloorAndCeiling(centered_corners);
+
+}
+
+function addTWDLights(scene, zones) {
+
+    zones.forEach(json => {
+        let xPos = 0;
+        let yPos = 0;
+
+        for (let i=1; i<=4; i++) {
+            xPos = xPos + parseFloat(json['x'+i]);
+            yPos = yPos + parseFloat(json['y'+i]);
+        }
+
+        console.log(avg);
+
+        xPos = xPos/4 - avg[0];
+        yPos = yPos/4 - avg[1];
+
+        console.log(xPos, yPos);
+
+        let color = 0xEDEEFF;
+
+        if(Math.random() > 0.9) {
+            color = 0x671B1F;
+        }
+
+        let light = new THREE.PointLight( color, Math.random(), 10 );
+        light.position.set( xPos, wallHeight, yPos);
+        scene.add( light );
+
+        const obj = {'on': true, 'light': light};
+        lights.push(obj);
+    });
 
 }
