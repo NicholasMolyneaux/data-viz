@@ -32,7 +32,7 @@ const INTERP = 4;
 const INTSECOND = 100;
 const INTERVAL = INTSECOND/(INTERP+1);
 
-const FACTOR = 1;
+const FACTOR = 10;
 
 const CUSTOMINTERVAL = INTERVAL/FACTOR;
 
@@ -41,8 +41,8 @@ console.log(FACTOR);
 let clocks = [];
 let lights = [];
 
-//const STYLE = "normal";
-const STYLE = "TWD";
+const STYLE = "normal";
+//const STYLE = "TWD";
 
 const infraName = "lausannetest5";
 const TrajName = "test4";
