@@ -60,30 +60,86 @@ function prepareChord(data) {
     dynamicChord(data);
 }
 
-function prepareTrajectories() {
+function prepareTrajectories(infra, xmin, xmax, ymin, ymax) {
 
     // canvas size and chord diagram radii
     const size = 700;
 
     var width = $("#ODCont").width();
 
-    const svg = d3.select("#trajectoriesOverlay").append("svg")
+   /* const svg = d3.select("#trajectoriesOverlay").append("svg")
         .attr("id", "containerForOD")
         .attr("preserveAspectRatio", "xMidYMid meet")
         .attr("viewBox", `${-size/2} ${-size/2} ${size} ${size}`)
-        .append("svg:g");
+        .append("svg:g");*/
 
-    const urls = ['http://transporsrv2.epfl.ch/api/trajectoriesbytime/lausanne/samplenostrategies',
-        'http://transporsrv2.epfl.ch/api/trajectoriesbytime/lausanne/samplenostrategies',
-        'http://transporsrv2.epfl.ch/api/trajectoriesbytime/lausanne/samplenostrategies'];
+    const margin = 0.01*(xmax-xmin);
+    const ratio = (ymax-ymin)/(xmax-xmin);
+    const pixelWidth = 900;
 
-    function plotData(data){
-        return new Promise(r => {
-            setTimeout(r, 3000);
-        })
+    let svg = d3.select("#trajectoriesOverlay")
+        .append("svg")
+        .attr("class", "container")
+        .attr("id", "svgCont")
+        .attr("width", pixelWidth)
+        .attr("height", parseInt(ratio * pixelWidth))
+        //.attr("width", pixelWidth)
+        //.attr("height", (ratio * pixelWidth))
+        .attr("viewBox", `${xmin-1} ${ymin} ${xmax} ${ymax}`)
+        .call(d3.zoom().on("zoom", () => svg.attr("transform", d3.event.transform)))
+        .append('g')
+        .attr("id", "subSvgCont");
+
+    let structure_layer = svg.append("g")
+        .attr("class", "structure_layer");
+
+    drawStructures("http://transporsrv2.epfl.ch/api/infra/", infra, structure_layer);
+
+    async function plotData(data) {
+
+        var line = d3.line()
+            .x(function(d, i) { return d.x; })
+            .y(function(d, i) { return d.y; });
+
+        async function drawPath(traj) {
+            const newData = [];
+            for (i = 0; i < traj.x.length; i++) {newData.push({"x": traj.x[i], "y": traj.y[i]})}
+            structure_layer.append("path")
+                .datum(newData,)
+                .attr("class", "the-walls")
+                .attr("stroke-opacity", 0.1)
+                .attr("d", line);
+            return new Promise((resolve) => {
+                //data.forEach(traj => drawPath(traj));
+                setTimeout(resolve, 100);
+            });
+        }
+
+        for (lineData of data) {
+            await drawPath(lineData);
+        }
+        //data.forEach(traj => drawPath(traj));
+
+        return new Promise((resolve) => {
+            //data.forEach(traj => drawPath(traj));
+            setTimeout(resolve, 100);
+        });
     }
 
-    const data = customStreaming(urls, plotData);
+    const pedIds = fetch('http://transporsrv2.epfl.ch/api/idlist/lausanne/samplenostrategies').then(r => r.json());
+    pedIds.then(ids => {
+        const chunk = 100;
+        const urls = [];
+        for (i=0, j=ids.length; i<j; i+=chunk) {
+            temparray = ids.slice(i,i+chunk);
+            urls.push("http://transporsrv2.epfl.ch/api/trajectoriesbyid/lausanne/samplenostrategies" + "/" + temparray)
+        }
+
+    fetch(urls[0])
+        .then(r => {return r.json()})
+        .then(d => { customStreaming(urls.slice(1), plotData, d); });
+    });
+
     //data.then(d => console.log(d));
 }
 

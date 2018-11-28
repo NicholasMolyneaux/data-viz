@@ -1,4 +1,4 @@
-async function customStreaming(urlList, f) {
+async function customStreaming(urlList, f, firstDataChunk) {
 
     async function getDataAndPlot(url, currentData) {
         fetch(url).then(r => {return r.json()}).then(d => {
@@ -8,10 +8,10 @@ async function customStreaming(urlList, f) {
         return f(currentData);
     }
 
-    let dataChunk;
+    let dataChunk = firstDataChunk;
     let fullData = [];
     for (url of urlList) {
-        dataChunk = await getDataAndPlot(url, dataChunk);
+        await getDataAndPlot(url, dataChunk);
     }
 
     return fullData;

@@ -179,16 +179,16 @@ function dataSelected() {
 
         const urlSummary = "http://transporsrv2.epfl.ch/api/summary/"+selectedInfra.name+"/"+selectedTraj.name;
 
-        /*fetch(urlSummary).then(response => {
+        fetch(urlSummary).then(response => {
             return response.json();
         }).then(data => {
 
             prepareChord(data);
         }).catch(err => {
             console.log(err)
-        }); */
+        });
 
-        prepareTrajectories();
+        prepareTrajectories(selectedInfra.name, selectedInfra.xmin, selectedInfra.xmax, selectedInfra.ymin, selectedInfra.ymax);
 
         const urlTraj = "http://transporsrv2.epfl.ch/api/trajectoriesbytime/"+selectedInfra.name+"/"+selectedTraj.name;
 

@@ -41,7 +41,7 @@ async function drawStructures(baseURL, name, svg) {
 
 function drawWalls(wall, svg) {
     // Draw walls
-    console.log(wall);
+    //console.log(wall);
     wall.map( (w)  => {
         svg.append("line")
             .attr("class", "the-walls")
