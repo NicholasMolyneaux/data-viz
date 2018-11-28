@@ -47,7 +47,7 @@ $(document).ready(function() {
 function loadInfra() {
     const url = baseURL + 'infralist';
 
-    console.log(url);
+    //console.log(url);
 
     $.ajax({
         type: "GET",
@@ -66,7 +66,7 @@ function loadInfra() {
 }
 
 function addInfra() {
-    console.log(infrastructures);
+    //(infrastructures);
 
     // DEBUG
     //infrastructures = [{'name': 'infra1', 'description': 'asdasdasd'}, {'name': 'infra2', 'description': '123123'}, {'name': 'infra3', 'description': 'Lorem Ipsum'}];
@@ -111,7 +111,7 @@ function getTraj() {
     })
         .done(function( data ) {
             trajectories = data;
-            console.log(trajectories);
+            //console.log(trajectories);
             // DEBUG
             //trajectories = [{'name': 'traj1-'+selectedInfra.name, 'description': 'asdasdasd'}, {'name': 'traj2-'+selectedInfra.name, 'description': '123123'}, {'name': 'traj3-'+selectedInfra.name, 'description': 'Lorem Ipsum'}];
             addTraj();
@@ -125,7 +125,7 @@ function getTraj() {
 }
 
 function addTraj() {
-    console.log(trajectories);
+    //console.log(trajectories);
 
     // Remove all options
     var select = document.getElementById("trajData");
@@ -148,9 +148,9 @@ function addTraj() {
 }
 
 function updateDescriptionTraj(e) {
-    console.log("updateDescriptionTraj");
+    //console.log("updateDescriptionTraj");
 
-    console.log(e);
+    //console.log(e);
     const trajName = e.options[e.selectedIndex].value;
     function isSelectedTraj(traj){return traj.name === trajName}
 
@@ -163,7 +163,7 @@ function updateDescriptionTraj(e) {
 
     selectedTraj = trajectories[idx];
 
-    console.log(selectedTraj);
+    //console.log(selectedTraj);
 
     document.getElementById('textDescTraj').innerHTML = selectedTraj['description'];
 }
@@ -177,16 +177,18 @@ function dataSelected() {
         // Show the rest of the webpage
         document.getElementById("StatsCont").style.display = "";
 
-        const urlSummary = "http://transporsrv2.epfl.ch/api/summary/"+selectedInfra.name+"/"+selectedTraj.name;;
+        const urlSummary = "http://transporsrv2.epfl.ch/api/summary/"+selectedInfra.name+"/"+selectedTraj.name;
 
-        fetch(urlSummary).then(response => {
+        /*fetch(urlSummary).then(response => {
             return response.json();
         }).then(data => {
 
             prepareChord(data);
         }).catch(err => {
             console.log(err)
-        });
+        }); */
+
+        prepareTrajectories();
 
         const urlTraj = "http://transporsrv2.epfl.ch/api/trajectoriesbytime/"+selectedInfra.name+"/"+selectedTraj.name;
 
@@ -231,7 +233,7 @@ function fullScreen(e) {
         fullScreenBool = true;
     }
 
-    console.log("LOL");
+    //console.log("LOL");
 }
 
 /* Is currently in full screen or not */

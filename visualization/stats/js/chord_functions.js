@@ -199,7 +199,7 @@ function updateChordDiagram(canvas, chord, arc, ribbon, colors, matrix, keys, la
 
 
     //console.log(last_layout);
-    console.log(groups);
+    //console.log(groups);
     groups.select("text")
         .each(function(d) {
             d.angle = (d.startAngle + d.endAngle) / 2;
@@ -262,8 +262,8 @@ function updateChordDiagram(canvas, chord, arc, ribbon, colors, matrix, keys, la
             });
         }
 
-        console.log("old groups");
-        console.log(oldGroups);
+        //console.log("old groups");
+        //console.log(oldGroups);
 
         return function(d, i) {
             return function(t) {

@@ -60,6 +60,33 @@ function prepareChord(data) {
     dynamicChord(data);
 }
 
+function prepareTrajectories() {
+
+    // canvas size and chord diagram radii
+    const size = 700;
+
+    var width = $("#ODCont").width();
+
+    const svg = d3.select("#trajectoriesOverlay").append("svg")
+        .attr("id", "containerForOD")
+        .attr("preserveAspectRatio", "xMidYMid meet")
+        .attr("viewBox", `${-size/2} ${-size/2} ${size} ${size}`)
+        .append("svg:g");
+
+    const urls = ['http://transporsrv2.epfl.ch/api/trajectoriesbytime/lausanne/samplenostrategies',
+        'http://transporsrv2.epfl.ch/api/trajectoriesbytime/lausanne/samplenostrategies',
+        'http://transporsrv2.epfl.ch/api/trajectoriesbytime/lausanne/samplenostrategies'];
+
+    function plotData(data){
+        return new Promise(r => {
+            setTimeout(r, 3000);
+        })
+    }
+
+    const data = customStreaming(urls, plotData);
+    //data.then(d => console.log(d));
+}
+
 // Options specific to a graph. key = graphID (Data + other options)
 let graphOptions = new Object();
 
