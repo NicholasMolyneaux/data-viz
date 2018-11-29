@@ -37,6 +37,11 @@ function runViz2D(tmin, tmax) {
     runAnimation(d3.select(".voronoi_poly_layer"), d3.select(".pedes_layer"), tmin, tmax);
 }
 
+function updateTimer(time) {
+    document.getElementById("timer").innerHTML = time.toFixed(2) + " [s.]";
+
+}
+
 function prepareChord(data) {
 
     // canvas size and chord diagram radii

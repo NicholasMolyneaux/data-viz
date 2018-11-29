@@ -181,6 +181,7 @@ function finishedLoading() {
 
     document.getElementById("timer").innerHTML = "0 [s.]";
     document.getElementById("timer").style.opacity = "1";
+    document.getElementById("timer").style.display = "";
 }
 
 

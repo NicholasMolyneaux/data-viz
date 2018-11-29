@@ -35,6 +35,7 @@ function runAnimation(voronoi_poly_layer , pedes_layer, tmin, tmax) {
         d3.timeout( () => {
             checkVoronoi(each_time.data, voronoi_poly_layer);
             updatePosition(each_time.data, trajSummary, pedes_layer);
+            updateTimer(each_time.time-tmin);
         }, (each_time.time-tmin) * 1000);
     })
 }
