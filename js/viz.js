@@ -106,7 +106,7 @@ function prepareTrajectories(infra, xmin, xmax, ymin, ymax) {
             const newData = [];
             for (i = 0; i < traj.x.length; i++) {newData.push({"x": traj.x[i], "y": traj.y[i]})}
             structure_layer.append("path")
-                .datum(newData,)
+                .datum(newData)
                 .attr("class", "the-walls")
                 .attr("stroke-opacity", 0.1)
                 .attr("d", line);
