@@ -1,29 +1,13 @@
 let click_zone_active = false;
 let connect_info;
+let od_information;
 
 // State of the control area button
 let stateControlAreaButton = "idle";
 
-let findDestinationFromSource = function(source_id) {
-    connect_info.map(a => {
-        let from = a["node"];
-        if (a["node"] === source_id) {
-            return a["connected_to"];
-        }
-    });
-};
-let determineOD = function(id) {
-    // check activate the click or not and change the state
-    if (click_zone_active) {
-        // check there is destination
-        let destination = findDestinationFromSource(id);
+// For OD filtering
+let od_selection = {"Origins": new Set(), "Destinations": new Set()};
 
-    }
-    else {
-        click_zone_active = true
-    }
-
-};
 
 let line = d3.line()
     .x(d => d[0])

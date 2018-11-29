@@ -19,6 +19,15 @@ function drawVoronoi(data, svg) {
         .attr("mask", "url(#voronoi-mask)");
 }
 
+function filterByOD(time_series_data, od) {
+    return time_series_data.filter(ped => {
+        let od_ped = od.filter(o => o.id === ped.id)[0];
+        if (od_ped === undefined) {
+            return false;
+        }
+        return od_selection.Origins.has(od_ped.o) && od_selection.Destinations.has(od_ped.d);
+    })
+}
 
 function pedLosColor(p) {
     let color;

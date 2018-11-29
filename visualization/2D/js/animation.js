@@ -1,6 +1,8 @@
-function updatePosition(time_series_data, svg) {
+function updatePosition(time_series_data, od, svg) {
     // Update circles (pedestrians)
-    let pedes = svg.selectAll(".ped-individual").data(time_series_data, d => d.id);
+    // Filter by OD
+    let filtered_time_series_data = filterByOD(time_series_data, od);
+    let pedes = svg.selectAll(".ped-individual").data(filtered_time_series_data, d => d.id);
     pedes.enter().append("circle")
         .attr("class", "ped-individual")
         .attr("id", d => d.id)
@@ -26,11 +28,11 @@ function updatePosition(time_series_data, svg) {
     // pedes_path.exit().remove();
 }
 
-function runAnimation(data, voronoi_poly_layer , pedes_layer, tmin, tmax) {
+function runAnimation(data, od, voronoi_poly_layer , pedes_layer, tmin, tmax) {
     data.map( each_time => {
         d3.timeout( () => {
             checkVoronoi(each_time.data, voronoi_poly_layer);
-            updatePosition(each_time.data, pedes_layer);
+            updatePosition(each_time.data, od, pedes_layer);
         }, (each_time.time-tmin) * 1000);
     })
 }

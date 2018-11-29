@@ -36,11 +36,11 @@ function prepViz2D(infra, xmin, xmax, ymin, ymax) {
 
 
 
-function runViz2D(data, tmin, tmax) {
+function runViz2D(data, od, tmin, tmax) {
 
 
     //Pedestrians
-    runAnimation(data, d3.select(".voronoi_poly_layer"), d3.select(".pedes_layer"), tmin, tmax);
+    runAnimation(data, od, d3.select(".voronoi_poly_layer"), d3.select(".pedes_layer"), tmin, tmax);
 }
 
 function prepareChord(data) {

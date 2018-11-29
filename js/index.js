@@ -191,14 +191,17 @@ function dataSelected() {
         prepareTrajectories(selectedInfra.name, selectedInfra.xmin, selectedInfra.xmax, selectedInfra.ymin, selectedInfra.ymax);
 
         const urlTraj = "http://transporsrv2.epfl.ch/api/trajectoriesbytime/"+selectedInfra.name+"/"+selectedTraj.name;
-
-        fetch(urlTraj).then(response => {
+        //Todo: is the OD independent to the selected data set?
+        const urlOD = "http://transporsrv2.epfl.ch/api/summary/"+selectedInfra.name+"/"+selectedTraj.name;
+        let traj_data = fetch(urlTraj).then(response => {
             return response.json();
-        }).then(data => {
-            runViz2D(data, selectedTraj.tmin, selectedTraj.tmax);
-
-            staticChord(data);
-
+        });
+        let od_info = fetch(urlOD).then(response => response.json());
+        Promise.all([traj_data, od_info]).then(data => {
+            let traj = data[0];
+            let od = data[1];
+            runViz2D(traj, od, selectedTraj.tmin, selectedTraj.tmax);
+            staticChord(traj);
         }).catch(err => {
             console.log(err)
         });
