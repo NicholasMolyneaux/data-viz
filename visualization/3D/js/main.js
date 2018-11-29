@@ -32,7 +32,7 @@ const INTERP = 4;
 const INTSECOND = 100;
 const INTERVAL = INTSECOND/(INTERP+1);
 
-const FACTOR = 10;
+const FACTOR = 2;
 
 const CUSTOMINTERVAL = INTERVAL/FACTOR;
 
@@ -41,11 +41,11 @@ console.log(FACTOR);
 let clocks = [];
 let lights = [];
 
-const STYLE = "normal";
-//const STYLE = "TWD";
+//const STYLE = "normal";
+const STYLE = "TWD";
 
-const infraName = "lausannetest5";
-const TrajName = "test4";
+const infraName = "lausanne";
+const TrajName = "samplenostrategies";
 
 let wallsData = null;
 let zonesData = null;
@@ -117,7 +117,7 @@ function init() {
     } else if (STYLE == "TWD") {
         scene.background = new THREE.Color(0x000000);
 
-        light = new THREE.HemisphereLight( 0xffffff, 0x444422, 0.0001 );
+        light = new THREE.HemisphereLight( 0xffffff, 0x444422, 0.02 );
         light.position.set( 0, wallHeight, 0 );
         light.castShadow = true;
         scene.add( light );

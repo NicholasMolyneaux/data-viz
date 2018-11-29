@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../favicon.ico">
+
+    <title>The Walking Data</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="./css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="./css/theme.css" rel="stylesheet">
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Press+Start+2P|Roboto" rel="stylesheet">
+
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
+</head>
+
+<body>
+
+<div class="allExceptFooter">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a id="logo-nav" class="navbar-brand" href="./index.html">TWD</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="./upload.html">Upload</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main jumbotron for a primary marketing message or call to action -->
+    <div class="jumbotron jumbotron-fluid mainTitle">
+        <div class="container">
+            <h1 id="title">The Walking Data</h1>
+            <br><br>
+            <p class="text-justify">Lorem Ipsum [...] Explicative text goes here! Donec id elit non mi porta gravida at eget
+                metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit
+                amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.</p>
+            <p><a id="learnMoreButton" class="btn btn-primary btn-lg" href="#" role="button">Learn more &raquo;</a></p>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="card border-light" id="loadCard">
+            <div class="card-header">
+                <h2>Load the data</h2>
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <div class="card border-dark">
+                        <div class="card-body container">
+                            <h6 class="card-title">Choose an Infrastructure</h6>
+                            <form>
+                                <div class="form-group">
+                                    <select class="custom-select" id="infraData" onchange="updateDescriptionInfra(this)">
+                                    </select>
+                                </div>
+                                <div class="form-group" id="descInfra" style="display: none;">
+                                    <span>Description:</span><br>
+                                    <span class="text-muted" id="textDescInfra"></span>
+                                </div>
+                            </form>
+                            <button class="btn btn-primary" onclick="getTraj()">Choose</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="card border-dark">
+                        <div class="card-body container">
+                            <h6 class="card-title">Choose a Trajectory data</h6>
+                            <form>
+                                <div class="form-group">
+                                    <select class="form-control" id="trajData" onchange="updateDescriptionTraj(this)">
+                                        <option selected disabled>Select an Infrastructure first.</option>
+                                    </select>
+                                </div>
+                                <div class="form-group" id="descTraj" style="display: none;">
+                                    <span>Description:</span><br>
+                                    <span class="text-muted" id="textDescTraj"></span>
+                                </div>
+                            </form>
+                            <button class="btn btn-primary" onclick="dataSelected()">Choose</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="VizCont" style="display: none;">
+    <!--<div id="VizCont">-->
+        <hr>
+
+        <div class="container" id="bigCont">
+            <div class="row justify-content-center" id="mainViz">
+
+                <div class="col" id="viz">
+                    <a id="fullscreen" role="button" title="fullscreen"><i class="fas fa-expand fa-lg"></i></a>
+                    <a id="threeDButton" role="button"><p id="threeD">3D</p></a>
+                    <a id="optionsButton" role="button" title="Options"><i class="fas fa-plus fa-lg"></i></a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <hr>
+    </div>
+
+    <div id="StatsCont" style="display: none;">
+    <!--<div id="StatsCont">-->
+
+        <div class="container jumbotron">
+            <h1 id="statsTitle">Statistics</h1>
+        </div>
+
+        <h2>OD Chord Diagram</h2>
+
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-12" id="ODCont">
+
+                </div>
+                <div class="col-12 opt-graphs">
+                    <p>The options for the OD chord diagrams will be shown here.</p>
+
+                </div>
+            </div>
+        </div>
+
+        <h2>Trajectories</h2>
+        <div class="container" id="trajectoriesOverlay">
+        </div>
+
+        <br>
+
+        <h2>Travel Time</h2>
+
+        <div class="container" id="TTContainer">
+        </div>
+
+        <br>
+
+        <h2>Speed</h2>
+
+        <div class="container" id="speedContainer">
+        </div>
+
+    </div>
+
+
+</div>
+
+
+
+
+<footer class="footer">
+    <div class="container">
+        <span class="text-muted">Footer!</span>
+    </div>
+</footer>
+</body>
+
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"
+        integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.3/js/bootstrap-select.min.js"></script>
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.3/css/bootstrap-select.min.css">
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+
+<script src="./js/bootstrap.bundle.js"></script>
+<script src="js/index.js"></script>
+
+<!-- d3 -->
+<script src="https://d3js.org/d3.v5.min.js"></script>
+<script src="https://d3js.org/d3-voronoi.v1.min.js"></script>
+<script src="https://d3js.org/d3-polygon.v1.min.js"></script>
+<script src="http://d3js.org/queue.v1.min.js"></script>
+<script src="js/d3-polygon-clip.js"></script>
+<script src='js/d3-tip.js'></script>
+
+<!-- All visualization -->
+<script src="js/viz.js"></script>
+
+<!-- 2D visualization -->
+<script src="visualization/2D/js/main.js"></script>
+<script src="visualization/2D/js/structure.js"></script>
+<script src="visualization/2D/js/map.js"></script>
+<script src="visualization/2D/js/animation.js"></script>
+
+<!-- Chord diagram -->
+<script src="visualization/stats/js/chord_functions.js"></script>
+<script src="visualization/stats/js/chord.js"></script>
+
+<!-- Histograms -->
+<script src="visualization/stats/js/graphs.js"></script>
+<script src="js/mustache.min.js"></script>
+<script src="js/html2canvas.min.js"></script>
+<script src="js/saveSvgAsPng.js"></script>
+<script src="js/FileSaver.min.js"></script>
+
+<!-- Trajectories -->
+<script src="js/customStreaming.js"></script>
+
+
+<!-- 3D visualization -->
+<!--<script src="visualization/3D/js/debug.js"></script>
+<script src="visualization/3D/js/functionality.js"></script>
+<script src="visualization/3D/js/build.js"></script>
+<script src="visualization/3D/js/animate.js"></script>
+<script src="visualization/3D/js/main_viz.js"></script>-->
+
+</html>
