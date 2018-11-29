@@ -99,7 +99,8 @@ function prepareTrajectories(infra, xmin, xmax, ymin, ymax) {
 
         var line = d3.line()
             .x(function(d, i) { return d.x; })
-            .y(function(d, i) { return d.y; });
+            .y(function(d, i) { return d.y; })
+            .curve(d3.curveMonotoneX);
 
         async function drawPath(traj) {
             const newData = [];
@@ -128,19 +129,22 @@ function prepareTrajectories(infra, xmin, xmax, ymin, ymax) {
 
     const pedIds = fetch('http://transporsrv2.epfl.ch/api/idlist/lausanne/samplenostrategies').then(r => r.json());
     pedIds.then(ids => {
-        const chunk = 100;
+        const chunk = 75;
         const urls = [];
         for (i=0, j=ids.length; i<j; i+=chunk) {
             temparray = ids.slice(i,i+chunk);
             urls.push("http://transporsrv2.epfl.ch/api/trajectoriesbyid/lausanne/samplenostrategies" + "/" + temparray)
         }
 
-    fetch(urls[0])
+    const allData = fetch(urls[0])
         .then(r => {return r.json()})
-        .then(d => { customStreaming(urls.slice(1), plotData, d); });
+        .then(d => { return customStreaming(urls.slice(1), plotData, d); });
+
+        console.log(allData);
+        allData.then(d => console.log(d));
     });
 
-    //data.then(d => console.log(d));
+
 }
 
 // Options specific to a graph. key = graphID (Data + other options)
