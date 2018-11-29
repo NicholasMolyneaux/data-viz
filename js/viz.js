@@ -1,17 +1,15 @@
-function prepViz2D(infra, xmin, xmax, ymin, ymax) {
+function prepViz2D(xmin, xmax, ymin, ymax) {
 
     const margin = 0.01*(xmax-xmin);
     const ratio = (ymax-ymin)/(xmax-xmin);
     const pixelWidth = 900;
 
+
     let svg = d3.select("#viz")
         .append("svg")
-        .attr("class", "container")
+        .attr("class", "container-fluid")
         .attr("id", "svgCont")
-        .attr("width", pixelWidth)
-        .attr("height", parseInt(ratio * pixelWidth))
-        //.attr("width", pixelWidth)
-        //.attr("height", (ratio * pixelWidth))
+        .attr("height", vizHeight)
         .attr("viewBox", `${xmin-1} ${ymin} ${xmax} ${ymax}`)
         .call(d3.zoom().on("zoom", () => svg.attr("transform", d3.event.transform)))
         .append('g')
@@ -28,7 +26,7 @@ function prepViz2D(infra, xmin, xmax, ymin, ymax) {
         .attr("class", "pedes_layer");
 
     // Read json data and draw frameworks (walls and zones)
-    drawStructures("http://transporsrv2.epfl.ch/api/infra/", infra, structure_layer);
+    drawStructures(structure_layer);
 
     appendOptions();
 
@@ -36,11 +34,11 @@ function prepViz2D(infra, xmin, xmax, ymin, ymax) {
 
 
 
-function runViz2D(data, tmin, tmax) {
+function runViz2D(tmin, tmax) {
 
 
     //Pedestrians
-    runAnimation(data, d3.select(".voronoi_poly_layer"), d3.select(".pedes_layer"), tmin, tmax);
+    runAnimation(d3.select(".voronoi_poly_layer"), d3.select(".pedes_layer"), tmin, tmax);
 }
 
 function prepareChord(data) {

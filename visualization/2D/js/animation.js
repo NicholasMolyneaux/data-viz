@@ -26,8 +26,8 @@ function updatePosition(time_series_data, svg) {
     // pedes_path.exit().remove();
 }
 
-function runAnimation(data, voronoi_poly_layer , pedes_layer, tmin, tmax) {
-    data.map( each_time => {
+function runAnimation(voronoi_poly_layer , pedes_layer, tmin, tmax) {
+    trajData.map( each_time => {
         d3.timeout( () => {
             checkVoronoi(each_time.data, voronoi_poly_layer);
             updatePosition(each_time.data, pedes_layer);

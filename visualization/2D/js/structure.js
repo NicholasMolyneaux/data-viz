@@ -1,42 +1,9 @@
-async function drawStructures(baseURL, name, svg) {
+function drawStructures(svg) {
 
-    // Draw the walls
-    fetch(baseURL + "walls" + "/" + name).then(response => {
-        return response.json();
-    }).then(wall => {
-        drawWalls(wall, svg)
-    }).catch(err => {
-        console.log(err)
-    });
-
-    // Draw the zones
-    fetch(baseURL + "zones" + "/" + name).then(response => {
-        return response.json();
-    }).then(zones => {
-        drawZones(zones, svg)
-    }).catch(err => {
-        console.log(err)
-    });
-
-    // Draw the gates
-    fetch(baseURL + "gates" + "/" + name).then(response => {
-        return response.json();
-    }).then(gates => {
-        drawGates(gates, svg)
-    }).catch(err => {
-        console.log(err)
-    });
-
-    /*
-    // Draw the Areas
-    fetch(baseURL + "areas" + "/" + name).then(response => {
-        return response.json();
-    }).then(zones => {
-        drawAreas(zones, svg)
-    }).catch(err => {
-        console.log(err)
-    });
-    */
+    drawWalls(wallsData, svg);
+    drawZones(zonesData, svg);
+    drawGates(gatesData, svg);
+    //drawAreas(areasData, svg);
 }
 
 function drawWalls(wall, svg) {

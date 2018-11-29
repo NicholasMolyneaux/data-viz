@@ -65,7 +65,8 @@ body {
 }
 
 .mainTitle {
-    padding-bottom: 20px;
+    margin: 0;
+    #padding-bottom: 20px;
 }
 
 h1, h2 {
@@ -83,7 +84,7 @@ h1, h2 {
 }
 
 .allExceptFooter {
-    padding-bottom: 80px; /* this needs to be bigger than footer height*/
+    padding-bottom: 60px; /* this needs to be bigger than footer height*/
     min-height: 100vh;
 }
 
@@ -188,6 +189,16 @@ h1, h2 {
     margin: 0 auto;
     position: relative;
     bottom: 100px;
+}
+
+#timer {
+    position: absolute;
+    top: 5px;
+    text-align: center;
+    width: 100%;
+    font-size: 30px;
+    font-family: "Fira Mono", Monaco, "Andale Mono", "Lucida Console", "Bitstream Vera Sans Mono", "Courier New", Courier, monospace;
+    font-weight: bolder;
 }
 
 #threeD {
@@ -317,7 +328,9 @@ h1, h2 {
 }
 
 #viz {
-    padding: -10px;
+    margin: 0;
+    padding: 0px;
+    #padding: -10px;
     #background-color: red;
 }
 

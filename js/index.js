@@ -1,18 +1,23 @@
 const baseURL = 'http://transporsrv2.epfl.ch/api/';
-//const baseURL = 'http://localhost:9000/';
 
+let vizHeight = $('.footer').offset().top - $('#viz').offset().top;
+
+let landscape = true;
+
+console.log(vizHeight);
 
 let infrastructures = null;
 let trajectories = null;
 
-let selectedInfra = null;
-let selectedTraj = null;
+let selectedInfra = "lausanne";
+let selectedTraj = "samplenostrategies";
 
 let infraSelected = false;
 
 let fullScreenBool = false;
 
 let fancyViz = false;
+let trajDataLoaded = false;
 
 let optionsShown = false;
 
@@ -43,6 +48,8 @@ $(document).ready(function() {
 
 });
 
+/* INFRASTRUCTURE */
+
 // Load the infrastructure by doing an ajax call
 function loadInfra() {
     const url = baseURL + 'infralist';
@@ -59,10 +66,20 @@ function loadInfra() {
             infrastructures = data;
             // Add the infra for the uploading the trajectories data
             addInfra();
+            noDataSelected();
+            loadInfraData().then(() => {
+                console.log(wallsData);
+                prepViz2D(selectedInfra.xmin, selectedInfra.xmax, selectedInfra.ymin, selectedInfra.ymax);
+            });
+            loadTraj();
         })
         .fail( function(xhr, textStatus, errorThrown) {
             alert("Error, please reload the website.");
         });
+}
+
+function noDataSelected() {
+    document.getElementById("timer").innerHTML = "No trajectory data!";
 }
 
 function addInfra() {
@@ -71,7 +88,15 @@ function addInfra() {
     // DEBUG
     //infrastructures = [{'name': 'infra1', 'description': 'asdasdasd'}, {'name': 'infra2', 'description': '123123'}, {'name': 'infra3', 'description': 'Lorem Ipsum'}];
 
-    infrastructures.forEach(infra => {
+    let idx = -1;
+
+    infrastructures.forEach((infra, index) => {
+
+        if(infra.name == selectedInfra) {
+            selectedInfra = infra;
+            idx = index;
+        }
+
         $('#infraData').append($('<option>', {
             value: infra.name,
             text: infra.name
@@ -79,9 +104,9 @@ function addInfra() {
     });
 
     document.getElementById('descInfra').style.display = '';
-    document.getElementById('textDescInfra').innerHTML = infrastructures[0]['description'];
+    document.getElementById('textDescInfra').innerHTML = infrastructures[idx]['description'];
 
-    selectedInfra = infrastructures[0];
+    document.getElementById("infraData").selectedIndex = idx;
 }
 
 function updateDescriptionInfra(e) {
@@ -95,11 +120,14 @@ function updateDescriptionInfra(e) {
     document.getElementById('textDescInfra').innerHTML = selectedInfra['description'];
 }
 
-function getTraj() {
+/* TRAJECTORIES */
+
+function loadTraj() {
 
     infraSelected = true;
 
     const url = baseURL + 'trajlist/' + selectedInfra['name'];
+    console.log(url);
 
     // We will have to take into account the infra.
 
@@ -115,14 +143,46 @@ function getTraj() {
             // DEBUG
             //trajectories = [{'name': 'traj1-'+selectedInfra.name, 'description': 'asdasdasd'}, {'name': 'traj2-'+selectedInfra.name, 'description': '123123'}, {'name': 'traj3-'+selectedInfra.name, 'description': 'Lorem Ipsum'}];
             addTraj();
-            document.getElementById("VizCont").style.display = "";
-            prepViz2D(selectedInfra.name, selectedInfra.xmin, selectedInfra.xmax, selectedInfra.ymin, selectedInfra.ymax);
+            loading();
+            trajDataLoaded = false;
+            loadTrajData().then(() => {
+                runViz2D(selectedTraj.tmin, selectedTraj.tmax);
+                trajDataLoaded = true;
+                finishedLoading();
+                }
+            );
+
+            //runViz();
         })
         .fail( function(xhr, textStatus, errorThrown) {
             alert("Error, please reload the website.");
         });
 
 }
+
+function loading() {
+    let timer = document.getElementById("timer");
+    timer.innerHTML = "LOADING";
+
+    keepFading($("#timer"));
+
+}
+
+function keepFading($obj) {
+    if (!trajDataLoaded) {
+        $obj.fadeToggle(1000, function () {
+            keepFading($obj)
+        });
+    }
+}
+
+function finishedLoading() {
+    $("#timer").stop(true, true);
+
+    document.getElementById("timer").innerHTML = "0 [s.]";
+    document.getElementById("timer").style.opacity = "1";
+}
+
 
 function addTraj() {
     //console.log(trajectories);
@@ -134,7 +194,15 @@ function addTraj() {
         select.options[i] = null;
     }
 
-    trajectories.forEach(traj => {
+    let idx = -1;
+
+    trajectories.forEach((traj, index) => {
+
+        if(traj.name == selectedTraj) {
+            selectedTraj = traj;
+            idx = index;
+        }
+
         $('#trajData').append($('<option>', {
             value: traj.name,
             text: traj.name
@@ -142,9 +210,10 @@ function addTraj() {
     });
 
     document.getElementById('descTraj').style.display = '';
-    document.getElementById('textDescTraj').innerHTML = trajectories[0]['description'];
+    document.getElementById('textDescTraj').innerHTML = trajectories[idx]['description'];
 
-    selectedTraj = trajectories[0];
+    document.getElementById("trajData").selectedIndex = idx;
+
 }
 
 function updateDescriptionTraj(e) {
@@ -169,53 +238,63 @@ function updateDescriptionTraj(e) {
 }
 
 
+function runViz() {
+
+    document.getElementById("mainViz").style.height = vizHeight + "px";
+
+    prepareTrajectories(selectedInfra.name, selectedInfra.xmin, selectedInfra.xmax, selectedInfra.ymin, selectedInfra.ymax);
+
+    const urlTraj = "http://transporsrv2.epfl.ch/api/trajectoriesbytime/"+selectedInfra.name+"/"+selectedTraj.name;
+
+    fetch(urlTraj).then(response => {
+        return response.json();
+    }).then(data => {
+        runViz2D(data, selectedTraj.tmin, selectedTraj.tmax);
+    }).catch(err => {
+        console.log(err)
+    });
+
+}
+
 function dataSelected() {
 
-    if (!infraSelected) {
-        window.alert("Please, choose an infrastructure first.")
-    } else {
-        // Show the rest of the webpage
-        document.getElementById("StatsCont").style.display = "";
+    // Show the rest of the webpage
+    document.getElementById("StatsCont").style.display = "";
 
-        const urlSummary = "http://transporsrv2.epfl.ch/api/summary/"+selectedInfra.name+"/"+selectedTraj.name;
+    const urlSummary = "http://transporsrv2.epfl.ch/api/summary/"+selectedInfra.name+"/"+selectedTraj.name;
 
-        fetch(urlSummary).then(response => {
-            return response.json();
-        }).then(data => {
+    fetch(urlSummary).then(response => {
+        return response.json();
+    }).then(data => {
 
-            prepareChord(data);
-        }).catch(err => {
-            console.log(err)
-        });
+        prepareChord(data);
+    }).catch(err => {
+        console.log(err)
+    });
 
-        prepareTrajectories(selectedInfra.name, selectedInfra.xmin, selectedInfra.xmax, selectedInfra.ymin, selectedInfra.ymax);
+    prepareTrajectories(selectedInfra.name, selectedInfra.xmin, selectedInfra.xmax, selectedInfra.ymin, selectedInfra.ymax);
 
-        const urlTraj = "http://transporsrv2.epfl.ch/api/trajectoriesbytime/"+selectedInfra.name+"/"+selectedTraj.name;
+    const urlTraj = "http://transporsrv2.epfl.ch/api/trajectoriesbytime/"+selectedInfra.name+"/"+selectedTraj.name;
 
-        fetch(urlTraj).then(response => {
-            return response.json();
-        }).then(data => {
-            runViz2D(data, selectedTraj.tmin, selectedTraj.tmax);
+    fetch(urlTraj).then(response => {
+        return response.json();
+    }).then(data => {
+        runViz2D(data, selectedTraj.tmin, selectedTraj.tmax);
 
-            staticChord(data);
+        staticChord(data);
 
-        }).catch(err => {
-            console.log(err)
-        });
+    }).catch(err => {
+        console.log(err)
+    });
 
-        fetch("data/factice/hist.json").then(response => {
-            return response.json();
-        }).then(hist => {
-            addHistograms(hist);
+    fetch("data/factice/hist.json").then(response => {
+        return response.json();
+    }).then(hist => {
+        addHistograms(hist);
 
-        }).catch(err => {
-            console.log(err)
-        });
-
-    }
-
-
-
+    }).catch(err => {
+        console.log(err)
+    });
 }
 
 function fullScreen(e) {
@@ -343,6 +422,19 @@ $('#optionsButton').click(() => {
         optionsShown = true;
     }
 });
+
+window.addEventListener('resize', function(){
+
+    document.getElementById("mainViz").style.height = 0 + "px";
+
+    vizHeight = $('.footer').offset().top - $('#viz').offset().top;
+
+    document.getElementById("mainViz").style.height = vizHeight + "px";
+
+    document.getElementById("svgCont").style.height = vizHeight + "px";
+
+
+}, true);
 
 
 
