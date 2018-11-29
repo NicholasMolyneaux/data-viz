@@ -3,6 +3,7 @@ let zonesData = null;
 let gatesData = null;
 let areasData = null;
 let trajData = null;
+let trajSummary = null;
 
 async function loadInfraData() {
 
@@ -50,6 +51,16 @@ async function loadTrajData() {
         return response.json();
     }).then(data => {
         trajData = data;
+    }).catch(err => {
+        console.log(err)
+    });
+
+    const urlSummary = "http://transporsrv2.epfl.ch/api/summary/"+selectedInfra.name+"/"+selectedTraj.name;
+
+    await fetch(urlSummary).then(response => {
+        return response.json();
+    }).then(data => {
+        trajSummary = data;
     }).catch(err => {
         console.log(err)
     });

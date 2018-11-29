@@ -32,11 +32,7 @@ function prepViz2D(xmin, xmax, ymin, ymax) {
 
 }
 
-
-
 function runViz2D(tmin, tmax) {
-
-
     //Pedestrians
     runAnimation(d3.select(".voronoi_poly_layer"), d3.select(".pedes_layer"), tmin, tmax);
 }

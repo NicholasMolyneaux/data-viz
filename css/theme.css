@@ -272,7 +272,7 @@ h1, h2 {
     vector-effect: non-scaling-stroke;
     stroke: gray;
     stroke-width: 2;
-    fill: none;
+    fill: white;
     opacity: 0;
 }
 

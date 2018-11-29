@@ -32,7 +32,14 @@ function drawZones(zones, svg) {
 
         // Control zones
         node.on("click", function () {
-            determineOD(this.getAttribute("id"));
+            if (d3.event.shiftKey) {
+                d3.select(this).style("stroke", "blue");
+                od_selection.Origins.add(d3.select(this).attr("id"));
+                console.log(od_information);
+            } else {
+                d3.select(this).style("stroke", "red");
+                od_selection.Destinations.add(d3.select(this).attr("id"));
+            }
         });
 
     });

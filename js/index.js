@@ -258,43 +258,56 @@ function runViz() {
 
 function dataSelected() {
 
-    // Show the rest of the webpage
-    document.getElementById("StatsCont").style.display = "";
+    window.alert("UNUSED FUNCTION! TO BE CHANGED!!!!!")
 
-    const urlSummary = "http://transporsrv2.epfl.ch/api/summary/"+selectedInfra.name+"/"+selectedTraj.name;
+    if (!infraSelected) {
+        window.alert("Please, choose an infrastructure first.")
+    } else {
+        // Show the rest of the webpage
+        document.getElementById("StatsCont").style.display = "";
 
-    fetch(urlSummary).then(response => {
-        return response.json();
-    }).then(data => {
+        const urlSummary = "http://transporsrv2.epfl.ch/api/summary/"+selectedInfra.name+"/"+selectedTraj.name;
 
-        prepareChord(data);
-    }).catch(err => {
-        console.log(err)
-    });
+        fetch(urlSummary).then(response => {
+            return response.json();
+        }).then(data => {
 
-    prepareTrajectories(selectedInfra.name, selectedInfra.xmin, selectedInfra.xmax, selectedInfra.ymin, selectedInfra.ymax);
+            prepareChord(data);
+        }).catch(err => {
+            console.log(err)
+        });
 
-    const urlTraj = "http://transporsrv2.epfl.ch/api/trajectoriesbytime/"+selectedInfra.name+"/"+selectedTraj.name;
+        prepareTrajectories(selectedInfra.name, selectedInfra.xmin, selectedInfra.xmax, selectedInfra.ymin, selectedInfra.ymax);
 
-    fetch(urlTraj).then(response => {
-        return response.json();
-    }).then(data => {
-        runViz2D(data, selectedTraj.tmin, selectedTraj.tmax);
+        const urlTraj = "http://transporsrv2.epfl.ch/api/trajectoriesbytime/"+selectedInfra.name+"/"+selectedTraj.name;
+        //Todo: is the OD independent to the selected data set?
+        const urlOD = "http://transporsrv2.epfl.ch/api/summary/"+selectedInfra.name+"/"+selectedTraj.name;
+        let traj_data = fetch(urlTraj).then(response => {
+            return response.json();
+        });
+        let od_info = fetch(urlOD).then(response => response.json());
+        Promise.all([traj_data, od_info]).then(data => {
+            let traj = data[0];
+            let od = data[1];
+            runViz2D(traj, od, selectedTraj.tmin, selectedTraj.tmax);
+            staticChord(traj);
+        }).catch(err => {
+            console.log(err)
+        });
 
-        staticChord(data);
+        fetch("data/factice/hist.json").then(response => {
+            return response.json();
+        }).then(hist => {
+            addHistograms(hist);
 
-    }).catch(err => {
-        console.log(err)
-    });
+        }).catch(err => {
+            console.log(err)
+        });
 
-    fetch("data/factice/hist.json").then(response => {
-        return response.json();
-    }).then(hist => {
-        addHistograms(hist);
+    }
 
-    }).catch(err => {
-        console.log(err)
-    });
+
+
 }
 
 function fullScreen(e) {
@@ -388,7 +401,7 @@ $(document).on('fullscreenchange webkitfullscreenchange mozfullscreenchange MSFu
 });
 
 function appendOptions() {
-    $.get('./assets/templates/options.mst', function(opts) {
+    $.get('./assets/templates/options.html', function(opts) {
         var rendered = Mustache.render(opts);
 
         $('#viz').append(rendered);
