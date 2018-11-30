@@ -30,12 +30,34 @@ function updatePosition(time_series_data, od, svg) {
     // pedes_path.exit().remove();
 }
 
-function runAnimation(voronoi_poly_layer , pedes_layer, tmin, tmax) {
+function runAnimation2(voronoi_poly_layer , pedes_layer, tmin, tmax) {
     trajData.map( each_time => {
         d3.timeout( () => {
             checkVoronoi(each_time.data, voronoi_poly_layer);
             updatePosition(each_time.data, trajSummary, pedes_layer);
-            updateTimer(each_time.time-tmin);
+            updateTimer(each_time.time);
         }, (each_time.time-tmin) * 1000);
     })
+}
+
+function runAnimation(voronoi_poly_layer , pedes_layer, tmin, tmax) {
+
+    const timeBounds = [tmin, tmax];
+
+    const trajDataFiltered = trajData.filter(v => v.time > timeBounds[0] && v.time <= timeBounds[1]);
+
+    function walkData() {
+        if (currentTimeShownIdx >= trajDataFiltered.length) {
+            currentTimeShownIdx = 0;
+            //clearInterval(pedMover);
+        }
+        checkVoronoi(trajDataFiltered[currentTimeShownIdx].data, voronoi_poly_layer);
+        updatePosition(trajDataFiltered[currentTimeShownIdx].data, trajSummary, pedes_layer);
+        updateTimer(trajDataFiltered[currentTimeShownIdx].time);
+        currentTimeShownIdx += 1;
+    }
+
+    console.log(INTERVAL2D/SPEEDFACTOR);
+
+    pedMover = setInterval(walkData, INTERVAL2D/SPEEDFACTOR);
 }

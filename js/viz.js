@@ -1,3 +1,9 @@
+let pedMover;
+let currentTimeShownIdx = 0;
+let INTERVAL2D = 100;
+let SPEEDFACTOR = 1;
+let paused = false;
+
 function prepViz2D(xmin, xmax, ymin, ymax) {
 
     const margin = 0.01*(xmax-xmin);
@@ -38,8 +44,31 @@ function runViz2D(tmin, tmax) {
 }
 
 function updateTimer(time) {
-    document.getElementById("timer").innerHTML = time.toFixed(2) + " [s.]";
+    document.getElementById("timer").innerHTML = secondsToHms(time);
 
+}
+
+function secondsToHms(d) {
+    d = Number(d);
+    var h = Math.floor(d / 3600);
+    var m = Math.floor(d % 3600 / 60);
+    var s = Math.floor(d % 3600 % 60);
+
+    let hDisplay = h;
+    if (h < 10) {
+        hDisplay = "0" + hDisplay;
+    }
+
+    let mDisplay = m;
+    if (m < 10) {
+        mDisplay = "0" + mDisplay;
+    }
+
+    let sDisplay = s;
+    if (s < 10) {
+        sDisplay = "0" + sDisplay;
+    }
+    return hDisplay + ":" + mDisplay + ":" + sDisplay;
 }
 
 function prepareChord(data) {
@@ -175,5 +204,52 @@ function addHistograms(hist) {
 
 }
 
+// Faster and Slower buttons
+$( "#forward" ).click(function() {
+
+    clearInterval(pedMover);
+    SPEEDFACTOR *= 2;
+
+    if (SPEEDFACTOR < 1) {
+        const frac = math.fraction(SPEEDFACTOR);
+        document.getElementById("speed").innerHTML = "&#215;" + frac.n + "/" + frac.d;
+    } else {
+        document.getElementById("speed").innerHTML = "&#215;" + SPEEDFACTOR;
+    }
+
+    if (!paused) {
+        runViz2D(selectedTraj.tmin, selectedTraj.tmax);
+    }});
+
+$( "#backward" ).click(function() {
+
+    clearInterval(pedMover);
+    SPEEDFACTOR /= 2;
+
+    if (SPEEDFACTOR < 1) {
+        const frac = math.fraction(SPEEDFACTOR);
+        document.getElementById("speed").innerHTML = "&#215;" + frac.n + "/" + frac.d;
+    } else {
+        document.getElementById("speed").innerHTML = "&#215;" + SPEEDFACTOR;
+    }
+
+    if (!paused) {
+        runViz2D(selectedTraj.tmin, selectedTraj.tmax);
+    }
+});
+
+$( "#playPauseButton" ).click(function() {
+
+    if (paused) {
+        runViz2D(selectedTraj.tmin, selectedTraj.tmax);
+        document.getElementById("playPauseButton").innerHTML = "<i class=\"fas fa-pause fa-lg\"></i>";
+        paused = false;
+    } else {
+        clearInterval(pedMover);
+        document.getElementById("playPauseButton").innerHTML = "<i class=\"fas fa-play fa-lg\"></i>";
+        paused = true;
+    }
+
+});
 
 

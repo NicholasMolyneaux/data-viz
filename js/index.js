@@ -182,6 +182,7 @@ function finishedLoading() {
     document.getElementById("timer").innerHTML = "0 [s.]";
     document.getElementById("timer").style.opacity = "1";
     document.getElementById("timer").style.display = "";
+    document.getElementById("buttons").style.display = "";
 }
 
 
@@ -371,7 +372,7 @@ function GoOutFullscreen() {
 
 $(document).on('fullscreenchange webkitfullscreenchange mozfullscreenchange MSFullscreenChange', function() {
     if(IsFullScreenCurrently()) {
-        document.getElementById("fullscreen").innerHTML = "<i class=\"fas fa-compress fa-2x\"></i>";
+        document.getElementById("fullscreen").innerHTML = "<i class=\"fas fa-compress fa-lg\"></i>";
 
         const viz = document.getElementById("viz");
         viz.style.height = "100%";

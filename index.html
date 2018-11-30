@@ -57,10 +57,19 @@
 
                 <div class="col" id="viz">
                     <div id="timer">TIMER</div>
-                    <a id="fullscreen" role="button" title="fullscreen"><i class="fas fa-expand fa-lg"></i></a>
-                    <a id="threeDButton" role="button"><p id="threeD">3D</p></a>
-                    <a id="optionsButton" role="button" title="Options"><i class="fas fa-plus fa-lg"></i></a>
-                    <a id="playPauseButton" role="button" title="Pause"><i class="fas fa-pause fa-lg"></i></a>
+                    <span id="buttons" style="display:none;">
+                        <a id="fullscreen" role="button" title="Fullscreen"><i class="fas fa-expand fa-lg"></i></a>
+                        <a id="threeDButton" role="button" title="3D viz"><i class="fas fa-cube fa-lg"></i></a>
+                        <a id="optionsButton" role="button" title="Options"><i class="fas fa-plus fa-lg"></i></a>
+                        <a id="help" title="Help"><i class="fas fa-question fa-lg"></i></a>
+
+                    <span id="middleButtons" class="unselectable">
+                        <span id="speed">&#215;1</span> <br>
+                        <a id="backward" role="button" title="Slower"><i class="fas fa-backward fa-lg"></i></a>&emsp;
+                        <a id="playPauseButton" role="button" title="Pause"><i class="fas fa-pause fa-lg"></i></a>&emsp;
+                        <a id="forward" role="button" title="Faster"><i class="fas fa-forward fa-lg"></i></a>
+                    </span>
+                </span>
                 </div>
 
             </div>
@@ -187,6 +196,7 @@
 
 
 <script src="js/libraries/bootstrap.bundle.js"></script>
+<script src="js/libraries/math.min.js"></script>
 <script src="js/index.js"></script>
 <script src="js/data.js"></script>
 
