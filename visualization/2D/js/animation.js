@@ -40,9 +40,10 @@ function runAnimation2(voronoi_poly_layer , pedes_layer, tmin, tmax) {
     })
 }
 
-function runAnimation(voronoi_poly_layer , pedes_layer, tmin, tmax) {
+function runAnimation(voronoi_poly_layer , pedes_layer) {
 
-    const timeBounds = [tmin, tmax];
+    const timeBounds = [minTime, maxTime];
+    console.log(timeBounds);
 
     const trajDataFiltered = trajData.filter(v => v.time > timeBounds[0] && v.time <= timeBounds[1]);
 

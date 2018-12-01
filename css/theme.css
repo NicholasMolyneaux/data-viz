@@ -95,7 +95,7 @@ h1, h2 {
     clear:both;
     padding-top:20px;
     bottom: 0;
-    background-color: #EBEDEF;
+    background-color: #E8EBEF;
 }
 
 .btn-primary {
@@ -140,14 +140,6 @@ h1, h2 {
 }
 
 /* Index CSS */
-
-#fullscreen {
-    cursor: pointer;
-    position:absolute;
-    bottom:5px;
-    right:10px;
-    color: #000000;
-}
 
 #optionsButton {
     cursor: pointer;
@@ -197,11 +189,18 @@ h1, h2 {
     font-weight: bolder;
 }
 
-#middleButtons {
-    position: absolute;
-    bottom: 5px;
+#leftButtons {
     cursor: pointer;
     left: 5px;
+    display: inline-flex;
+    display: flex;
+    justify-content: center;
+}
+
+#rightButtons {
+    cursor: pointer;
+    right: 5px;
+    display: inline-flex;
 }
 
 #speed {
@@ -209,9 +208,6 @@ h1, h2 {
     bottom: 25px;
     font-family: "Fira Mono", Monaco, "Andale Mono", "Lucida Console", "Bitstream Vera Sans Mono", "Courier New", Courier, monospace;
     font-weight: bolder;
-    left: 50%;
-    -webkit-transform: translateX(-50%);
-    transform: translateX(-50%)
 }
 
 #help {
@@ -221,12 +217,63 @@ h1, h2 {
     right: 10px;
 }
 
-#threeDButton {
-    position:absolute;
+#slider {
+    flex-grow: 1;
+    bottom:-7px;
+}
+
+.noUi-connect {
+    background: #E8EBEF;
+}
+
+.noUi-horizontal .outer {
+    width: 20px;
+    height: 20px;
+    box-shadow: none;
+    outline: none;
+    background: #262A2D;
+    border: none;
+    box-shadow: none;
     cursor: pointer;
-    bottom:5px;
-    right:40px;
-    color: #000000;
+    outline: none;
+}
+
+.noUi-horizontal .inner {
+    background: transparent;
+    width: 10px;
+    height: 20px;
+    border-top: solid 10px rgb(200,30,50);
+    border-left: solid 10px transparent;
+    border-right: solid 10px transparent;
+    border-bottom: transparent;
+    box-shadow: none;
+    outline: none;
+    cursor: default;
+}
+
+.noUi-connects, .noUi-base, .noUi-target, .noUi-connect{
+    height: 10px;
+}
+
+.noUi-horizontal .noUi-handle:before,
+.noUi-horizontal .noUi-handle:after {
+    content: '';
+    background: transparent;
+}
+
+.fake-fill {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    background: black;
+    z-index: 0;
+}
+
+#bottomButtons {
+    display: flex;
+    position: absolute;
+    bottom: 5px;
+    width: 100%;
 }
 
 #statsTitle {

@@ -38,37 +38,16 @@ function prepViz2D(xmin, xmax, ymin, ymax) {
 
 }
 
-function runViz2D(tmin, tmax) {
+function runViz2D() {
     //Pedestrians
-    runAnimation(d3.select(".voronoi_poly_layer"), d3.select(".pedes_layer"), tmin, tmax);
+    runAnimation(d3.select(".voronoi_poly_layer"), d3.select(".pedes_layer"));
 }
 
 function updateTimer(time) {
     document.getElementById("timer").innerHTML = secondsToHms(time);
 
-}
+    slider.noUiSlider.setHandle(1, time, true);
 
-function secondsToHms(d) {
-    d = Number(d);
-    var h = Math.floor(d / 3600);
-    var m = Math.floor(d % 3600 / 60);
-    var s = Math.floor(d % 3600 % 60);
-
-    let hDisplay = h;
-    if (h < 10) {
-        hDisplay = "0" + hDisplay;
-    }
-
-    let mDisplay = m;
-    if (m < 10) {
-        mDisplay = "0" + mDisplay;
-    }
-
-    let sDisplay = s;
-    if (s < 10) {
-        sDisplay = "0" + sDisplay;
-    }
-    return hDisplay + ":" + mDisplay + ":" + sDisplay;
 }
 
 function prepareChord(data) {
@@ -218,7 +197,7 @@ $( "#forward" ).click(function() {
     }
 
     if (!paused) {
-        runViz2D(selectedTraj.tmin, selectedTraj.tmax);
+        runViz2D();
     }});
 
 $( "#backward" ).click(function() {
@@ -234,7 +213,7 @@ $( "#backward" ).click(function() {
     }
 
     if (!paused) {
-        runViz2D(selectedTraj.tmin, selectedTraj.tmax);
+        runViz2D();
     }
 });
 
@@ -252,4 +231,44 @@ $( "#playPauseButton" ).click(function() {
 
 });
 
+function secondsToHms(d) {
+    d = Number(d);
+    var h = Math.floor(d / 3600);
+    var m = Math.floor(d % 3600 / 60);
+    var s = Math.floor(d % 3600 % 60);
+
+    let hDisplay = h;
+    if (h < 10) {
+        hDisplay = "0" + hDisplay;
+    }
+
+    let mDisplay = m;
+    if (m < 10) {
+        mDisplay = "0" + mDisplay;
+    }
+
+    let sDisplay = s;
+    if (s < 10) {
+        sDisplay = "0" + sDisplay;
+    }
+    return hDisplay + ":" + mDisplay + ":" + sDisplay;
+}
+
+function changeTimes(tmin, tmax) {
+
+    tmin = tmin.split(':').reduce((acc,time) => (60 * acc) + +time);
+    tmax = tmax.split(':').reduce((acc,time) => (60 * acc) + +time);
+
+    let nbrIdx = parseInt(10*Math.max(0, tmin-minTime));
+
+    console.log(nbrIdx);
+
+    currentTimeShownIdx -= nbrIdx;
+
+    minTime = tmin;
+    maxTime = tmax;
+
+    clearInterval(pedMover);
+    runViz2D();
+}
 

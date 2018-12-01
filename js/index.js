@@ -4,8 +4,6 @@ let vizHeight = $('.footer').offset().top - $('#viz').offset().top;
 
 let landscape = true;
 
-console.log(vizHeight);
-
 let infrastructures = null;
 let trajectories = null;
 
@@ -20,6 +18,10 @@ let fancyViz = false;
 let trajDataLoaded = false;
 
 let optionsShown = false;
+
+let slider = null;
+let minTime;
+let maxTime;
 
 $(document).ready(function() {
 
@@ -146,9 +148,9 @@ function loadTraj() {
             loading();
             trajDataLoaded = false;
             loadTrajData().then(() => {
-                runViz2D(selectedTraj.tmin, selectedTraj.tmax);
                 trajDataLoaded = true;
                 finishedLoading();
+                runViz2D();
                 }
             );
 
@@ -179,10 +181,45 @@ function keepFading($obj) {
 function finishedLoading() {
     $("#timer").stop(true, true);
 
+    slider = document.getElementById('slider');
+
+    noUiSlider.create(slider, {
+        start: [selectedTraj.tmin, selectedTraj.tmin, selectedTraj.tmax],
+        connect: [false, true, true, false],
+        range: {
+            'min': selectedTraj.tmin,
+            'max': selectedTraj.tmax
+        },
+        tooltips: [true, false, true],
+        format: {
+            to: secondsToHmss,
+            from: Number
+        }
+    });
+
+    slider.noUiSlider.on('change', function () {
+        let times = slider.noUiSlider.get();
+
+        changeTimes(times[0], times[2]);
+    });
+
+
+    let handles = slider.querySelectorAll('.noUi-handle');
+    handles[0].classList.add('outer');
+    handles[1].classList.add('inner');
+    handles[2].classList.add('outer');
+
+    let origins = slider.getElementsByClassName('noUi-origin');
+    origins[1].setAttribute('disabled', true);
+
+    minTime = selectedTraj.tmin;
+    maxTime = selectedTraj.tmax;
+
     document.getElementById("timer").innerHTML = "0 [s.]";
     document.getElementById("timer").style.opacity = "1";
     document.getElementById("timer").style.display = "";
     document.getElementById("buttons").style.display = "";
+
 }
 
 
@@ -210,6 +247,7 @@ function addTraj() {
             text: traj.name
         }))
     });
+
 
     document.getElementById('descTraj').style.display = '';
     document.getElementById('textDescTraj').innerHTML = trajectories[idx]['description'];
@@ -307,8 +345,6 @@ function dataSelected() {
         });
 
     }
-
-
 
 }
 
@@ -450,6 +486,30 @@ window.addEventListener('resize', function(){
 
 
 }, true);
+
+function secondsToHmss(d) {
+    d = Number(d);
+    var h = Math.floor(d / 3600);
+    var m = Math.floor(d % 3600 / 60);
+    var s = Math.floor(d % 3600 % 60);
+    var ss = Math.round(10*(d - Math.floor(d)));
+
+    let hDisplay = h;
+    if (h < 10) {
+        hDisplay = "0" + hDisplay;
+    }
+
+    let mDisplay = m;
+    if (m < 10) {
+        mDisplay = "0" + mDisplay;
+    }
+
+    let sDisplay = s;
+    if (s < 10) {
+        sDisplay = "0" + sDisplay;
+    }
+    return hDisplay + ":" + mDisplay + ":" + sDisplay + "." + ss;
+}
 
 
 
