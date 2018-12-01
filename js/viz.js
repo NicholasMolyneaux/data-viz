@@ -254,21 +254,26 @@ function secondsToHms(d) {
     return hDisplay + ":" + mDisplay + ":" + sDisplay;
 }
 
-function changeTimes(tmin, tmax) {
+function changeTimes(times) {
 
-    tmin = tmin.split(':').reduce((acc,time) => (60 * acc) + +time);
-    tmax = tmax.split(':').reduce((acc,time) => (60 * acc) + +time);
+    const tmin = times[0].split(':').reduce((acc,time) => (60 * acc) + +time);
+    const current = times[1].split(':').reduce((acc,time) => (60 * acc) + +time);
+    const tmax = times[2].split(':').reduce((acc,time) => (60 * acc) + +time);
 
-    let nbrIdx = parseInt(10*Math.max(0, tmin-minTime));
-
-    console.log(nbrIdx);
-
+    let nbrIdx = parseInt(10*(tmin-minTime));
+    
     currentTimeShownIdx -= nbrIdx;
 
     minTime = tmin;
     maxTime = tmax;
 
-    clearInterval(pedMover);
-    runViz2D();
+    console.log(currentTimeShownIdx);
+    currentTimeShownIdx = parseInt(10*(current-minTime));
+    console.log(currentTimeShownIdx);
+
+    if (!paused) {
+        clearInterval(pedMover);
+        runViz2D();
+    }
 }
 

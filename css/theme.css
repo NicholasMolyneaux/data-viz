@@ -261,6 +261,13 @@ h1, h2 {
     background: transparent;
 }
 
+.noUi-tooltip {
+    display: none;
+}
+.noUi-active .noUi-tooltip {
+    display: block;
+}
+
 .fake-fill {
     position: absolute;
     top: 0;

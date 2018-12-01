@@ -200,7 +200,7 @@ function finishedLoading() {
     slider.noUiSlider.on('change', function () {
         let times = slider.noUiSlider.get();
 
-        changeTimes(times[0], times[2]);
+        changeTimes(times);
     });
 
 
@@ -209,8 +209,8 @@ function finishedLoading() {
     handles[1].classList.add('inner');
     handles[2].classList.add('outer');
 
-    let origins = slider.getElementsByClassName('noUi-origin');
-    origins[1].setAttribute('disabled', true);
+    //let origins = slider.getElementsByClassName('noUi-origin');
+    //origins[1].setAttribute('disabled', true);
 
     minTime = selectedTraj.tmin;
     maxTime = selectedTraj.tmax;
