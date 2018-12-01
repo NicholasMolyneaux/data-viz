@@ -43,7 +43,6 @@ function runAnimation2(voronoi_poly_layer , pedes_layer, tmin, tmax) {
 function runAnimation(voronoi_poly_layer , pedes_layer) {
 
     const timeBounds = [minTime, maxTime];
-    console.log(timeBounds);
 
     const trajDataFiltered = trajData.filter(v => v.time > timeBounds[0] && v.time <= timeBounds[1]);
 
@@ -61,4 +60,13 @@ function runAnimation(voronoi_poly_layer , pedes_layer) {
     console.log(INTERVAL2D/SPEEDFACTOR);
 
     pedMover = setInterval(walkData, INTERVAL2D/SPEEDFACTOR);
+}
+
+function runOneStep(voronoi_poly_layer , pedes_layer) {
+    const timeBounds = [minTime, maxTime];
+
+    const trajDataFiltered = trajData.filter(v => v.time > timeBounds[0] && v.time <= timeBounds[1]);
+
+    updatePosition(trajDataFiltered[currentTimeShownIdx].data, trajSummary, pedes_layer);
+    updateTimer(trajDataFiltered[currentTimeShownIdx].time);
 }

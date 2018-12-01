@@ -43,6 +43,10 @@ function runViz2D() {
     runAnimation(d3.select(".voronoi_poly_layer"), d3.select(".pedes_layer"));
 }
 
+function runViz2D1Step() {
+    runOneStep(d3.select(".voronoi_poly_layer"), d3.select(".pedes_layer"));
+}
+
 function updateTimer(time) {
     document.getElementById("timer").innerHTML = secondsToHms(time);
 
@@ -261,19 +265,19 @@ function changeTimes(times) {
     const tmax = times[2].split(':').reduce((acc,time) => (60 * acc) + +time);
 
     let nbrIdx = parseInt(10*(tmin-minTime));
-    
+
     currentTimeShownIdx -= nbrIdx;
 
     minTime = tmin;
     maxTime = tmax;
 
-    console.log(currentTimeShownIdx);
     currentTimeShownIdx = parseInt(10*(current-minTime));
-    console.log(currentTimeShownIdx);
 
     if (!paused) {
         clearInterval(pedMover);
         runViz2D();
+    } else {
+        runViz2D1Step();
     }
 }
 
