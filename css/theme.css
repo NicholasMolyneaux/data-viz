@@ -191,16 +191,16 @@ h1, h2 {
 
 #leftButtons {
     cursor: pointer;
-    left: 5px;
     display: inline-flex;
     display: flex;
     justify-content: center;
+    padding-left: 10px;
 }
 
 #rightButtons {
     cursor: pointer;
-    right: 5px;
     display: inline-flex;
+    padding-right: 10px;
 }
 
 #speed {
@@ -229,6 +229,7 @@ h1, h2 {
 .noUi-horizontal .outer {
     width: 20px;
     height: 20px;
+    border-radius: 20px;
     box-shadow: none;
     outline: none;
     background: #262A2D;

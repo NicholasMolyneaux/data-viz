@@ -4,47 +4,76 @@ let INTERVAL2D = 100;
 let SPEEDFACTOR = 1;
 let paused = false;
 
-function prepViz2D(xmin, xmax, ymin, ymax) {
+function prepViz() {
 
-    const margin = 0.01*(xmax-xmin);
-    const ratio = (ymax-ymin)/(xmax-xmin);
-    const pixelWidth = 900;
+    if (viz3D) {
+
+    } else {
+
+        const xmin = selectedInfra.xmin,
+            xmax = selectedInfra.xmax,
+            ymin = selectedInfra.ymin,
+            ymax = selectedInfra.ymax
+
+        const margin = 0.01*(xmax-xmin);
+        const ratio = (ymax-ymin)/(xmax-xmin);
+        const pixelWidth = 900;
+
+        console.log()
 
 
-    let svg = d3.select("#viz")
-        .append("svg")
-        .attr("class", "container-fluid")
-        .attr("id", "svgCont")
-        .attr("height", vizHeight)
-        .attr("viewBox", `${xmin-1} ${ymin} ${xmax} ${ymax}`)
-        .call(d3.zoom().on("zoom", () => svg.attr("transform", d3.event.transform)))
-        .append('g')
-        .attr("id", "subSvgCont");
+        let svg = d3.select("#viz")
+            .append("svg")
+            .attr("class", "container-fluid")
+            .attr("id", "svgCont")
+            .attr("height", vizHeight)
+            .attr("viewBox", `${xmin-1} ${ymin} ${xmax} ${ymax}`)
+            .call(d3.zoom().on("zoom", () => svg.attr("transform", d3.event.transform)))
+            .append('g')
+            .attr("id", "subSvgCont");
 
-    let structure_layer = svg.append("g")
-        .attr("class", "structure_layer");
+        document.getElementById("mainViz").style.height = 0 + "px";
 
-    let voronoi_poly_layer = svg.append("g")
-        .attr("class", "voronoi_poly_layer");
-    let voronoi_clip_layer = svg.append("g")
-        .attr("class", "voronoi_clip_layer");
-    let pedes_layer = svg.append("g")
-        .attr("class", "pedes_layer");
+        vizHeight = $('.footer').offset().top - $('#viz').offset().top;
 
-    // Read json data and draw frameworks (walls and zones)
-    drawStructures(structure_layer);
+        document.getElementById("mainViz").style.height = vizHeight + "px";
 
-    appendOptions();
+        document.getElementById("svgCont").style.height = vizHeight + "px";
 
+        let structure_layer = svg.append("g")
+            .attr("class", "structure_layer");
+
+        let voronoi_poly_layer = svg.append("g")
+            .attr("class", "voronoi_poly_layer");
+        let voronoi_clip_layer = svg.append("g")
+            .attr("class", "voronoi_clip_layer");
+        let pedes_layer = svg.append("g")
+            .attr("class", "pedes_layer");
+
+        // Read json data and draw frameworks (walls and zones)
+        drawStructures(structure_layer);
+
+        appendOptions();
+    }
 }
 
-function runViz2D() {
-    //Pedestrians
-    runAnimation(d3.select(".voronoi_poly_layer"), d3.select(".pedes_layer"));
+function runViz() {
+
+    if (viz3D) {
+
+    } else {
+        //Pedestrians
+        runAnimation(d3.select(".voronoi_poly_layer"), d3.select(".pedes_layer"));
+
+    }
 }
 
-function runViz2D1Step() {
-    runOneStep(d3.select(".voronoi_poly_layer"), d3.select(".pedes_layer"));
+function do1Step() {
+    if (viz3D) {
+
+    } else {
+        runOneStep(d3.select(".voronoi_poly_layer"), d3.select(".pedes_layer"));
+    }
 }
 
 function updateTimer(time) {
@@ -201,7 +230,7 @@ $( "#forward" ).click(function() {
     }
 
     if (!paused) {
-        runViz2D();
+        runViz();
     }});
 
 $( "#backward" ).click(function() {
@@ -217,14 +246,14 @@ $( "#backward" ).click(function() {
     }
 
     if (!paused) {
-        runViz2D();
+        runViz();
     }
 });
 
 $( "#playPauseButton" ).click(function() {
 
     if (paused) {
-        runViz2D(selectedTraj.tmin, selectedTraj.tmax);
+        runViz();
         document.getElementById("playPauseButton").innerHTML = "<i class=\"fas fa-pause fa-lg\"></i>";
         paused = false;
     } else {
@@ -275,9 +304,35 @@ function changeTimes(times) {
 
     if (!paused) {
         clearInterval(pedMover);
-        runViz2D();
+        runViz();
     } else {
-        runViz2D1Step();
+        do1Step();
     }
 }
+
+$( "#threeDButton" ).click(function() {
+
+    if(viz3D) {
+
+        document.getElementById("threeDButton").innerHTML = "<i class=\"fas fa-cube fa-lg\"></i>";
+        viz3D = false;
+
+
+        clearInterval(pedMover);
+
+        prepViz();
+        runViz();
+
+    } else {
+
+        document.getElementById("threeDButton").innerHTML = "<i class=\"fas fa-square fa-lg\"></i>";
+        viz3D = true;
+
+        clearInterval(pedMover);
+
+        $("#svgCont").remove();
+        $("#dragOpt").remove();
+
+    }
+});
 

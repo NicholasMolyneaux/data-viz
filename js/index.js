@@ -14,7 +14,7 @@ let infraSelected = false;
 
 let fullScreenBool = false;
 
-let fancyViz = false;
+let viz3D = false;
 let trajDataLoaded = false;
 
 let optionsShown = false;
@@ -70,8 +70,7 @@ function loadInfra() {
             addInfra();
             noDataSelected();
             loadInfraData().then(() => {
-                console.log(wallsData);
-                prepViz2D(selectedInfra.xmin, selectedInfra.xmax, selectedInfra.ymin, selectedInfra.ymax);
+                prepViz();
             });
             loadTraj();
         })
@@ -129,7 +128,6 @@ function loadTraj() {
     infraSelected = true;
 
     const url = baseURL + 'trajlist/' + selectedInfra['name'];
-    console.log(url);
 
     // We will have to take into account the infra.
 
@@ -150,11 +148,9 @@ function loadTraj() {
             loadTrajData().then(() => {
                 trajDataLoaded = true;
                 finishedLoading();
-                runViz2D();
+                runViz();
                 }
             );
-
-            //runViz();
         })
         .fail( function(xhr, textStatus, errorThrown) {
             alert("Error, please reload the website.");
@@ -275,77 +271,6 @@ function updateDescriptionTraj(e) {
     //console.log(selectedTraj);
 
     document.getElementById('textDescTraj').innerHTML = selectedTraj['description'];
-}
-
-
-function runViz() {
-
-    document.getElementById("mainViz").style.height = vizHeight + "px";
-
-    prepareTrajectories(selectedInfra.name, selectedInfra.xmin, selectedInfra.xmax, selectedInfra.ymin, selectedInfra.ymax);
-
-    const urlTraj = "http://transporsrv2.epfl.ch/api/trajectoriesbytime/"+selectedInfra.name+"/"+selectedTraj.name;
-
-    fetch(urlTraj).then(response => {
-        return response.json();
-    }).then(data => {
-        runViz2D(data, selectedTraj.tmin, selectedTraj.tmax);
-    }).catch(err => {
-        console.log(err)
-    });
-
-}
-
-function dataSelected() {
-
-    window.alert("UNUSED FUNCTION! TO BE CHANGED!!!!!")
-
-    if (!infraSelected) {
-        window.alert("Please, choose an infrastructure first.")
-    } else {
-        // Show the rest of the webpage
-        document.getElementById("StatsCont").style.display = "";
-
-        const urlSummary = "http://transporsrv2.epfl.ch/api/summary/"+selectedInfra.name+"/"+selectedTraj.name;
-
-        fetch(urlSummary).then(response => {
-            return response.json();
-        }).then(data => {
-
-            prepareChord(data);
-        }).catch(err => {
-            console.log(err)
-        });
-
-        prepareTrajectories(selectedInfra.name, selectedInfra.xmin, selectedInfra.xmax, selectedInfra.ymin, selectedInfra.ymax);
-
-        const urlTraj = "http://transporsrv2.epfl.ch/api/trajectoriesbytime/"+selectedInfra.name+"/"+selectedTraj.name;
-        //Todo: is the OD independent to the selected data set?
-        const urlOD = "http://transporsrv2.epfl.ch/api/summary/"+selectedInfra.name+"/"+selectedTraj.name;
-        let traj_data = fetch(urlTraj).then(response => {
-            return response.json();
-        });
-        let od_info = fetch(urlOD).then(response => response.json());
-        Promise.all([traj_data, od_info]).then(data => {
-            let traj = data[0];
-            let od = data[1];
-            runViz2D(traj, od, selectedTraj.tmin, selectedTraj.tmax);
-            staticChord(traj);
-        }).catch(err => {
-            console.log(err)
-        });
-
-        fetch("data/factice/hist.json").then(response => {
-            return response.json();
-        }).then(hist => {
-            addHistograms(hist);
-
-        }).catch(err => {
-            console.log(err)
-        });
-
-    }
-
 }
 
 function fullScreen(e) {
