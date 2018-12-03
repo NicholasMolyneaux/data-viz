@@ -81,6 +81,7 @@ function updateTimer(time) {
 
     slider.noUiSlider.setHandle(1, time, true);
 
+
 }
 
 function prepareChord(data) {
@@ -294,6 +295,8 @@ function changeTimes(times) {
     const tmax = times[2].split(':').reduce((acc,time) => (60 * acc) + +time);
 
     let nbrIdx = parseInt(10*(tmin-minTime));
+
+    console.log(nbrIdx);
 
     currentTimeShownIdx -= nbrIdx;
 

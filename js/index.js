@@ -193,7 +193,8 @@ function finishedLoading() {
         }
     });
 
-    slider.noUiSlider.on('change', function () {
+    slider.noUiSlider.on('slide', function () {
+
         let times = slider.noUiSlider.get();
 
         changeTimes(times);
@@ -271,24 +272,6 @@ function updateDescriptionTraj(e) {
     //console.log(selectedTraj);
 
     document.getElementById('textDescTraj').innerHTML = selectedTraj['description'];
-}
-
-function fullScreen(e) {
-
-    e.preventDefault();
-
-    if (fullScreenBool) {
-        // Not in full screen anymore
-        fullScreenBool = false;
-
-        // Update the size of the div
-        const viz = document.getElementById("viz");
-    } else {
-        // Now in full screen
-        fullScreenBool = true;
-    }
-
-    //console.log("LOL");
 }
 
 /* Is currently in full screen or not */
