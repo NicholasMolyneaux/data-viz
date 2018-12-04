@@ -68,7 +68,7 @@ function animatePedestrians(json) {
         // Check if its ID is in the dct of ped
         if (dctPed.hasOwnProperty(ped.id)){
             // Update the position of this pedestrian
-            updatePosition(ped);
+            updatePosition3D(ped);
         } else {
             // Create a pedestrian
             if (STYLE == "normal") {
@@ -268,7 +268,7 @@ function createZombie(ped) {
 
 }
 
-function updatePosition(ped) {
+function updatePosition3D(ped) {
     if (dctPed[ped.id].hasOwnProperty("position")) {
 
         var oldX = dctPed[ped.id].position['x'];

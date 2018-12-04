@@ -7,12 +7,10 @@ let landscape = true;
 let infrastructures = null;
 let trajectories = null;
 
-let selectedInfra = "lausanne";
-let selectedTraj = "samplenostrategies";
+let selectedInfra = "lausannenew";
+let selectedTraj = "test10";
 
 let infraSelected = false;
-
-let fullScreenBool = false;
 
 let viz3D = false;
 let trajDataLoaded = false;
@@ -324,10 +322,18 @@ $(document).on('fullscreenchange webkitfullscreenchange mozfullscreenchange MSFu
         viz.style.backgroundColor = "white";
         viz.style.padding = "0";
 
-        const svgCont = document.getElementById("svgCont");
-        svgCont.style.padding = "0";
-        svgCont.style.maxWidth = "100%";
-        svgCont.style.height = "100%";
+        if (viz3D) {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+
+            renderer.setSize(window.innerWidth, window.innerHeight);
+
+        } else {
+            const svgCont = document.getElementById("svgCont");
+            svgCont.style.padding = "0";
+            svgCont.style.maxWidth = "100%";
+            svgCont.style.height = "100%";
+        }
 
         document.getElementById("dragOpt").style.top = 10 + "px";
         document.getElementById("dragOpt").style.left = 10 + "px";
@@ -338,7 +344,15 @@ $(document).on('fullscreenchange webkitfullscreenchange mozfullscreenchange MSFu
 
         $("#viz").removeAttr("style");
 
-        $("#svgCont").removeAttr("style");
+
+        if (viz3D) {
+            resizeViz();
+
+        } else {
+            $("#svgCont").removeAttr("style");
+        }
+
+
 
         document.getElementById("dragOpt").style.top = 10 + "px";
         document.getElementById("dragOpt").style.left = 10 + "px";
@@ -384,16 +398,32 @@ $('#optionsButton').click(() => {
 
 window.addEventListener('resize', function(){
 
+    resizeViz();
+
+}, true);
+
+function resizeViz() {
     document.getElementById("mainViz").style.height = 0 + "px";
 
     vizHeight = $('.footer').offset().top - $('#viz').offset().top;
 
+    console.log(vizHeight);
+
     document.getElementById("mainViz").style.height = vizHeight + "px";
 
-    document.getElementById("svgCont").style.height = vizHeight + "px";
+    if (viz3D) {
 
+        camera.aspect = window.innerWidth / vizHeight;
+        camera.updateProjectionMatrix();
 
-}, true);
+        renderer.setSize(window.innerWidth, vizHeight);
+
+        //document.getElementById("canvas").height = vizHeight + "px";
+        //document.getElementById("canvas").width = document.getElementById("viz").style.width + "px";
+    } else {
+        document.getElementById("svgCont").style.height = vizHeight + "px";
+    }
+}
 
 function secondsToHmss(d) {
     d = Number(d);

@@ -1,4 +1,4 @@
-function updatePosition(time_series_data, od, svg) {
+function updatePosition2D(time_series_data, od, svg) {
     // Update circles (pedestrians)
     // Filter by OD
 
@@ -42,7 +42,7 @@ function runAnimation(voronoi_poly_layer , pedes_layer) {
             //clearInterval(pedMover);
         }
         checkVoronoi(trajDataFiltered[currentTimeShownIdx].data, voronoi_poly_layer);
-        updatePosition(trajDataFiltered[currentTimeShownIdx].data, trajSummary, pedes_layer);
+        updatePosition2D(trajDataFiltered[currentTimeShownIdx].data, trajSummary, pedes_layer);
         updateTimer(trajDataFiltered[currentTimeShownIdx].time);
         currentTimeShownIdx += 1;
     }
@@ -55,6 +55,6 @@ function runOneStep(voronoi_poly_layer , pedes_layer) {
 
     const trajDataFiltered = trajData.filter(v => v.time > timeBounds[0] && v.time <= timeBounds[1]);
 
-    updatePosition(trajDataFiltered[currentTimeShownIdx].data, trajSummary, pedes_layer);
+    updatePosition2D(trajDataFiltered[currentTimeShownIdx].data, trajSummary, pedes_layer);
     updateTimer(trajDataFiltered[currentTimeShownIdx].time);
 }

@@ -1,19 +1,122 @@
+// General global parameters
 let pedMover;
 let currentTimeShownIdx = 0;
-let INTERVAL2D = 100;
+const INTERVAL2D = 100;
 let SPEEDFACTOR = 1;
 let paused = false;
 
+// 3D parameters
+
+// Various folders
+const assetsFolder = "./visualization/3D/assets/";
+const modelsFolder = "./visualization/3D/models/";
+
+let container, stats, controls, raycaster;
+let camera, scene, renderer, light;
+const INTERP = 4;
+const INTERVAL3D = INTERVAL2D/(INTERP+1);
+
+// Some variables
+const wallHeight = 2.5;
+const wallDepth = 0.1;
+const peopleHeight = 1.6;
+let wallsHidden = false;
+let avg = [0,0];
+let STYLE = "TWD";
+
+// Some 3D objects
+let topFloor, bottomFloor, ceiling;
+let walls = [];
+let clocks = [];
+let lights = [];
+
+// Pedestrians
+let dctPed = new Object();
+let mixers = [];
+
+let mouse = new THREE.Vector2(), INTERSECTED;
+let SELECTED = new Object();
+
 function prepViz() {
 
+    console.log(viz3D);
+
     if (viz3D) {
+
+        container = document.getElementById("viz");
+
+        console.log("TAMERE!")
+
+        // Set Camera position
+        camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 0.1, 2000 );
+        camera.position.set( 0, 50, 0);
+
+        // Set the controls
+        controls = new THREE.OrbitControls( camera );
+        controls.target.set( 0,0,0 );
+        controls.update();
+
+        // New scene
+        scene = new THREE.Scene();
+        camera.lookAt(scene.position);
+
+        // models
+        buildWalls(wallsData);
+
+        // Load pedestrians
+        //interpolateAndAnimate(trajData);
+
+        // Load one pedestrian (DEBUG PURPOSE)
+        //loadMinecraft();
+
+        // Load one zombie (DEBUG PURPOSE)
+        //loadZombie();
+
+        // Add axes (DEBUG PURPOSE)
+        //var worldAxis = new THREE.AxesHelper(20);
+        //scene.add(worldAxis);
+
+        // Light
+        if (STYLE == "normal") {
+            scene.background = new THREE.Color(0xffffff);
+
+            light = new THREE.HemisphereLight( 0xbbbbff, 0x444422 );
+            light.position.set( 0, wallHeight, 0 );
+            light.castShadow = true;
+            scene.add( light );
+
+        } else if (STYLE == "TWD") {
+            scene.background = new THREE.Color(0x000000);
+
+            light = new THREE.HemisphereLight( 0xffffff, 0x444422, 0.02 );
+            light.position.set( 0, wallHeight, 0 );
+            light.castShadow = true;
+            scene.add( light );
+
+            addTWDLights(scene, zonesData);
+        }
+
+
+        raycaster = new THREE.Raycaster();
+
+        renderer = new THREE.WebGLRenderer( { antialias: true } );
+        renderer.setPixelRatio( window.devicePixelRatio );
+
+        renderer.setSize(window.innerWidth, vizHeight);
+        renderer.gammaOutput = true;
+        renderer.domElement.id = 'canvas';
+        container.appendChild( renderer.domElement );
+
+        //resizeViz();
+
+        renderer.render( scene, camera );
 
     } else {
 
         const xmin = selectedInfra.xmin,
             xmax = selectedInfra.xmax,
             ymin = selectedInfra.ymin,
-            ymax = selectedInfra.ymax
+            ymax = selectedInfra.ymax;
 
         const margin = 0.01*(xmax-xmin);
         const ratio = (ymax-ymin)/(xmax-xmin);
@@ -320,8 +423,10 @@ $( "#threeDButton" ).click(function() {
         document.getElementById("threeDButton").innerHTML = "<i class=\"fas fa-cube fa-lg\"></i>";
         viz3D = false;
 
-
         clearInterval(pedMover);
+
+        $("#canvas").remove();
+        // delete the other stuff!
 
         prepViz();
         runViz();
@@ -335,6 +440,8 @@ $( "#threeDButton" ).click(function() {
 
         $("#svgCont").remove();
         $("#dragOpt").remove();
+
+        prepViz();
 
     }
 });
