@@ -5,38 +5,6 @@ const INTERVAL2D = 100;
 let SPEEDFACTOR = 1;
 let paused = false;
 
-// 3D parameters
-
-// Various folders
-const assetsFolder = "./visualization/3D/assets/";
-const modelsFolder = "./visualization/3D/models/";
-
-let container, stats, controls, raycaster;
-let camera, scene, renderer, light;
-const INTERP = 4;
-const INTERVAL3D = INTERVAL2D/(INTERP+1);
-
-// Some variables
-const wallHeight = 2.5;
-const wallDepth = 0.1;
-const peopleHeight = 1.6;
-let wallsHidden = false;
-let avg = [0,0];
-let STYLE = "TWD";
-
-// Some 3D objects
-let topFloor, bottomFloor, ceiling;
-let walls = [];
-let clocks = [];
-let lights = [];
-
-// Pedestrians
-let dctPed = new Object();
-let mixers = [];
-
-let mouse = new THREE.Vector2(), INTERSECTED;
-let SELECTED = new Object();
-
 function prepViz() {
 
     console.log(viz3D);
@@ -45,11 +13,9 @@ function prepViz() {
 
         container = document.getElementById("viz");
 
-        console.log("TAMERE!")
-
         // Set Camera position
         camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 0.1, 2000 );
-        camera.position.set( 0, 50, 0);
+        camera.position.set( -42.39557080736188, 67.12576960977573, 69.11641657512034);
 
         // Set the controls
         controls = new THREE.OrbitControls( camera );
@@ -60,7 +26,9 @@ function prepViz() {
         scene = new THREE.Scene();
         camera.lookAt(scene.position);
 
-        // models
+        console.log(walls);
+
+        // If walls are not built, build them!
         buildWalls(wallsData);
 
         // Load pedestrians
@@ -107,9 +75,22 @@ function prepViz() {
         renderer.domElement.id = 'canvas';
         container.appendChild( renderer.domElement );
 
-        //resizeViz();
+        // stats (DEBUG)
+        // stats = new Stats();
+        // container.appendChild( stats.dom );
+
+        // Mouse stuff
+        document.addEventListener( 'mousemove', onDocumentMouseMove, false );
+        document.addEventListener( 'mousedown', onDocumentMouseDown, false );
+
+        // Key stuff
+        document.addEventListener( 'keypress', onKeyPress, false);
+
+        resizeViz();
 
         renderer.render( scene, camera );
+
+        animate();
 
     } else {
 
@@ -121,9 +102,6 @@ function prepViz() {
         const margin = 0.01*(xmax-xmin);
         const ratio = (ymax-ymin)/(xmax-xmin);
         const pixelWidth = 900;
-
-        console.log()
-
 
         let svg = d3.select("#viz")
             .append("svg")
@@ -155,27 +133,29 @@ function prepViz() {
 
         // Read json data and draw frameworks (walls and zones)
         drawStructures(structure_layer);
-
-        appendOptions();
     }
+
+    appendOptions();
+
 }
 
 function runViz() {
 
     if (viz3D) {
+        runAnimation3D();
 
     } else {
         //Pedestrians
-        runAnimation(d3.select(".voronoi_poly_layer"), d3.select(".pedes_layer"));
+        runAnimation2D(d3.select(".voronoi_poly_layer"), d3.select(".pedes_layer"));
 
     }
 }
 
 function do1Step() {
     if (viz3D) {
-
+        runOneStep3D();
     } else {
-        runOneStep(d3.select(".voronoi_poly_layer"), d3.select(".pedes_layer"));
+        runOneStep2D(d3.select(".voronoi_poly_layer"), d3.select(".pedes_layer"));
     }
 }
 
@@ -183,7 +163,6 @@ function updateTimer(time) {
     document.getElementById("timer").innerHTML = secondsToHms(time);
 
     slider.noUiSlider.setHandle(1, time, true);
-
 
 }
 
@@ -323,35 +302,52 @@ function addHistograms(hist) {
 // Faster and Slower buttons
 $( "#forward" ).click(function() {
 
-    clearInterval(pedMover);
-    SPEEDFACTOR *= 2;
+    if (SPEEDFACTOR <= 16) {
+        clearInterval(pedMover);
 
-    if (SPEEDFACTOR < 1) {
-        const frac = math.fraction(SPEEDFACTOR);
-        document.getElementById("speed").innerHTML = "&#215;" + frac.n + "/" + frac.d;
-    } else {
-        document.getElementById("speed").innerHTML = "&#215;" + SPEEDFACTOR;
+        if (viz3D & SPEEDFACTOR == 2) {
+            currentTimeShownIdx = Math.round(currentTimeShownIdx/(INTERP+1));
+        }
+
+        SPEEDFACTOR *= 2;
+
+        if (SPEEDFACTOR < 1) {
+            const frac = math.fraction(SPEEDFACTOR);
+            document.getElementById("speed").innerHTML = "&#215;" + frac.n + "/" + frac.d;
+        } else {
+            document.getElementById("speed").innerHTML = "&#215;" + SPEEDFACTOR;
+        }
+
+        if (!paused) {
+            runViz();
+        }
     }
-
-    if (!paused) {
-        runViz();
-    }});
+});
 
 $( "#backward" ).click(function() {
 
-    clearInterval(pedMover);
-    SPEEDFACTOR /= 2;
+    if (SPEEDFACTOR >= 0.25) {
+        clearInterval(pedMover);
 
-    if (SPEEDFACTOR < 1) {
-        const frac = math.fraction(SPEEDFACTOR);
-        document.getElementById("speed").innerHTML = "&#215;" + frac.n + "/" + frac.d;
-    } else {
-        document.getElementById("speed").innerHTML = "&#215;" + SPEEDFACTOR;
+        if (viz3D & SPEEDFACTOR == 4) {
+            currentTimeShownIdx = currentTimeShownIdx*(INTERP+1);
+        }
+
+
+        SPEEDFACTOR /= 2;
+
+        if (SPEEDFACTOR < 1) {
+            const frac = math.fraction(SPEEDFACTOR);
+            document.getElementById("speed").innerHTML = "&#215;" + frac.n + "/" + frac.d;
+        } else {
+            document.getElementById("speed").innerHTML = "&#215;" + SPEEDFACTOR;
+        }
+
+        if (!paused) {
+            runViz();
+        }
     }
 
-    if (!paused) {
-        runViz();
-    }
 });
 
 $( "#playPauseButton" ).click(function() {
@@ -397,7 +393,13 @@ function changeTimes(times) {
     const current = times[1].split(':').reduce((acc,time) => (60 * acc) + +time);
     const tmax = times[2].split(':').reduce((acc,time) => (60 * acc) + +time);
 
-    let nbrIdx = parseInt(10*(tmin-minTime));
+    let mult = 10;
+
+    if (viz3D & SPEEDFACTOR <= 2) {
+        mult *= (INTERP+1);
+    }
+
+    let nbrIdx = parseInt(mult*(tmin-minTime));
 
     console.log(nbrIdx);
 
@@ -406,7 +408,7 @@ function changeTimes(times) {
     minTime = tmin;
     maxTime = tmax;
 
-    currentTimeShownIdx = parseInt(10*(current-minTime));
+    currentTimeShownIdx = parseInt(mult*(current-minTime));
 
     if (!paused) {
         clearInterval(pedMover);
@@ -418,31 +420,77 @@ function changeTimes(times) {
 
 $( "#threeDButton" ).click(function() {
 
+    $("#dragOpt").remove();
+    document.getElementById("optionsButton").innerHTML = "<i class=\"fas fa-plus fa-lg\"></i>";
+    optionsShown = false;
+
+
     if(viz3D) {
 
         document.getElementById("threeDButton").innerHTML = "<i class=\"fas fa-cube fa-lg\"></i>";
+        document.getElementById("threeDButton").title = "3D viz";
+
+        document.getElementById("help").title = "Scroll for zoom/dezoom; Click + Mouse to move around; Click on a zone to select it as an origin and ctrl+click to select it as a destination."
+
         viz3D = false;
 
         clearInterval(pedMover);
 
         $("#canvas").remove();
-        // delete the other stuff!
 
-        prepViz();
-        runViz();
+
+        // Have to delete correctly these stuff.
+        topFloor = null;
+        bottomFloor = null;
+        ceiling = null;
+        walls = [];
+        clocks = [];
+        lights = [];
+
+        while(scene.children.length > 0){
+            scene.remove(scene.children[0]);
+        }
+
+        controls = null;
+
+        dctPed = new Object();
+        mixers = [];
+
+        container = null;
+        stats = null;
+        controls = null;
+        raycaster = null;
+        camera = null;
+        scene = null;
+        renderer = null;
+        light = null;
+
+
+        if (SPEEDFACTOR <= 2) {
+            currentTimeShownIdx = Math.floor(currentTimeShownIdx/(INTERP+1));
+        }
+
 
     } else {
 
         document.getElementById("threeDButton").innerHTML = "<i class=\"fas fa-square fa-lg\"></i>";
+        document.getElementById("threeDButton").title = "2D viz";
+
+        document.getElementById("help").title = "Scroll for zoom/dezoom; CTRL+Mouse/Arrow keys to more; Mouse to rotate."
+
         viz3D = true;
 
         clearInterval(pedMover);
 
         $("#svgCont").remove();
-        $("#dragOpt").remove();
 
-        prepViz();
+        if (SPEEDFACTOR <= 2) {
+            currentTimeShownIdx *= (INTERP+1);
+        }
 
     }
+
+    prepViz();
+    runViz();
 });
 

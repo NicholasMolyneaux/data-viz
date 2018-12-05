@@ -93,7 +93,8 @@ function onKeyPress( event ) {
     if (event.code === "Space") {
 
         // Reset camera and controls
-        camera.position.set( 0, 50, 0);
+        camera.position.set( -42.39557080736188, 67.12576960977573, 69.11641657512034)
+
         controls.target.set( 0,0,0 );
         controls.enabled = true;
         controls.update();
