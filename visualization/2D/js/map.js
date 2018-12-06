@@ -1,21 +1,26 @@
 //TODO: map to true rgb. gray scale now.
+
 function drawAVoronoi(data, polygon, canvas) {
     let rect = rectangleContainPolygon(polygon);
     let v = d3.voronoi()
         .extent(rect);
     let clip = polygonToArray(polygon);
     let data_in_voronoi_area = filterPointInPolygon(data, polygon);
-    let voronoi_polygons = v.polygons(data_in_voronoi_area.map(d => [d.x, d.y])).map(p => d3.polygonClip(clip, p));
+    let voronoi_polygons = v.polygons(data_in_voronoi_area.map(d => [d.x, d.y]));
+    if (polygon.attr("id") === "voronoi-area") {
+        voronoi_polygons = voronoi_polygons.map(p =>d3.polygonClip(clip, p));
+    }
     let areas = voronoi_polygons.map(d => d3.polygonArea(d));
+    let voronoi_polygons_with_id = voronoi_polygons.map((d,i) => {return {"d":d, "id":data_in_voronoi_area[i].id}});
     let publish_json = encodeJson(data_in_voronoi_area, areas);
     publish(publish_json);
-    let voronois = canvas.selectAll("path").data(voronoi_polygons);
+    let voronois = canvas.selectAll("path").data(voronoi_polygons_with_id, d => d.id);
     voronois.enter().append("path")
         .attr("class", "voronoi-poly")
-        .attr("d", line)
+        .merge(voronois)
+        .attr("d", d => line(d.d))
         .style("fill", (d,i)=> pedLosColor(areas[i]))
         .style("opacity", 0.7);
-    //.attr("mask", "url(#voronoi-mask)");
 }
 function filterByOD(time_series_data, od) {
     // Check od set is empty (no click at all)
@@ -177,7 +182,7 @@ function drawVoronoiArea(svg, polygon) {
         .attr("points", polygon_hull.map(p => p.join(",")).join(" "))
         .attr("fill", "white");
 
-    svg.append("polygon")
-        .attr("class", "voronoi-area")
+    d3.select(".voronoi_poly_layer").append("polygon")
+        .attr("id", "voronoi-area")
         .attr("points", polygon_hull.map(p => p.join(",")).join(" "));
 }

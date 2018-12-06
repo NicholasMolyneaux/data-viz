@@ -1,13 +1,12 @@
-function drawStructures(main_layer, voronoi_layer) {
+function drawStructures(main_layer) {
     drawWalls(wallsData, main_layer);
     drawZones(zonesData, main_layer);
     drawGates(gatesData, main_layer);
-    drawControlAreas(defaultControl, voronoi_layer);
 }
 
 function drawWalls(wall, svg) {
     // Draw walls
-    //console.log(wall);
+
     wall.map( (w)  => {
         svg.append("line")
             .attr("class", "the-walls")
@@ -42,25 +41,7 @@ function drawZones(zones, svg) {
         });
 
     });
-    // Draw invisible arrows
-    // connect_info = graph["connectivity"];
-    // graph["connectivity"].map( a => {
-    //     let from = a["node"];
-    //     let to = a["connected_to"];
-    //     if (!(to.length == 0)) {
-    //         let from_center = centerOfRect(d3.selectAll(".the-zones").filter(`#${from}`));
-    //         to.map( d => {
-    //             let to_center = centerOfRect(d3.selectAll(".the-zones").filter(`#${d}`));
-    //             svg.append("line")
-    //                 .attr("class", "the-flow-lines")
-    //                 .attr("id", `${from}:${d}`)
-    //                 .attr("x1", from_center["x"])
-    //                 .attr("y1", from_center["y"])
-    //                 .attr("x2", to_center["x"])
-    //                 .attr("y2", to_center["y"]);
-    //         })
-    //     }
-    // });
+
 }
 
 function drawGates(gates, svg) {

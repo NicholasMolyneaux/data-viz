@@ -281,7 +281,6 @@ h1, h2 {
     stroke: red;
     stroke-width: 1;
     fill: none;
-    opacity: 0;
 }
 
 .flow-gates {
@@ -309,7 +308,7 @@ h1, h2 {
     fill: none;
 }
 
-.voronoi-area {
+#voronoi-area {
     vector-effect: non-scaling-stroke;
     stroke: black;
     stroke-width: 2;

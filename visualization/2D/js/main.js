@@ -43,9 +43,9 @@ function checkZone() {
 }
 function checkControl() {
     if (d3.select("#control_checkbox").property("checked")) {
-        d3.selectAll(".controlled-areas").style("opacity", 1);
+        drawControlAreas(defaultControl, d3.select(".voronoi_poly_layer"));
     } else {
-        d3.selectAll(".controlled-areas").style("opacity", 0);
+        d3.selectAll(".controlled-areas").remove();
     }
 }
 function checkFlow() {
