@@ -34,30 +34,33 @@ function onDocumentMouseMove( event ) {
 
 function onDocumentMouseDown( event ) {
 
-    event.stopPropagation();
-    event.preventDefault();
+    if (viz3D) {
 
-    mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
-    mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+        event.stopPropagation();
+        event.preventDefault();
 
-    raycaster.setFromCamera( mouse, camera );
-    var intersects = raycaster.intersectObjects( scene.children, true );
+        mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+        mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
 
-    var intersects_glft = new Array();
+        raycaster.setFromCamera( mouse, camera );
+        var intersects = raycaster.intersectObjects( scene.children, true );
 
-    // Select only skinned mesh. (To see if it works later on)
-    intersects.forEach(i => {
-        if (i.object.type == 'SkinnedMesh') {
-            intersects_glft.push(i);
+        var intersects_glft = new Array();
+
+        // Select only skinned mesh. (To see if it works later on)
+        intersects.forEach(i => {
+            if (i.object.type == 'SkinnedMesh') {
+                intersects_glft.push(i);
+            }
+        });
+
+        if ( intersects_glft.length > 0 ) {
+            console.log(intersects_glft);
+            SELECTED = intersects_glft[ 0 ].object;
+
+            followPedestrian();
+
         }
-    });
-
-    if ( intersects_glft.length > 0 ) {
-        console.log(intersects_glft);
-        SELECTED = intersects_glft[ 0 ].object;
-
-        followPedestrian();
-
     }
 }
 
@@ -93,7 +96,10 @@ function onKeyPress( event ) {
     if (event.code === "Space") {
 
         // Reset camera and controls
-        camera.position.set( 0, 50, 0);
+        camera.position.set( -42.39557080736188, 67.12576960977573, 69.11641657512034)
+
+        resizeViz();
+
         controls.target.set( 0,0,0 );
         controls.enabled = true;
         controls.update();

@@ -2,73 +2,63 @@ function intersection(o1, o2) {
     return Object.keys(o1).filter({}.hasOwnProperty.bind(o2));
 }
 
-function interpolateAndAnimate(json) {
+function runAnimation3D() {
 
-    console.log(json[0]);
-    console.log(json[10]);
+    const timeBounds = [minTime, maxTime];
 
-    const arrayToObject = (array) =>
-        array.reduce((obj, item) => {
-            obj[item.id] = item
-            return obj
-        }, {});
+    let trajDataFiltered = null;
+    let interval = null;
 
-    const delta = 0.1;
-
-    let interpJson = [];
-
-    for(let i=0; i<json.length-1; i++) {
-        interpJson.push(json[i]);
-
-        const init = arrayToObject(json[i].data);
-        const final = arrayToObject(json[i+1].data);
-
-        const inter = intersection(init, final);
-
-        for(let j=1; j<=INTERP; j++) {
-            let interpObj = new Object();
-            interpObj['time'] = json[i].time + delta/(INTERP+1)*j
-
-            let data = [];
-            for(let k=0; k<inter.length; k++) {
-                const id = inter[k];
-                let obj = new Object();
-                obj['id'] = init[id]['id'];
-                obj['x'] = (final[id]['x']-init[id]['x'])/(INTERP+1)*j + init[id]['x'];
-                obj['y'] = (final[id]['y']-init[id]['y'])/(INTERP+1)*j + init[id]['y'];
-                data.push(obj);
-            }
-            interpObj['data'] = data;
-            interpJson.push(interpObj);
-        }
+    if (SPEEDFACTOR <= 2) {
+        trajDataFiltered = interpolatedTrajData.filter(v => v.time > timeBounds[0] && v.time <= timeBounds[1]);
+        interval = INTERVAL3D;
+    } else {
+        trajDataFiltered = trajData.filter(v => v.time > timeBounds[0] && v.time <= timeBounds[1]);
+        interval = INTERVAL2D;
     }
 
-    interpJson.forEach((item, index) => {
-        setTimeout(() => {
-            animatePedestrians(item)
-        }, CUSTOMINTERVAL * index);
-    })
+    function walkData() {
+        if (currentTimeShownIdx >= trajDataFiltered.length) {
+            currentTimeShownIdx = 0;
+            //clearInterval(pedMover);
+        }
+        animatePedestrians(trajDataFiltered[currentTimeShownIdx].data);
+        updateTimer(trajDataFiltered[currentTimeShownIdx].time);
+        currentTimeShownIdx += 1;
+    }
+
+    pedMover = setInterval(walkData, interval/SPEEDFACTOR);
 
 }
 
+function runOneStep3D() {
+    const timeBounds = [minTime, maxTime];
 
+    let trajDataFiltered = null;
+
+    if (SPEEDFACTOR <= 2) {
+        trajDataFiltered = interpolatedTrajData.filter(v => v.time > timeBounds[0] && v.time <= timeBounds[1]);
+    } else {
+        trajDataFiltered = trajData.filter(v => v.time > timeBounds[0] && v.time <= timeBounds[1]);
+    }
+
+    animatePedestrians(trajDataFiltered[currentTimeShownIdx].data);
+    updateTimer(trajDataFiltered[currentTimeShownIdx].time);
+}
 
 function animatePedestrians(json) {
-
-    // Update the time
-    document.getElementById("timer").innerHTML = json.time.toFixed(2) + " [s.]";
 
     var listIds = [];
 
     // Go through data
-    json.data.forEach(ped => {
+    json.forEach(ped => {
 
         listIds.push(ped.id);
 
         // Check if its ID is in the dct of ped
         if (dctPed.hasOwnProperty(ped.id)){
             // Update the position of this pedestrian
-            updatePosition(ped);
+            updatePosition3D(ped);
         } else {
             // Create a pedestrian
             if (STYLE == "normal") {
@@ -250,7 +240,12 @@ function createZombie(ped) {
         clocks.push(new THREE.Clock());
 
         // Set the position
-        gltf.scene.position.set(ped.x-avg[0],0,ped.y-avg[1]);
+        if (anim == "crawl") {
+            gltf.scene.position.set(ped.x-avg[0],0.1,ped.y-avg[1]);
+
+        } else {
+            gltf.scene.position.set(ped.x-avg[0],0,ped.y-avg[1]);
+        }
 
         gltf.scene.matrixWorldNeedsUpdate = true;
         gltf.scene.updateMatrixWorld();
@@ -268,7 +263,7 @@ function createZombie(ped) {
 
 }
 
-function updatePosition(ped) {
+function updatePosition3D(ped) {
     if (dctPed[ped.id].hasOwnProperty("position")) {
 
         var oldX = dctPed[ped.id].position['x'];
@@ -296,7 +291,7 @@ function updatePosition(ped) {
             angle = angle - Math.PI/2;
         }
 
-        dctPed[ped.id].position.set(newX, 0, newY);
+        dctPed[ped.id].position.set(newX, dctPed[ped.id].position['y'], newY);
         if (norm > 0) {
             dctPed[ped.id].rotation.set(0, -angle, 0);
         }

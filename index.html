@@ -11,6 +11,8 @@
 
     <!-- Bootstrap core CSS -->
     <link href="./css/bootstrap.min.css" rel="stylesheet">
+    <link href="./css/nouislider.min.css" rel="stylesheet">
+
 
     <!-- Custom styles for this template -->
     <link href="./css/theme.css" rel="stylesheet">
@@ -25,6 +27,7 @@
 <body>
 
 <div class="allExceptFooter">
+
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <a id="logo-nav" class="navbar-brand" href="./index.html">TWD</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
@@ -57,10 +60,30 @@
 
                 <div class="col" id="viz">
                     <div id="timer">TIMER</div>
-                    <a id="fullscreen" role="button" title="fullscreen"><i class="fas fa-expand fa-lg"></i></a>
-                    <a id="threeDButton" role="button"><p id="threeD">3D</p></a>
-                    <a id="optionsButton" role="button" title="Options"><i class="fas fa-plus fa-lg"></i></a>
+                    <span id="buttons" style="display: none;">
 
+                        <a id="optionsButton" role="button" title="Options"><i class="fas fa-plus fa-lg"></i></a>
+                        <a id="help" title="Help"><i class="fas fa-question fa-lg"></i></a>
+
+                        <div id="bottomButtons">
+                            <span id="leftButtons" class="unselectable">
+                                <span id="speed">&#215;1</span> <br>
+                                <a id="backward" role="button" title="Slower"><i class="fas fa-backward fa-lg"></i></a>&emsp;
+                                <a id="playPauseButton" role="button" title="Pause"><i class="fas fa-pause fa-lg"></i></a>&emsp;
+                                <a id="forward" role="button" title="Faster"><i class="fas fa-forward fa-lg"></i></a>
+
+                            </span>
+                            &emsp;
+                            <div id="slider" class="noUi-target noUi-ltr noUi-horizontal"></div>
+
+                            <span id="rightButtons" class="unselectable">
+                                &emsp;&emsp;
+                                <a id="threeDButton" role="button" title="2D viz"><i class="fas fa-square fa-lg"></i></a>&emsp;
+                                <a id="fullscreen" role="button" title="Fullscreen"><i class="fas fa-expand fa-lg"></i></a>
+                            </span>
+                        </div>
+
+                    </span>
                 </div>
 
             </div>
@@ -69,7 +92,7 @@
 
     </div>
 
-    <div id="StatsCont" style="display: none;">
+    <div id="StatsCont" style="display: none">
     <!--<div id="StatsCont">-->
         <hr>
 
@@ -158,18 +181,14 @@
             </div>
         </div>
     </div>
-
-
 </div>
 
-
-
-
-<footer class="footer">
+<footer id="footer" class="footer" style="display: none">
     <div class="container">
         <span class="text-muted">Footer!</span>
     </div>
 </footer>
+
 </body>
 
 
@@ -187,16 +206,26 @@
 
 
 <script src="js/libraries/bootstrap.bundle.js"></script>
+<script src="js/libraries/math.min.js"></script>
+<script src="js/libraries/nouislider.min.js"></script>
 <script src="js/index.js"></script>
 <script src="js/data.js"></script>
 
-<!-- d3 -->
+<!-- d3.js -->
 <script src="https://d3js.org/d3.v5.min.js"></script>
 <script src="https://d3js.org/d3-voronoi.v1.min.js"></script>
 <script src="https://d3js.org/d3-polygon.v1.min.js"></script>
 <script src="http://d3js.org/queue.v1.min.js"></script>
 <script src="js/libraries/d3-polygon-clip.js"></script>
 <script src='js/libraries/d3-tip.js'></script>
+
+<!-- Three.js -->
+<script src="visualization/3D/libs/three.min.js"></script>
+<script src="visualization/3D/libs/js/controls/OrbitControls.js"></script>
+<script src="visualization/3D/libs/js/loaders/GLTFLoader.js"></script>
+<script src="visualization/3D/libs/js/libs/inflate.min.js"></script>
+<script src="visualization/3D/libs/js/WebGL.js"></script>
+<script src="visualization/3D/libs/js/libs/stats.min.js"></script>
 
 <!-- All visualization -->
 <script src="js/viz.js"></script>
@@ -221,12 +250,11 @@
 <!-- Trajectories -->
 <script src="js/libraries/customStreaming.js"></script>
 
-
 <!-- 3D visualization -->
-<!--<script src="visualization/3D/js/debug.js"></script>
+<script src="visualization/3D/js/main.js"></script>
+<script src="visualization/3D/js/debug.js"></script>
 <script src="visualization/3D/js/functionality.js"></script>
 <script src="visualization/3D/js/build.js"></script>
 <script src="visualization/3D/js/animate.js"></script>
-<script src="visualization/3D/js/main_viz.js"></script>-->
 
 </html>

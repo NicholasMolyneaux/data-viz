@@ -12,8 +12,11 @@ function drawAVoronoi(data, polygon, canvas) {
     }
     let areas = voronoi_polygons.map(d => d3.polygonArea(d));
     let voronoi_polygons_with_id = voronoi_polygons.map((d,i) => {return {"d":d, "id":data_in_voronoi_area[i].id}});
-    let publish_json = encodeJson(data_in_voronoi_area, areas);
-    publish(publish_json);
+
+    // DEBUG
+    // let publish_json = encodeJson(data_in_voronoi_area, areas);
+    // publish(publish_json);
+
     let voronois = canvas.selectAll("path").data(voronoi_polygons_with_id, d => d.id);
     voronois.enter().append("path")
         .attr("class", "voronoi-poly")
@@ -22,6 +25,7 @@ function drawAVoronoi(data, polygon, canvas) {
         .style("fill", (d,i)=> pedLosColor(areas[i]))
         .style("opacity", 0.7);
 }
+
 function filterByOD(time_series_data, od) {
     // Check od set is empty (no click at all)
     if (od_selection.Origins.size === 0 && od_selection.Destinations.size === 0) {
@@ -59,6 +63,7 @@ function filterByOD(time_series_data, od) {
         return od_selection.Origins.has(od_ped.o) && od_selection.Destinations.has(od_ped.d);
     })
 }
+
 function pedLosColor(p) {
     let color;
     if (p >= 3.24)
@@ -139,8 +144,6 @@ function setVoronoiArea() {
         drawVoronoiArea(voronoi_clip_canvas, pre_circles);
 
     } else if (stateControlAreaButton == 'drawn') {
-
-        console.log("ASD");
 
         stateControlAreaButton = 'idle';
         document.getElementById("control_area").innerHTML = "Draw Control Area";

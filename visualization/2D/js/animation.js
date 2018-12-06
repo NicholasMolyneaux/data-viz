@@ -1,4 +1,4 @@
-function updatePosition(time_series_data, svg) {
+function updatePosition2D(time_series_data, od, svg) {
     // Update circles (pedestrians)
     let pedes = svg.selectAll(".ped-individual").data(time_series_data, d => d.id);
     pedes.enter().append("circle")
@@ -12,13 +12,39 @@ function updatePosition(time_series_data, svg) {
 
 }
 
-function runAnimation(voronoi_poly_layer ,voronoi_canvas,  pedes_layer, tmin, tmax) {
-    trajData.map( each_time => {
-        d3.timeout( () => {
-            // Filter by OD
-            let filtered_time_series_data = filterByOD(each_time.data, trajSummary);
-            checkVoronoi(filtered_time_series_data, voronoi_poly_layer, voronoi_canvas);
-            updatePosition(filtered_time_series_data, pedes_layer);
-        }, (each_time.time-tmin) * 1000);
-    })
+function runAnimation2D() {
+
+    const voronoi_poly_layer = d3.select(".voronoi_poly_layer");
+    const pedes_layer = d3.select(".pedes_layer");
+    const voronoi_canvas = d3.select(".voronoi_canvas");
+
+    const timeBounds = [minTime, maxTime];
+
+    const trajDataFiltered = trajData.filter(v => v.time > timeBounds[0] && v.time <= timeBounds[1]);
+
+    function walkData() {
+        if (currentTimeShownIdx >= trajDataFiltered.length) {
+            currentTimeShownIdx = 0;
+            //clearInterval(pedMover);
+        }
+        checkVoronoi(trajDataFiltered[currentTimeShownIdx].data, voronoi_poly_layer, voronoi_canvas);
+        updatePosition2D(trajDataFiltered[currentTimeShownIdx].data, trajSummary, pedes_layer);
+        updateTimer(trajDataFiltered[currentTimeShownIdx].time);
+        currentTimeShownIdx += 1;
+    }
+
+    pedMover = setInterval(walkData, INTERVAL2D/SPEEDFACTOR);
+}
+
+function runOneStep2D() {
+
+    const voronoi_poly_layer = d3.select(".voronoi_poly_layer");
+    const pedes_layer = d3.select(".pedes_layer");
+
+    const timeBounds = [minTime, maxTime];
+
+    const trajDataFiltered = trajData.filter(v => v.time > timeBounds[0] && v.time <= timeBounds[1]);
+
+    updatePosition2D(trajDataFiltered[currentTimeShownIdx].data, trajSummary, pedes_layer);
+    updateTimer(trajDataFiltered[currentTimeShownIdx].time);
 }

@@ -43,7 +43,7 @@ function checkZone() {
 }
 function checkControl() {
     if (d3.select("#control_checkbox").property("checked")) {
-        drawControlAreas(defaultControl, d3.select(".voronoi_poly_layer"));
+        drawControlAreas(areasData, d3.select(".voronoi_poly_layer"));
     } else {
         d3.selectAll(".controlled-areas").remove();
     }

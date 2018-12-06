@@ -2,13 +2,15 @@ let wallsData = null;
 let zonesData = null;
 let gatesData = null;
 let areasData = null;
-let defaultControl = null;
 let trajData = null;
 let trajSummary = null;
 
+const INTERP = 4;
+let interpolatedTrajData = null;
+
 async function loadInfraData() {
 
-    await fetch(baseURL + "infra/walls" + "/" + selectedInfra.name).then(response => {
+    await fetch(baseURL + "infra/walls/" + selectedInfra.name).then(response => {
         return response.json();
     }).then(walls => {
         wallsData = walls;
@@ -16,7 +18,7 @@ async function loadInfraData() {
         console.log(err)
     });
 
-    await fetch(baseURL + "infra/zones" + "/" + selectedInfra.name).then(response => {
+    await fetch(baseURL + "infra/zones/" + selectedInfra.name).then(response => {
         return response.json();
     }).then(zones => {
         zonesData = zones;
@@ -24,7 +26,7 @@ async function loadInfraData() {
         console.log(err)
     });
 
-    await fetch(baseURL + "infra/gates" + "/" + selectedInfra.name).then(response => {
+    await fetch(baseURL + "infra/gates/" + selectedInfra.name).then(response => {
         return response.json();
     }).then(gates => {
         gatesData = gates;
@@ -32,22 +34,13 @@ async function loadInfraData() {
         console.log(err)
     });
 
-    await fetch(baseURL + "infra/monitoredareas" + "/" + "lausannenew").then(response => {
+    await fetch(baseURL + "infra/monitoredareas/" + selectedInfra.name).then(response => {
         return response.json();
     }).then(monitoredareas => {
-        defaultControl = monitoredareas;
+        areasData = monitoredareas;
     }).catch(err => {
         console.log(err)
     });
-    /*
-    await fetch(baseURL + "areas" + "/" + selectedInfra.name).then(response => {
-        return response.json();
-    }).then(areas => {
-        areasData = areas;
-    }).catch(err => {
-        console.log(err)
-    });
-     */
 
 }
 
@@ -72,4 +65,42 @@ async function loadTrajData() {
     }).catch(err => {
         console.log(err)
     });
+}
+
+function interPolateData() {
+
+    const arrayToObject = (array) =>
+        array.reduce((obj, item) => {
+            obj[item.id] = item;
+            return obj
+        }, {});
+
+    interpolatedTrajData = [];
+
+    for(let i=0; i<trajData.length-1; i++) {
+        interpolatedTrajData.push(trajData[i]);
+
+        const init = arrayToObject(trajData[i].data);
+        const final = arrayToObject(trajData[i+1].data);
+
+        const inter = intersection(init, final);
+
+        for(let j=1; j<=INTERP; j++) {
+            let interpObj = new Object();
+            interpObj['time'] = trajData[i].time + INTERVAL2D/(INTERP+1)*j/1000;
+
+            let data = [];
+            for(let k=0; k<inter.length; k++) {
+                const id = inter[k];
+                let obj = new Object();
+                obj['id'] = init[id]['id'];
+                obj['x'] = (final[id]['x']-init[id]['x'])/(INTERP+1)*j + init[id]['x'];
+                obj['y'] = (final[id]['y']-init[id]['y'])/(INTERP+1)*j + init[id]['y'];
+                data.push(obj);
+            }
+            interpObj['data'] = data;
+            interpolatedTrajData.push(interpObj);
+        }
+    }
+
 }

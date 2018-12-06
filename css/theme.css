@@ -55,7 +55,9 @@
 
 body {
     font-family: 'Roboto', sans-serif;
-    height: 100%;
+    margin: 0;
+    padding-bottom:0;
+    background-color: black;
     #font-size: 2vw;
 }
 
@@ -66,6 +68,7 @@ body {
 
 .mainTitle {
     margin: 0;
+    padding: 50px;
     #padding-bottom: 20px;
 }
 
@@ -85,7 +88,7 @@ h1, h2 {
 
 .allExceptFooter {
     padding-bottom: 60px; /* this needs to be bigger than footer height*/
-    min-height: 100vh;
+    #min-height: 100vh;
 }
 
 .footer {
@@ -95,7 +98,7 @@ h1, h2 {
     clear:both;
     padding-top:20px;
     bottom: 0;
-    background-color: #EBEDEF;
+    background-color: #E8EBEF;
 }
 
 .btn-primary {
@@ -141,24 +144,11 @@ h1, h2 {
 
 /* Index CSS */
 
-#fullscreen {
-    cursor: pointer;
-    position:absolute;
-    bottom:5px;
-    right:10px;
-    color: #000000;
-}
-
 #optionsButton {
     cursor: pointer;
     position:absolute;
     top:5px;
     left:10px;
-    color: #000000;
-}
-
-#fullscreen:hover, #threeD:hover, #optionsButton:hover {
-    transform: scale(1.2);
 }
 
 .min-opt {
@@ -201,28 +191,99 @@ h1, h2 {
     font-weight: bolder;
 }
 
-#threeD {
+#leftButtons {
     cursor: pointer;
-    font-size: 20px;
-    text-shadow: 0 1px 0 #ccc,
-    0 2px 0 #c9c9c9,
-    0 3px 0 #bbb,
-    0 4px 0 #b9b9b9,
-    0 5px 0 #aaa,
-    0 6px 1px rgba(0,0,0,.1),
-    0 0 5px rgba(0,0,0,.1),
-    0 1px 3px rgba(0,0,0,.3),
-    0 3px 5px rgba(0,0,0,.2),
-    0 5px 10px rgba(0,0,0,.25),
-    0 10px 10px rgba(0,0,0,.2),
-    0 20px 20px rgba(0,0,0,.15);
+    display: inline-flex;
+    display: flex;
+    justify-content: center;
+    padding-left: 10px;
 }
 
-#threeDButton {
-    position:absolute;
-    top:5px;
-    right:10px;
-    color: #000000;
+#rightButtons {
+    cursor: pointer;
+    display: inline-flex;
+    padding-right: 10px;
+}
+
+#speed {
+    position: absolute;
+    bottom: 25px;
+    font-family: "Fira Mono", Monaco, "Andale Mono", "Lucida Console", "Bitstream Vera Sans Mono", "Courier New", Courier, monospace;
+    font-weight: bolder;
+}
+
+#help {
+    position: absolute;
+    cursor: help;
+    top: 5px;
+    right: 10px;
+}
+
+#slider {
+    flex-grow: 1;
+    bottom:-7px;
+}
+
+.noUi-connect {
+    background: #E8EBEF;
+}
+
+.noUi-horizontal .outer {
+    width: 20px;
+    height: 20px;
+    border-radius: 20px;
+    box-shadow: none;
+    outline: none;
+    background: #262A2D;
+    border: none;
+    box-shadow: none;
+    cursor: pointer;
+    outline: none;
+}
+
+.noUi-horizontal .inner {
+    background: transparent;
+    width: 10px;
+    height: 20px;
+    border-top: solid 10px rgb(200,30,50);
+    border-left: solid 10px transparent;
+    border-right: solid 10px transparent;
+    border-bottom: transparent;
+    box-shadow: none;
+    outline: none;
+    cursor: default;
+}
+
+.noUi-connects, .noUi-base, .noUi-target, .noUi-connect{
+    height: 10px;
+}
+
+.noUi-horizontal .noUi-handle:before,
+.noUi-horizontal .noUi-handle:after {
+    content: '';
+    background: transparent;
+}
+
+.noUi-tooltip {
+    display: none;
+}
+.noUi-active .noUi-tooltip {
+    display: block;
+}
+
+.fake-fill {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    background: black;
+    z-index: 0;
+}
+
+#bottomButtons {
+    display: flex;
+    position: absolute;
+    bottom: 5px;
+    width: 100%;
 }
 
 #statsTitle {
@@ -231,6 +292,15 @@ h1, h2 {
 
 .cardheader {
     border: 0;
+}
+
+.unselectable {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 
