@@ -491,6 +491,11 @@ $( "#threeDButton" ).click(function() {
     }
 
     prepViz();
-    runViz();
+
+    if(paused) {
+        do1Step();
+    } else {
+        runViz();
+    }
 });
 

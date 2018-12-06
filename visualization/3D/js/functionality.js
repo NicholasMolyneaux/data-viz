@@ -95,6 +95,8 @@ function onKeyPress( event ) {
         // Reset camera and controls
         camera.position.set( -42.39557080736188, 67.12576960977573, 69.11641657512034)
 
+        resizeViz();
+
         controls.target.set( 0,0,0 );
         controls.enabled = true;
         controls.update();
