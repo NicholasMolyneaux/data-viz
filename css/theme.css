@@ -429,8 +429,13 @@ h1, h2 {
     pointer-events: all;
 }
 
+.chordlabels {
+    font-size: 15px;
+    font-weight: bold;
+}
+
 path.group {
-    fill-opacity: .8;
+    fill-opacity: 0.8;
 }
 
 path.chord {

@@ -1,18 +1,14 @@
 //Function for grouping zones together. The object (map) inside must be passed from the user somehow.
 //TODO: Get the groupeddZones from the web page
-function getVisibleName(str) {
+function getVisibleNameMapping(groupedZones) {
 
-    const groupedZones = {};
-    //groupedZones["left-top"] = "left";
-    //groupedZones["left-bottom"] = "left";
-    //groupedZones["right-top"] = "right";
-    //groupedZones["right-bottom"] = "right";
-
-    if (groupedZones[str] === undefined) {
-        return str;
-    } else {
-        return groupedZones[str];
-    }
+    return function f(str) {
+        if (groupedZones[str] === undefined) {
+            return str;
+        } else {
+            return groupedZones[str];
+        }
+    };
 }
 
 //create a key that will represent the relationship
@@ -147,7 +143,22 @@ function arcTween(oldLayout, arc) {
 }*/
 
 
-function updateChordDiagram(canvas, chord, arc, ribbon, colors, matrix, keys, last_layout, geom) {
+
+function updateChordDiagram(canvas, chord, arc, ribbon, colors, matrix, keys, last_layout, geom, duration) {
+
+    function hideOnMouseOver(opacity) {
+        return function(g, i) {
+            canvas.selectAll("path.chord")
+                .filter(function(d) { return d.source.index != i && d.target.index != i; })
+                .transition()
+                .style("opacity", opacity);
+        };
+    }
+
+    function groupOnClick(id) {
+        makingNewGroup.push(id);
+        newGroupLabel = newGroupLabel + " / " + keys[id];
+    }
 
     const currentLayout = chord(matrix);
 
@@ -160,11 +171,18 @@ function updateChordDiagram(canvas, chord, arc, ribbon, colors, matrix, keys, la
 
     groups.exit()
         .transition()
-        .duration(1000)
+        .duration(duration)
         .attr("opacity", 0.0)
         .remove();
 
-    const entering = groups.enter().append("g");
+    const entering = groups.enter()
+        .append("g")
+        .on("mouseover", hideOnMouseOver(0.1))
+        .on("mouseout", hideOnMouseOver(1.0))
+        .on("click", d => {
+            groupOnClick(d.index);
+            console.log(makingNewGroup);
+        });
 
     entering.append("path")
         .attr("class", "group")
@@ -175,37 +193,30 @@ function updateChordDiagram(canvas, chord, arc, ribbon, colors, matrix, keys, la
         .attr("d", arc);
 
     entering.append("text")
-        .attr("class", "text")
+        .attr("class", "chordlabels")
         .each(function(d) {
             d.angle = (d.startAngle + d.endAngle) / 2;
         })
         .attr("dy", "0.35em")
-        .style("font-family", "helvetica, arial, sans-serif")
-        .style("font-size", "15px")
         //.attr("text-anchor", function(d) {
         //    return d.angle > Math.PI ? "end" : null;
         //})
         .attr("text-anchor", "middle")
         .attr("transform", function(d) {
-            //console.log(d);
             return "rotate(" + (d.angle * 180 / Math.PI - 90) + ")" +
-                "translate(" + (geom.r0 + 75) + ")"+
+                "translate(" + (geom.r0 + geom.textSpacing) + ")"+
                 (d.angle > Math.PI ? "rotate(180)" : "");
         })
         .text(function(d) {
             return keys[d.index];
         });
 
-
-
-    //console.log(last_layout);
-    //console.log(groups);
     groups.select("text")
         .each(function(d) {
             d.angle = (d.startAngle + d.endAngle) / 2;
         })
         .transition()
-        .duration(1000)
+        .duration(duration)
         .attrTween("transform", labelTween(last_layout));
 
 
@@ -216,7 +227,7 @@ function updateChordDiagram(canvas, chord, arc, ribbon, colors, matrix, keys, la
         })
         .attr("d", arc)
         .transition()
-        .duration(1000)
+        .duration(duration)
         .attrTween("d", arcTween(last_layout, arc));
 
 
@@ -234,7 +245,7 @@ function updateChordDiagram(canvas, chord, arc, ribbon, colors, matrix, keys, la
         })
         .attr("d", ribbon.radius(geom.r0))
         .transition()
-        .duration(1000)
+        .duration(duration)
         .attrTween("d", chordTween(last_layout, ribbon));
 
 
@@ -245,7 +256,7 @@ function updateChordDiagram(canvas, chord, arc, ribbon, colors, matrix, keys, la
         })
         .attr("d", ribbon.radius(geom.r0))
         .transition()
-        .duration(1000)
+        .duration(duration)
         .attrTween("d", chordTween(last_layout, ribbon));
 
     chordPaths.exit()
@@ -271,7 +282,7 @@ function updateChordDiagram(canvas, chord, arc, ribbon, colors, matrix, keys, la
                 //console.log(oldAngle, d.angle);
                 //console.log(oldAngle, d.angle, (oldAngle + (d.angle-oldAngle)*t * 180 / Math.PI - 90));
                 return "rotate(" + (oldAngle*180/Math.PI + (d.angle-oldAngle)*t * 180 / Math.PI - 90) + ")" +
-                "translate(" + (geom.r0 + 75) + ")" +
+                "translate(" + (geom.r0 + geom.textSpacing) + ")" +
                 ((oldAngle + (d.angle-oldAngle)*t) > Math.PI ? "rotate(180)" : "")
             }
         }

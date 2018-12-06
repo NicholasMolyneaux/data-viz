@@ -1,6 +1,59 @@
-//import {chordKey, arcTween, chordTween} from "./chord_functions.js";
 
-function staticChord(data) {
+let chordAnimation;
+let pausedChord = false;
+let chordAnimationCurrentTimeIdx = 0;
+
+let makingNewGroup = [];
+let newGroupLabel = "";
+
+const IDLE = 0;
+const SELECTING = 1;
+let stateButtonChord = IDLE;
+
+function groupingChordGroups(groupedData) {
+    if (stateButtonChord === IDLE) {
+        stateButtonChord = SELECTING;
+        makingNewGroup = {};
+        newGroupLabel = "";
+        return {};
+    } else if (stateButtonChord === SELECTING) {
+        stateButtonChord = IDLE;
+        makingNewGroup.forEach(l => groupedData[keys[l] = newGroupLabel]);
+        deleteChord();
+        staticChord(data, groupedData);
+        return groupedData;
+    } else { console.log("ERROR WITH GROUPING CHORD DIAGRAM")}
+}
+
+function deleteCustomGroups() {
+    deleteChord();
+    staticChord(data, {});
+    return {};
+}
+
+$( "#playPauseButtonChord" ).click(function() {
+
+    if (pausedChord) {
+        chordAnimation = setInterval(chordAnimateFunction, 1000);
+        document.getElementById("playPauseButtonChord").innerHTML = "<i class=\"fas fa-pause fa-lg\"></i>";
+        pausedChord = false;
+    } else {
+        clearInterval(chordAnimation);
+        document.getElementById("playPauseButtonChord").innerHTML = "<i class=\"fas fa-play fa-lg\"></i>";
+        pausedChord = true;
+    }
+
+});
+
+function deleteChord() {
+    const svg = d3.select("#circle");
+    svg.selectAll(("g")).remove();
+    svg.selectAll(("path")).remove();
+}
+
+function staticChord(data, groupedZones) {
+
+    const getVisibleName = getVisibleNameMapping(groupedZones);
 
     //////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////// Static data processing ///////////////////////////////////
@@ -41,25 +94,22 @@ function staticChord(data) {
     const w = svgUp.node().getBoundingClientRect().width,
         h = svgUp.node().getBoundingClientRect().height;
 
-    const r1 = h/2;
-    const r0 = r1-110;
-
-    const geom = {"w": w, "h": h, "r1": h / 2, "r0": r1 - 110};
+    const geom = {"w": w, "h": h, "r1": h / 2, "r0": h / 2 - 110, "textSpacing": 40};
 
     const chord = d3.chord()
         .padAngle(0.05)
-        //.sortSubgroups(d3.descending)
+        .sortSubgroups(d3.descending)
         .sortChords(d3.descending);
 
     const arc = d3.arc()
-        .innerRadius(r0)
-        .outerRadius(r0 + 20)
+        .innerRadius(geom.r0)
+        .outerRadius(geom.r0 + 20)
         .startAngle(d => d.startAngle)
         .endAngle(d => d.endAngle);
 
 
     const ribbon = d3.ribbon()
-        .radius(r0)
+        .radius(geom.r0)
         .startAngle(d => d.startAngle)
         .endAngle(d => d.endAngle);
 
@@ -72,12 +122,16 @@ function staticChord(data) {
     const svg = d3.select("#circle");
 
     svg.append("circle")
-        .attr("r", r0 + 20);
+        .attr("r", geom.r0 + 20);
 
-    updateChordDiagram(svg, chord, arc, ribbon, colors, odMatrix, keys, null, geom);
+    return updateChordDiagram(svg, chord, arc, ribbon, colors, odMatrix, keys, null, geom, 2000);
 }
 
-function dynamicChord(data) {
+function dynamicChord(data, groupedZones) {
+
+    const duration = 1000; // ms
+
+    const getVisibleName = getVisibleNameMapping(groupedZones);
 
     //////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////// Dynamic data processing //////////////////////////////////
@@ -128,10 +182,8 @@ function dynamicChord(data) {
 
     const w = svgUp.node().getBoundingClientRect().width,
         h = svgUp.node().getBoundingClientRect().height;
-    const r1 = h/2;
-    const r0 = r1-110;
 
-    const geom = {"w": w, "h": h, "r1": h / 2, "r0": r1 - 110};
+    const geom = {"w": w, "h": h, "r1": h / 2, "r0": h / 2 - 110, "textSpacing": 40};
 
     const chord = d3.chord()
         .padAngle(0.05)
@@ -139,14 +191,14 @@ function dynamicChord(data) {
         .sortChords(d3.descending);
 
     const arc = d3.arc()
-        .innerRadius(r0)
-        .outerRadius(r0 + 20)
+        .innerRadius(geom.r0)
+        .outerRadius(geom.r0 + 20)
         .startAngle(d => d.startAngle)
         .endAngle(d => d.endAngle);
 
 
     const ribbon = d3.ribbon()
-        .radius(r0)
+        .radius(geom.r0)
         .startAngle(d => d.startAngle)
         .endAngle(d => d.endAngle);
 
@@ -159,22 +211,24 @@ function dynamicChord(data) {
     const svg = d3.select("#circle");
 
     svg.append("circle")
-        .attr("r", r0 + 20);
+        .attr("r", geom.r0 + 20);
 
-    let currentTimeIndex = 0;
-    let chordAnimation;
+    //let currentTimeIndex = 0;
+    //let chordAnimation;
 
     let last_layout;
 
     function animateChordDiagram() {
-        if (currentTimeIndex >= odPerTime.length) {
+        if (chordAnimationCurrentTimeIdx >= odPerTime.length) {
             clearInterval(chordAnimation);
         } else {
-            last_layout = updateChordDiagram(svg, chord, arc, ribbon, colors, odPerTime[currentTimeIndex], keys, last_layout, geom);
-            currentTimeIndex += 1;
+            last_layout = updateChordDiagram(svg, chord, arc, ribbon, colors, odPerTime[chordAnimationCurrentTimeIdx], keys, last_layout, geom, duration);
+            chordAnimationCurrentTimeIdx += 1;
         }
     }
 
-    chordAnimation = setInterval(animateChordDiagram, 1000);
+    //chordAnimation = setInterval(animateChordDiagram, duration);
+
+    return animateChordDiagram;
 }
 
