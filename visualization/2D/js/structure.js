@@ -1,9 +1,8 @@
-function drawStructures(svg) {
-
-    drawWalls(wallsData, svg);
-    drawZones(zonesData, svg);
-    drawGates(gatesData, svg);
-    //drawAreas(areasData, svg);
+function drawStructures(main_layer, voronoi_layer) {
+    drawWalls(wallsData, main_layer);
+    drawZones(zonesData, main_layer);
+    drawGates(gatesData, main_layer);
+    drawControlAreas(defaultControl, voronoi_layer);
 }
 
 function drawWalls(wall, svg) {
@@ -77,15 +76,13 @@ function drawGates(gates, svg) {
     } );
 }
 
-function drawAreas(areas, svg) {
+function drawControlAreas(areas, layer) {
     // Draw controlled area
     areas.map( (c) => {
-        svg.append("rect")
+        layer.append("polygon")
             .attr("class", "controlled-areas")
             .attr("id", c["name"])
-            .attr("x", c["x1"] )
-            .attr("y", c["y1"] )
-            .attr("width", c["x2"] - c["x1"])
-            .attr("height", c["y3"] - c["y2"]);
+            .attr("points", `${c.x1},${c.y1} ${c.x2},${c.y2} ${c.x3},${c.y3} ${c.x4},${c.y4}`);
+
     } );
 }

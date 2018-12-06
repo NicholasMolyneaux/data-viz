@@ -1,25 +1,51 @@
 //TODO: map to true rgb. gray scale now.
-function drawVoronoi(data, svg) {
-    let vertices = data.map( d => [d.x, d.y]);
-    let rect = rectangleContainPolygon(".voronoi-area");
+function drawAVoronoi(data, polygon, canvas) {
+    let rect = rectangleContainPolygon(polygon);
     let v = d3.voronoi()
         .extent(rect);
-    let clip = polygonIDToArray(".voronoi-area");
-    let data_in_voronoi_area = filterPointInPolygon(data, ".voronoi-area");
+    let clip = polygonToArray(polygon);
+    let data_in_voronoi_area = filterPointInPolygon(data, polygon);
     let voronoi_polygons = v.polygons(data_in_voronoi_area.map(d => [d.x, d.y])).map(p => d3.polygonClip(clip, p));
     let areas = voronoi_polygons.map(d => d3.polygonArea(d));
     let publish_json = encodeJson(data_in_voronoi_area, areas);
-    //publish(publish_json);
-    let voronois = svg.selectAll(".voronoi-poly").data(voronoi_polygons);
+    publish(publish_json);
+    let voronois = canvas.selectAll("path").data(voronoi_polygons);
     voronois.enter().append("path")
         .attr("class", "voronoi-poly")
         .attr("d", line)
         .style("fill", (d,i)=> pedLosColor(areas[i]))
-        .style("opacity", 0.7)
-        .attr("mask", "url(#voronoi-mask)");
+        .style("opacity", 0.7);
+    //.attr("mask", "url(#voronoi-mask)");
 }
-
 function filterByOD(time_series_data, od) {
+    // Check od set is empty (no click at all)
+    if (od_selection.Origins.size === 0 && od_selection.Destinations.size === 0) {
+        return time_series_data;
+    }
+
+    // Only destinations exist
+    if (od_selection.Origins.size === 0) {
+        return time_series_data.filter(ped => {
+            let od_ped = od.filter(o => o.id === ped.id)[0];
+            if (od_ped === undefined) {
+                return false;
+            }
+            return od_selection.Destinations.has(od_ped.d);
+        });
+    }
+
+    // Only origins exist
+    if (od_selection.Destinations.size === 0) {
+        return time_series_data.filter(ped => {
+            let od_ped = od.filter(o => o.id === ped.id)[0];
+            if (od_ped === undefined) {
+                return false;
+            }
+            return od_selection.Origins.has(od_ped.o);
+        });
+    }
+
+    // Both are exist
     return time_series_data.filter(ped => {
         let od_ped = od.filter(o => o.id === ped.id)[0];
         if (od_ped === undefined) {
@@ -28,7 +54,6 @@ function filterByOD(time_series_data, od) {
         return od_selection.Origins.has(od_ped.o) && od_selection.Destinations.has(od_ped.d);
     })
 }
-
 function pedLosColor(p) {
     let color;
     if (p >= 3.24)
@@ -45,42 +70,38 @@ function pedLosColor(p) {
         color = "rgb(255,0,0)";
     return color;
 }
-
 function clearCanvas(voronoi_clip_canvas) {
     voronoi_clip_canvas.selectAll("*").remove();
 }
-
-function deleteVoronoi(svg) {
-    svg.selectAll(".voronoi-poly").remove();
+function deleteVoronoi(voronoi_canvas) {
+    voronoi_canvas.selectAll("*").remove();
 }
-
-function filterPointInPolygon(data, polygon_id) {
-    let polygon_array = polygonIDToArray(polygon_id);
+function filterPointInPolygon(data, polygon) {
+    let polygon_array = polygonToArray(polygon);
     return data.filter(d => d3.polygonContains(polygon_array, [d.x, d.y]));
 }
 
-function polygonIDToArray(polygon_id) {
-    let polygon = d3.select(polygon_id);
-    console.log(polygon);
-    let polygon_array = polygon.attr("points").split(" ").map(s => s.split(",").map(n => Number(n)));
-    return polygon_array;
+function polygonToArray(polygon) {
+    return polygon.attr("points").split(" ").map(s => s.split(",").map(n => Number(n)));
 }
-function rectangleContainPolygon(polygon_id) {
-    let polygon_array = polygonIDToArray(polygon_id);
+
+function rectangleContainPolygon(polygon) {
+    let polygon_array = polygonToArray(polygon);
     let x_coordinates = polygon_array.map(d => d[0]);
     let y_coordinates = polygon_array.map(d => d[1]);
     return [[d3.min(x_coordinates), d3.min(y_coordinates)], [d3.max(x_coordinates), d3.max(y_coordinates)]];
 }
-
-function checkVoronoi(data, voronoi_poly_layer) {
+function checkVoronoi(data, voronoi_poly_layer, voronoi_canvas) {
     if (d3.select("#voronoi_checkbox").property("checked")) {
-        deleteVoronoi(voronoi_poly_layer);
-        drawVoronoi(data, voronoi_poly_layer);
+        deleteVoronoi(voronoi_canvas);
+        voronoi_poly_layer.selectAll("*").each(function () {
+            drawAVoronoi(data, d3.select(this), voronoi_canvas);
+        })
+
     } else {
-        deleteVoronoi(voronoi_poly_layer);
+        deleteVoronoi(voronoi_canvas);
     }
 }
-
 function setVoronoiArea() {
 
     let svg = d3.select("svg");
@@ -140,7 +161,6 @@ function setVoronoiArea() {
     })
     */
 }
-
 function drawVoronoiArea(svg, polygon) {
     clearCanvas(svg.select("#subSvgCont"));
     let polygon_hull = d3.polygonHull(polygon);

@@ -2,6 +2,7 @@ let wallsData = null;
 let zonesData = null;
 let gatesData = null;
 let areasData = null;
+let defaultControl = null;
 let trajData = null;
 let trajSummary = null;
 
@@ -31,6 +32,13 @@ async function loadInfraData() {
         console.log(err)
     });
 
+    await fetch(baseURL + "infra/monitoredareas" + "/" + "lausannenew").then(response => {
+        return response.json();
+    }).then(monitoredareas => {
+        defaultControl = monitoredareas;
+    }).catch(err => {
+        console.log(err)
+    });
     /*
     await fetch(baseURL + "areas" + "/" + selectedInfra.name).then(response => {
         return response.json();

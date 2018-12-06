@@ -17,7 +17,8 @@ function prepViz2D(xmin, xmax, ymin, ymax) {
 
     let structure_layer = svg.append("g")
         .attr("class", "structure_layer");
-
+    let voronoi_canvas = svg.append("g")
+        .attr("class", "voronoi_canvas");
     let voronoi_poly_layer = svg.append("g")
         .attr("class", "voronoi_poly_layer");
     let voronoi_clip_layer = svg.append("g")
@@ -26,7 +27,7 @@ function prepViz2D(xmin, xmax, ymin, ymax) {
         .attr("class", "pedes_layer");
 
     // Read json data and draw frameworks (walls and zones)
-    drawStructures(structure_layer);
+    drawStructures(structure_layer, voronoi_poly_layer);
 
     appendOptions();
 
@@ -34,7 +35,7 @@ function prepViz2D(xmin, xmax, ymin, ymax) {
 
 function runViz2D(tmin, tmax) {
     //Pedestrians
-    runAnimation(d3.select(".voronoi_poly_layer"), d3.select(".pedes_layer"), tmin, tmax);
+    runAnimation(d3.select(".voronoi_poly_layer"), d3.select(".pedes_layer"), d3.select(".voronoi_canvas"), tmin, tmax);
 }
 
 function prepareChord(data) {
@@ -87,7 +88,6 @@ function prepareTrajectories(infra, xmin, xmax, ymin, ymax) {
     let structure_layer = svg.append("g")
         .attr("class", "structure_layer");
 
-    drawStructures("http://transporsrv2.epfl.ch/api/infra/", infra, structure_layer);
 
     async function plotData(data) {
 
