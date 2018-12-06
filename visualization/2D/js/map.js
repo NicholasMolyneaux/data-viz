@@ -98,13 +98,13 @@ function rectangleContainPolygon(polygon) {
 }
 function checkVoronoi(data, voronoi_poly_layer, voronoi_canvas) {
     if (d3.select("#voronoi_checkbox").property("checked")) {
-        deleteVoronoi(voronoi_canvas);
+        clearCanvas(voronoi_canvas);
         voronoi_poly_layer.selectAll("*").each(function () {
             drawAVoronoi(data, d3.select(this), voronoi_canvas);
         })
 
     } else {
-        deleteVoronoi(voronoi_canvas);
+        clearCanvas(voronoi_canvas);
     }
 }
 function setVoronoiArea() {
@@ -145,6 +145,7 @@ function setVoronoiArea() {
         stateControlAreaButton = 'idle';
         document.getElementById("control_area").innerHTML = "Draw Control Area";
 
+        d3.select("#voronoi-area").remove();
         clearCanvas(voronoi_clip_canvas);
     }
 
