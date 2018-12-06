@@ -30,7 +30,7 @@ function updatePosition2D(time_series_data, od, svg) {
     // pedes_path.exit().remove();
 }
 
-function runAnimation(voronoi_poly_layer , pedes_layer) {
+function runAnimation2D(voronoi_poly_layer , pedes_layer) {
 
     const timeBounds = [minTime, maxTime];
 
@@ -50,7 +50,7 @@ function runAnimation(voronoi_poly_layer , pedes_layer) {
     pedMover = setInterval(walkData, INTERVAL2D/SPEEDFACTOR);
 }
 
-function runOneStep(voronoi_poly_layer , pedes_layer) {
+function runOneStep2D(voronoi_poly_layer , pedes_layer) {
     const timeBounds = [minTime, maxTime];
 
     const trajDataFiltered = trajData.filter(v => v.time > timeBounds[0] && v.time <= timeBounds[1]);

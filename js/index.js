@@ -12,7 +12,7 @@ let selectedTraj = "test10";
 
 let infraSelected = false;
 
-let viz3D = false;
+let viz3D = true;
 let trajDataLoaded = false;
 
 let optionsShown = false;
@@ -215,6 +215,8 @@ function finishedLoading() {
     document.getElementById("timer").style.display = "";
     document.getElementById("buttons").style.display = "";
 
+    interPolateData();
+
 }
 
 
@@ -361,7 +363,16 @@ $(document).on('fullscreenchange webkitfullscreenchange mozfullscreenchange MSFu
 });
 
 function appendOptions() {
-    $.get('./assets/templates/options.html', function(opts) {
+
+    let file;
+
+    if (viz3D) {
+        file = './assets/templates/options3D.html';
+    } else {
+        file = './assets/templates/options2D.html';
+    }
+
+    $.get(file, function(opts) {
         var rendered = Mustache.render(opts);
 
         $('#viz').append(rendered);
@@ -374,7 +385,17 @@ function appendOptions() {
         $( function() {
             $( "#dragOpt" ).draggable(
                 {
-                    containment: $( "body" )
+                    containment: $( "body" ),
+                    start: function() {
+                        if (viz3D) {
+                            controls.enabled = false;
+                        }
+                    },
+                    stop: function() {
+                        if (viz3D) {
+                            controls.enabled = true;
+                        }
+                    },
                 });
         } );
     });
