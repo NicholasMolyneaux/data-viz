@@ -1,6 +1,83 @@
+class Zone{
+    constructor(x, y, width, height, name) {
+        this.x = Number(x);
+        this.y = Number(y);
+        this.height = Number(height);
+        this.width = Number(width);
+        this.name = name;
+        this.state_o = false;
+        this.state_d = false;
+        this.g = false;
+    }
+    drawOn(canvas) {
+        this.g = canvas.append("g");
+        this.g.append("rect")
+            .attr("class", "the-zones")
+            .attr("id", this.name)
+            .attr("x", this.x)
+            .attr("y", this.y)
+            .attr("width", this.width)
+            .attr("height", this.height)
+            .on("click", () => {
+                // activate Destination
+                if (d3.event.shiftKey) {
+                    this.setDestination();
+                }
+                // activate Origin
+                else {
+                    this.setOrigin();
+                }});
+
+        this.g.append("text")
+            .attr("class", "zone-text-overlay")
+            .attr("id", "origin")
+            .attr("x", this.x+this.width/2)
+            .attr("y", this.y+this.height/3)
+            .attr("dominant-baseline","middle")
+            .attr("text-anchor","middle")
+            .attr("fill", "red");
+
+        this.g.append("text")
+            .attr("class", "zone-text-overlay")
+            .attr("id", "destination")
+            .attr("x", this.x+this.width/2)
+            .attr("y", this.y+this.height*2/3)
+            .attr("dominant-baseline","middle")
+            .attr("text-anchor","middle")
+            .attr("fill", "blue");
+    }
+    setOrigin(){
+        if (this.state_o) {
+            this.desetOrigin();
+        } else {
+            this.state_o = true;
+            od_selection.Origins.add(this.name);
+            this.g.select("#origin").text("O");
+        }
+    }
+    setDestination(){
+        if (this.state_d) {
+            this.desetDestination();
+        } else {
+            this.state_d = true;
+            od_selection.Destinations.add(this.name);
+            this.g.select("#destination").text("D");
+        }
+    }
+    desetOrigin() {
+        this.state_o = false;
+        this.g.select("#origin").text("");
+        od_selection.Origins.delete(this.name);
+    }
+    desetDestination() {
+        this.state_d = false;
+        this.g.select("#destination").text("");
+        od_selection.Destinations.delete(this.name);
+    }
+}
+
 function drawStructures(main_layer) {
     drawWalls(wallsData, main_layer);
-    drawZones(zonesData, main_layer);
     drawGates(gatesData, main_layer);
 }
 
@@ -16,30 +93,11 @@ function drawWalls(wall, svg) {
             .attr("y2", w["y2"]);
     }) ;
 }
+
 function drawZones(zones, svg) {
-
     zones.map( (g) => {
-        // Append zones
-        let node = svg.append("rect")
-            .attr("class", "the-zones")
-            .attr("id", g["name"])
-            .attr("x", g["x1"])
-            .attr("y", g["y1"])
-            .attr("width", g["x2"]-g["x1"])
-            .attr("height", g["y3"]-g["y2"]);
-
-        // Control zones
-        node.on("click", function () {
-            if (d3.event.shiftKey) {
-                d3.select(this).style("stroke", "blue");
-                od_selection.Origins.add(d3.select(this).attr("id"));
-                console.log(od_information);
-            } else {
-                d3.select(this).style("stroke", "red");
-                od_selection.Destinations.add(d3.select(this).attr("id"));
-            }
-        });
-
+        let zone = new Zone(g["x1"], g["y1"], g["x2"]-g["x1"], g["y3"]-g["y2"], g["name"]);
+        zone.drawOn(svg);
     });
 
 }

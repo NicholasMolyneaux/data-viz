@@ -36,9 +36,12 @@ function toggleZone(checkbox, target) {
 }
 function checkZone() {
     if (d3.select("#zone_checkbox").property("checked")) {
-        d3.selectAll(".the-zones").style("opacity", 1);
+        drawZones(zonesData, d3.select(".structure_layer"));
     } else {
-        d3.selectAll(".the-zones").style("opacity", 0);
+        d3.selectAll(".the-zones").remove();
+        d3.selectAll(".zone-text-overlay").remove();
+        od_selection = {"Origins": new Set(), "Destinations": new Set()};
+
     }
 }
 function checkControl() {

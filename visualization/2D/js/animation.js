@@ -1,4 +1,4 @@
-function updatePosition2D(time_series_data, od, svg) {
+function updatePosition2D(time_series_data, svg) {
     // Update circles (pedestrians)
     let pedes = svg.selectAll(".ped-individual").data(time_series_data, d => d.id);
     pedes.enter().append("circle")
@@ -27,9 +27,11 @@ function runAnimation2D() {
             currentTimeShownIdx = 0;
             //clearInterval(pedMover);
         }
-        checkVoronoi(trajDataFiltered[currentTimeShownIdx].data, voronoi_poly_layer, voronoi_canvas);
-        updatePosition2D(trajDataFiltered[currentTimeShownIdx].data, trajSummary, pedes_layer);
-        updateTimer(trajDataFiltered[currentTimeShownIdx].time);
+        let current_time = trajDataFiltered[currentTimeShownIdx].time;
+        let current_fileterd_daya_by_od = filterByOD(trajDataFiltered[currentTimeShownIdx].data, trajSummary);
+        checkVoronoi(current_fileterd_daya_by_od, voronoi_poly_layer, voronoi_canvas);
+        updatePosition2D(current_fileterd_daya_by_od, pedes_layer);
+        updateTimer(current_time);
         currentTimeShownIdx += 1;
     }
 
@@ -45,6 +47,9 @@ function runOneStep2D() {
 
     const trajDataFiltered = trajData.filter(v => v.time > timeBounds[0] && v.time <= timeBounds[1]);
 
-    updatePosition2D(trajDataFiltered[currentTimeShownIdx].data, trajSummary, pedes_layer);
-    updateTimer(trajDataFiltered[currentTimeShownIdx].time);
+    let current_time = trajDataFiltered[currentTimeShownIdx].time;
+    let current_fileterd_daya_by_od = filterByOD(trajDataFiltered[currentTimeShownIdx].data, trajSummary);
+    checkVoronoi(current_fileterd_daya_by_od, voronoi_poly_layer, voronoi_canvas);
+    updatePosition2D(current_fileterd_daya_by_od, pedes_layer);
+    updateTimer(current_time);
 }
