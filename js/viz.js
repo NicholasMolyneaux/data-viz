@@ -185,6 +185,7 @@ function prepareChord(data) {
     const getVisibleName = getVisibleNameMapping({});
     console.log(getVisibleName);
     chordKeysOriginalData = Array.from(new Set(data.map(v => getVisibleName(v.o)).concat(data.map(v => getVisibleName(v.d)))));
+    currentLabels = chordKeysOriginalData.slice();
     staticChord(data, getVisibleName, chordKeysOriginalData);
 }
 

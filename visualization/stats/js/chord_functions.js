@@ -194,6 +194,7 @@ function updateChordDiagram(canvas, chord, arc, ribbon, colors, matrix, keys, la
         console.log(id);
         makingNewGroup.push(id);
         if (newGroupLabel.length === 0) newGroupLabel = keys[id].toString(); else {newGroupLabel = newGroupLabel + " / " + keys[id];}
+        document.getElementById("chord-group-name").value = newGroupLabel;
     }
 
     // stores the current layout for reference

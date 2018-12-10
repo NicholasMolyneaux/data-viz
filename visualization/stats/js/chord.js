@@ -41,6 +41,7 @@ let newGroupLabel = "";
 
 // map from the index to group to the new label
 let currentGroupingScheme = {};
+let currentLabels;// = chordKeysOriginalData.slice();
 
 // States of the grouping button
 const IDLE = 0;
@@ -57,16 +58,20 @@ function groupingChordGroups() {
         stateButtonChord = SELECTING;
         makingNewGroup = [];
         newGroupLabel = "";
+        document.getElementById("chord-group-name").value = "";
+        document.getElementById("chord-group-name").setAttribute("style", "");
 
     } else if (stateButtonChord === SELECTING) {
         // When the button show "make group"
         stateButtonChord = IDLE;
 
-        console.log()
+        document.getElementById("chord-group-name").setAttribute("style", "display: none");
+        console.log(currentLabels);
 
-        // For elements which have been selected (clicked), create new grouping object
+        // For elements which have been selected (clicked), create new grouping object with name specified in th
+        // input box which is filled by default with the concatenation of sub names.
         makingNewGroup.forEach(l => {
-            currentGroupingScheme[chordKeysOriginalData[l]] = newGroupLabel;
+            currentGroupingScheme[currentLabels[l]] = document.getElementById("chord-group-name").value;
         });
 
         // delete old chord diagram
@@ -76,12 +81,13 @@ function groupingChordGroups() {
         const getVisibleName = getVisibleNameMapping(currentGroupingScheme);
 
         // Copies original names and then removes the ones which have been grouped together.
-        let keysTmp = chordKeysOriginalData.slice();
+        let keysTmp = currentLabels.slice();
         makingNewGroup.sort(function (a, b) {return b - a;}
         ).forEach(i => keysTmp.splice(i, 1));
 
+        currentLabels = Array.from(new Set(keysTmp.concat(Object.values(currentGroupingScheme))));
         // Builds the new chord diagram with the grouped names
-        staticChord(trajSummary, getVisibleName, Array.from(new Set(keysTmp.concat(Object.values(currentGroupingScheme)))));
+        staticChord(trajSummary, getVisibleName, currentLabels);
     } else {
         console.log("ERROR WITH GROUPING CHORD DIAGRAM")
     }
