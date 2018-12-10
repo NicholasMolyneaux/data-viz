@@ -86,6 +86,11 @@ function deletePedestrian(listIds) {
 
     // Delete all the lost pedestrians
     diff.forEach(pedId => {
+        console.log("Ped deleted: " + SELECTED.parent.parent.uuid + ", " + dctPed[pedId].uuid);
+        if (SELECTED.parent.parent.uuid === dctPed[pedId].uuid) {
+            SELECTED = null;
+            resetCamera();
+        }
         var ped = dctPed[pedId];
         scene.remove(ped);
         delete dctPed[pedId];
@@ -213,8 +218,6 @@ function createZombie(ped) {
         object.traverse(function (child) {
             if (child.isMesh) {
 
-                console.log(child.material);
-
                 child.castShadow = true;
                 child.receiveShadow = true;
                 child.material.refractionRatio = 0.5;
@@ -227,7 +230,7 @@ function createZombie(ped) {
 
         // Define the ration and scale the minecraft steve
         var ratio = peopleHeight / size.y;
-        console.log("ratio = " + ratio);
+        //console.log("ratio = " + ratio);
         object.scale.set(ratio, ratio, ratio);
 
         // Animation of the object

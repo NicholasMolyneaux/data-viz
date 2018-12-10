@@ -5,9 +5,7 @@ const INTERVAL2D = 100;
 let SPEEDFACTOR = 1;
 let paused = false;
 
-function prepViz() {
-
-    console.log(viz3D);
+function prepViz(change3DStyle=false) {
 
     if (viz3D) {
 
@@ -15,18 +13,17 @@ function prepViz() {
 
         // Set Camera position
         camera = new THREE.PerspectiveCamera( 45, document.body.clientWidth / vizHeight, 0.1, 2000 );
-        camera.position.set( -42.39557080736188, 67.12576960977573, 69.11641657512034);
+        camera.position.set( cameraInitPos[0], cameraInitPos[1], cameraInitPos[2]);
 
         // Set the controls
         controls = new THREE.OrbitControls( camera, container );
         controls.target.set( 0,0,0 );
+
         controls.update();
 
         // New scene
         scene = new THREE.Scene();
         camera.lookAt(scene.position);
-
-        console.log(walls);
 
         // If walls are not built, build them!
         buildWalls(wallsData);
@@ -89,18 +86,17 @@ function prepViz() {
         resizeViz();
 
         renderer.render( scene, camera );
+
         animate();
 
-    } else {
+    } else if (viz2D) {
+
+        cancelAnimationFrame(animation);
 
         const xmin = selectedInfra.xmin,
             xmax = selectedInfra.xmax,
             ymin = selectedInfra.ymin,
             ymax = selectedInfra.ymax;
-
-        const margin = 0.01*(xmax-xmin);
-        const ratio = (ymax-ymin)/(xmax-xmin);
-        const pixelWidth = 900;
 
         let svg = d3.select("#viz")
             .append("svg")
@@ -135,7 +131,11 @@ function prepViz() {
         drawStructures(structure_layer);
     }
 
-    appendOptions();
+    if (!change3DStyle) {
+        appendOptions();
+    }
+
+    resizeViz();
 
 }
 
@@ -143,18 +143,16 @@ function runViz() {
 
     if (viz3D) {
         runAnimation3D();
-
-    } else {
+    } else if (viz2D)  {
         //Pedestrians
         runAnimation2D();
-
     }
 }
 
 function do1Step() {
     if (viz3D) {
         runOneStep3D();
-    } else {
+    } else if (viz2D) {
         runOneStep2D();
     }
 }
@@ -423,7 +421,6 @@ $( "#threeDButton" ).click(function() {
     document.getElementById("optionsButton").innerHTML = "<i class=\"fas fa-plus fa-lg\"></i>";
     optionsShown = false;
 
-
     if(viz3D) {
 
         document.getElementById("threeDButton").innerHTML = "<i class=\"fas fa-cube fa-lg\"></i>";
@@ -432,6 +429,7 @@ $( "#threeDButton" ).click(function() {
         document.getElementById("help").title = "Scroll for zoom/dezoom; Click + Mouse to move around; Click on a zone to select it as an origin and ctrl+click to select it as a destination."
 
         viz3D = false;
+        viz2D = true;
 
         clearInterval(pedMover);
 
@@ -449,8 +447,6 @@ $( "#threeDButton" ).click(function() {
         while(scene.children.length > 0){
             scene.remove(scene.children[0]);
         }
-
-        controls = null;
 
         dctPed = new Object();
         mixers = [];
@@ -470,7 +466,7 @@ $( "#threeDButton" ).click(function() {
         }
 
 
-    } else {
+    } else if (viz2D) {
 
         document.getElementById("threeDButton").innerHTML = "<i class=\"fas fa-square fa-lg\"></i>";
         document.getElementById("threeDButton").title = "2D viz";
@@ -478,6 +474,7 @@ $( "#threeDButton" ).click(function() {
         document.getElementById("help").title = "Scroll for zoom/dezoom; CTRL+Mouse/Arrow keys to more; Mouse to rotate."
 
         viz3D = true;
+        viz2D = false;
 
         clearInterval(pedMover);
 
@@ -497,4 +494,53 @@ $( "#threeDButton" ).click(function() {
         runViz();
     }
 });
+
+function changeStyle3D() {
+
+    cancelAnimationFrame(animation);
+
+    if (STYLE == "TWD") {
+        STYLE = "normal";
+    } else {
+        STYLE = "TWD";
+    }
+
+    clearInterval(pedMover);
+
+    $("#canvas").remove();
+
+    // Have to delete correctly these stuff.
+    topFloor = null;
+    bottomFloor = null;
+    ceiling = null;
+    walls = [];
+    clocks = [];
+    lights = [];
+
+    while(scene.children.length > 0){
+        scene.remove(scene.children[0]);
+    }
+
+    dctPed = new Object();
+    mixers = [];
+
+    container = null;
+    stats = null;
+    controls = null;
+    raycaster = null;
+    camera = null;
+    scene = null;
+    renderer = null;
+    light = null;
+
+    prepViz(true);
+
+    if (!presentationPlaying) {
+        if(paused) {
+            do1Step();
+        } else {
+            runViz();
+        }
+    }
+}
 

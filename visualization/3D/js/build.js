@@ -201,11 +201,11 @@ function buildWalls(jsonWalls) {
     corners.push(corners[0]);
 
     // Update the corners position
-    var centered_corners = []
+    var centered_corners = [];
 
     corners.forEach(c => {
         centered_corners.push([c[0]-avg[0], c[1]-avg[1]])
-    })
+    });
 
     centered_corners = Array.from(new Set(centered_corners.map(JSON.stringify)), JSON.parse);
 
@@ -226,13 +226,9 @@ function addTWDLights(scene, zones) {
             yPos = yPos + parseFloat(json['y'+i]);
         }
 
-        console.log(avg);
-
         xPos = xPos/4 - avg[0];
         yPos = yPos/4 - avg[1];
-
-        console.log(xPos, yPos);
-
+        
         let color = 0xEDEEFF;
 
         if(Math.random() > 0.9) {
