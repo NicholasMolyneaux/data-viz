@@ -5,6 +5,8 @@ let areasData = null;
 let trajData = null;
 let trajSummary = null;
 
+let chordKeysOriginalData = [];
+
 const INTERP = 4;
 let interpolatedTrajData = null;
 

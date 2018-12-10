@@ -1,35 +1,19 @@
 
+
+/////////////////////////////////////////////////////////////////
+////////////////// Dynamic chord elements ///////////////////////
+/////////////////////////////////////////////////////////////////
+
+// the animation object which can be paused and started again.
 let chordAnimation;
+
+// boolean indicating the state of the simulation
 let pausedChord = false;
+
+// index of the slice of the animation currently shown
 let chordAnimationCurrentTimeIdx = 0;
 
-let makingNewGroup = [];
-let newGroupLabel = "";
 
-const IDLE = 0;
-const SELECTING = 1;
-let stateButtonChord = IDLE;
-
-function groupingChordGroups(groupedData) {
-    if (stateButtonChord === IDLE) {
-        stateButtonChord = SELECTING;
-        makingNewGroup = {};
-        newGroupLabel = "";
-        return {};
-    } else if (stateButtonChord === SELECTING) {
-        stateButtonChord = IDLE;
-        makingNewGroup.forEach(l => groupedData[keys[l] = newGroupLabel]);
-        deleteChord();
-        staticChord(data, groupedData);
-        return groupedData;
-    } else { console.log("ERROR WITH GROUPING CHORD DIAGRAM")}
-}
-
-function deleteCustomGroups() {
-    deleteChord();
-    staticChord(data, {});
-    return {};
-}
 
 $( "#playPauseButtonChord" ).click(function() {
 
@@ -45,23 +29,97 @@ $( "#playPauseButtonChord" ).click(function() {
 
 });
 
+/////////////////////////////////////////////////////////////////
+/////////////////// Static chord variables //////////////////////
+/////////////////////////////////////////////////////////////////
+
+// current selection to make into same group
+let makingNewGroup = [];
+
+// new label for the group
+let newGroupLabel = "";
+
+// map from the index to group to the new label
+let currentGroupingScheme = {};
+
+// States of the grouping button
+const IDLE = 0;
+const SELECTING = 1;
+let stateButtonChord = IDLE;
+
+/**
+ * On click function for the grouping of the zones in the chord diagram. This function will
+ * either start the grouping process or append new values to the future group.
+ */
+function groupingChordGroups() {
+    if (stateButtonChord === IDLE) {
+        // Initializes elements to make new group.
+        stateButtonChord = SELECTING;
+        makingNewGroup = [];
+        newGroupLabel = "";
+
+    } else if (stateButtonChord === SELECTING) {
+        // When the button show "make group"
+        stateButtonChord = IDLE;
+
+        console.log()
+
+        // For elements which have been selected (clicked), create new grouping object
+        makingNewGroup.forEach(l => {
+            currentGroupingScheme[chordKeysOriginalData[l]] = newGroupLabel;
+        });
+
+        // delete old chord diagram
+        deleteChord();
+
+        // create new function mapping ids to visible names
+        const getVisibleName = getVisibleNameMapping(currentGroupingScheme);
+
+        // Copies original names and then removes the ones which have been grouped together.
+        let keysTmp = chordKeysOriginalData.slice();
+        makingNewGroup.sort(function (a, b) {return b - a;}
+        ).forEach(i => keysTmp.splice(i, 1));
+
+        // Builds the new chord diagram with the grouped names
+        staticChord(trajSummary, getVisibleName, Array.from(new Set(keysTmp.concat(Object.values(currentGroupingScheme)))));
+    } else {
+        console.log("ERROR WITH GROUPING CHORD DIAGRAM")
+    }
+}
+
+/**
+ * Deletes the current chord diagram and rebuilds the original one.
+ */
+function deleteCustomGroups() {
+    currentGroupingScheme = {};
+    deleteChord();
+    const getVisibleName = getVisibleNameMapping({});
+    staticChord(trajSummary, getVisibleName, chordKeysOriginalData);
+}
+
+/**
+ * Only deletes the chord, nothing else.
+ */
 function deleteChord() {
     const svg = d3.select("#circle");
     svg.selectAll(("g")).remove();
     svg.selectAll(("path")).remove();
 }
 
-function staticChord(data, groupedZones) {
+/**
+ * Builds a static chord diagram and adds the functionalites for clicking and highlithing the specific groups.
+ * @param data raw summary data to group together
+ * @param getVisibleName maps the index to another name if needed
+ * @param keys list of keys to use
+ */
+function staticChord(data, getVisibleName, keys) {
 
-    const getVisibleName = getVisibleNameMapping(groupedZones);
+    console.log(keys);
+
 
     //////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////// Static data processing ///////////////////////////////////
     //////////////////////////////////////////////////////////////////////////////////////////////
-
-    // Set of keys computed from the grouped od zones.
-    const keys = Array.from(new Set(data.map(v => getVisibleName(v.o)).concat(data.map(v => getVisibleName(v.d)))));
-    //const keys = Array("left", "top", "right", "bottom")
 
     // Creation of the full OD matrix. First the data is gropued by OD using D3's nest function. Then the data is stored
     // into a OD matrix (two dimensional array).
@@ -91,34 +149,39 @@ function staticChord(data, groupedZones) {
 
     const svgUp = d3.select("#containerForOD");
 
-    const w = svgUp.node().getBoundingClientRect().width,
-        h = svgUp.node().getBoundingClientRect().height;
+    // TODO: change sizes to take into account dynamic resizing
+    const w = 900;//svgUp.node().getBoundingClientRect().width,
+        h = 900;//svgUp.node().getBoundingClientRect().height;
 
     const geom = {"w": w, "h": h, "r1": h / 2, "r0": h / 2 - 110, "textSpacing": 40};
 
+    // Main chord object
     const chord = d3.chord()
         .padAngle(0.05)
         .sortSubgroups(d3.descending)
         .sortChords(d3.descending);
 
+    // Builder for the arcs
     const arc = d3.arc()
         .innerRadius(geom.r0)
         .outerRadius(geom.r0 + 20)
         .startAngle(d => d.startAngle)
         .endAngle(d => d.endAngle);
 
-
+    // Builder for the chords
     const ribbon = d3.ribbon()
         .radius(geom.r0)
         .startAngle(d => d.startAngle)
         .endAngle(d => d.endAngle);
 
+    // Colors
     const colors = d3.scaleOrdinal(d3.schemeRdYlGn[11]);
 
     //////////////////////////////////////////////////////////////////////////////////////////////
     //////////////////////////////////// Static chord diagram ////////////////////////////////////
     //////////////////////////////////////////////////////////////////////////////////////////////
 
+    // selects the canvas where to draw the chord diagram
     const svg = d3.select("#circle");
 
     svg.append("circle")
@@ -178,12 +241,17 @@ function dynamicChord(data, groupedZones) {
     //////////////////////////////////// General chord settings //////////////////////////////////
     //////////////////////////////////////////////////////////////////////////////////////////////
 
-    const svgUp = d3.select("#containerForOD");
+    const svgUp = d3.select("#ODCont");
 
-    const w = svgUp.node().getBoundingClientRect().width,
-        h = svgUp.node().getBoundingClientRect().height;
+    const w = 800;//svgUp.node().offsetWidth,//.getBoundingClientRect().width,
+    const h = 800;//svgUp.offsetHeight;//node().getBoundingClientRect().height;
+
+    console.log(svgUp);
+    console.log(w, h);
 
     const geom = {"w": w, "h": h, "r1": h / 2, "r0": h / 2 - 110, "textSpacing": 40};
+
+    console.log(geom);
 
     const chord = d3.chord()
         .padAngle(0.05)

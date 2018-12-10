@@ -169,9 +169,9 @@ function updateTimer(time) {
 function prepareChord(data) {
 
     // canvas size and chord diagram radii
-    const size = 700;
+    const size = 900;
 
-    var width = $("#ODCont").width();
+    //var width = $("#ODCont").width();
 
     const svg = d3.select("#ODCont").append("svg")
         .attr("id", "containerForOD")
@@ -180,7 +180,12 @@ function prepareChord(data) {
         .append("svg:g")
         .attr("id", "circle");
 
-    dynamicChord(data);
+
+    //dynamicChord(data, {});
+    const getVisibleName = getVisibleNameMapping({});
+    console.log(getVisibleName);
+    chordKeysOriginalData = Array.from(new Set(data.map(v => getVisibleName(v.o)).concat(data.map(v => getVisibleName(v.d)))));
+    staticChord(data, getVisibleName, chordKeysOriginalData);
 }
 
 function prepareTrajectories(infra, xmin, xmax, ymin, ymax) {

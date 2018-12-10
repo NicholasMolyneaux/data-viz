@@ -219,6 +219,8 @@ function finishedLoading() {
 
     interPolateData();
 
+    prepareChord(trajSummary);
+
 }
 
 
