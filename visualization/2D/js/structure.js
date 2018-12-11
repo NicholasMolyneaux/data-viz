@@ -18,6 +18,15 @@ class Zone{
             .attr("y", this.y)
             .attr("width", this.width)
             .attr("height", this.height)
+            .on("mouseover", d => {
+                console.log(this.name);
+                this.g.select(".tooltip")
+                    .text(`The zone ${this.name}`);
+            })
+            .on("mouseout", d => {
+                // this.g.select(".tooltip")
+                //     .text("");
+            })
             .on("click", () => {
                 // activate Destination
                 if (d3.event.shiftKey) {
@@ -45,6 +54,16 @@ class Zone{
             .attr("dominant-baseline","middle")
             .attr("text-anchor","middle")
             .attr("fill", "blue");
+
+        // for tooltip
+        this.g.append("text")
+            .attr("class", "tooltip")
+            .attr("x", this.x)
+            .attr("y", this.y)
+            .attr("dominant-baseline","middle")
+            .attr("text-anchor","middle")
+            .attr("fill", "black");
+
     }
     setOrigin(){
         if (this.state_o) {

@@ -320,6 +320,10 @@ h1, h2 {
     vector-effect: non-scaling-stroke;
     font-size: 0.7pt;
 }
+.tooltip {
+    vector-effect: non-scaling-stroke;
+    font-size: 1pt;
+}
 
 #middle-text {
     fill: white;
