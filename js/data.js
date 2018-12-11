@@ -9,7 +9,7 @@ let trajSummary = null;
 let chordKeysOriginalData = [];
 
 // data used for plotting trajectories of pedestrians
-let trajectoryDataByID = null;
+let trajectoryDataByID = [];
 
 
 const INTERP = 4;

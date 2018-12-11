@@ -85,7 +85,7 @@ function checkTrajectories() {
         d3.select(".pedes_layer").selectAll(".ped-individual").remove();
 
         // show trajectories
-        prepareTrajectories(d3.select(".trajectories_layer"));
+        plotAllTrajectories(d3.select(".trajectories_layer"));
 
     } else {
         // remove trajectories

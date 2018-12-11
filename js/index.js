@@ -163,18 +163,33 @@ function loadTraj() {
 
             // With animation
             loadTrajData().then(() => {
-                    trajDataLoaded = true;
-                    interPolateData();
-                    createSlider();
+                trajDataLoaded = true;
+                interPolateData();
+                createSlider();
 
-                fetch("http://transporsrv2.epfl.ch/api/trajectoriesbyid/" + selectedInfra.name + "/" + selectedTraj.name).then(response => {
-                    return response.json();
-                }).then(data => {
-                    trajectoryDataByID = data;
-                    document.getElementById("all_trajectories_checkbox").removeAttribute('disabled');
-                }).catch(err => {
+                    // Downsamples the trajectory data
+                // TODO should be moved to somewhere cleaner
+                    fetch("http://transporsrv2.epfl.ch/api/trajectoriesbyid/" + selectedInfra.name + "/" + selectedTraj.name).then(response => {
+                        return response.json();
+                    }).then(data => {
+                        for (ped of data) {
+                            let downsampledPed = {};
+                            downsampledPed["id"] = ped.id;
+                            downsampledPed["time"] = [];
+                            downsampledPed["x"] = [];
+                            downsampledPed["y"] = [];
+                            for (idx = 0; idx < ped.time.length; idx = idx+10) {
+                                downsampledPed.time.push(ped.time[idx]);
+                                downsampledPed.x.push(ped.x[idx]);
+                                downsampledPed.y.push(ped.y[idx]);
+                            }
+                        trajectoryDataByID.push(downsampledPed);
+                        }
+                        document.getElementById("all_trajectories_checkbox").removeAttribute('disabled');
+                    }).catch(err => {
                     console.log(err)
-                });
+                    });
+
 
                 if (!presentationPlaying) {
                         finishedLoading();
