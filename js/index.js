@@ -686,7 +686,7 @@ function presentation() {
 
         // Weird movement!
         // TODO: Fix this
-        moveCameraToDesiredPosition(cameraPresPos, cameraPresRot);
+        moveCameraToDesiredPosition(cameraPresPos);
 
     }, time);
     time += 10000 + 2*animTime;
@@ -738,7 +738,7 @@ function skipPresentation() {
     }
 
     runViz();
-    moveCameraToDesiredPosition(cameraInitPos, cameraInitRot);
+    moveCameraToDesiredPosition(cameraInitPos);
     prepareChord(trajSummary);
 }
 
