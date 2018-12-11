@@ -499,13 +499,13 @@ function changeStyle3D() {
 
     cancelAnimationFrame(animation);
 
+    clearInterval(pedMover);
+
     if (STYLE == "TWD") {
         STYLE = "normal";
     } else {
         STYLE = "TWD";
     }
-
-    clearInterval(pedMover);
 
     $("#canvas").remove();
 
@@ -520,6 +520,8 @@ function changeStyle3D() {
     while(scene.children.length > 0){
         scene.remove(scene.children[0]);
     }
+
+    // TODO: Delete correctly the pedestrians!!!
 
     dctPed = new Object();
     mixers = [];
