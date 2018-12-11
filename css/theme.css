@@ -343,8 +343,9 @@ h1, h2 {
 
 .the-zones {
     vector-effect: non-scaling-stroke;
-    stroke: gray;
-    stroke-width: 2;
+    stroke-dasharray: 5;
+    stroke: black;
+    stroke-width: 1;
     fill: white;
 }
 
