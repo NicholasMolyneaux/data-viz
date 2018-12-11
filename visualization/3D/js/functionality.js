@@ -93,7 +93,10 @@ function onKeyPress( event ) {
 
     if (event.code === "Space" && !event.shiftKey) {
 
-        resetCamera();
+        // Reset camera and controls
+        moveCameraToDesiredPosition(cameraInitPos, cameraInitRot);
+
+        stopFollowingPed();
 
     }
 
@@ -101,14 +104,8 @@ function onKeyPress( event ) {
         // Reset camera and controls
         moveCameraToDesiredPosition(cameraPresPos, cameraPresRot);
 
-        resizeViz();
+        stopFollowingPed();
 
-        //controls.target.set( 0,0,0 );
-        controls.enabled = true;
-        controls.update();
-        controls.reset();
-
-        SELECTED = new Object();
     }
 
     if (event.code === "KeyS") {
@@ -121,16 +118,15 @@ function onKeyPress( event ) {
     }
 }
 
-function resetCamera() {
-    // Reset camera and controls
-    moveCameraToDesiredPosition(cameraInitPos, cameraInitRot);
+function stopFollowingPed() {
+    if (!(Object.keys(SELECTED).length === 0 && SELECTED.constructor === Object)) {
+        resizeViz();
 
-    resizeViz();
+        //controls.target.set( 0,0,0 );
+        controls.enabled = true;
+        controls.update();
+        controls.reset();
 
-    //controls.target.set( 0,0,0 );
-    controls.enabled = true;
-    controls.update();
-    controls.reset();
-
-    SELECTED = new Object();
+        SELECTED = new Object();
+    }
 }

@@ -86,10 +86,11 @@ function deletePedestrian(listIds) {
 
     // Delete all the lost pedestrians
     diff.forEach(pedId => {
-        console.log("Ped deleted: " + SELECTED.parent.parent.uuid + ", " + dctPed[pedId].uuid);
-        if (SELECTED.parent.parent.uuid === dctPed[pedId].uuid) {
-            SELECTED = null;
-            resetCamera();
+        if (!(Object.keys(SELECTED).length === 0 && SELECTED.constructor === Object)) {
+            if (SELECTED.parent.parent.uuid === dctPed[pedId].uuid) {
+                SELECTED = new Object();
+                resetCamera();
+            }
         }
         var ped = dctPed[pedId];
         scene.remove(ped);
