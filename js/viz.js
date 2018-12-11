@@ -12,7 +12,7 @@ function prepViz(change3DStyle=false) {
         container = document.getElementById("viz");
 
         // Set Camera position
-        camera = new THREE.PerspectiveCamera( 45, document.body.clientWidth / vizHeight, 0.1, 2000 );
+        camera = new THREE.PerspectiveCamera( 45, document.body.clientWidth / vizHeight, 0.1, 1000 );
         camera.position.set( cameraInitPos[0], cameraInitPos[1], cameraInitPos[2]);
 
         // Set the controls

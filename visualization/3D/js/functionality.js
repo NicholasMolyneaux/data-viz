@@ -94,7 +94,7 @@ function onKeyPress( event ) {
     if (event.code === "Space" && !event.shiftKey) {
 
         // Reset camera and controls
-        moveCameraToDesiredPosition(cameraInitPos, cameraInitRot);
+        moveCameraToDesiredPosition(cameraInitPos);
 
         stopFollowingPed();
 
@@ -102,7 +102,7 @@ function onKeyPress( event ) {
 
     if (event.code === "Space" && event.shiftKey) {
         // Reset camera and controls
-        moveCameraToDesiredPosition(cameraPresPos, cameraPresRot);
+        moveCameraToDesiredPosition(cameraPresPos, cameraPresControl);
 
         stopFollowingPed();
 
@@ -111,7 +111,7 @@ function onKeyPress( event ) {
     if (event.code === "KeyS") {
 
         cameraPresPos = [camera.position['x'], camera.position['y'], camera.position['z']];
-        cameraPresRot = [camera.rotation['x'], camera.rotation['y'], camera.rotation['z']];
+        cameraPresControl = [controls.target.x, controls.target.y, controls.target.z];
 
         window.alert("Position saved!");
 

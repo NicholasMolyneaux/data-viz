@@ -30,10 +30,9 @@ let SELECTED = new Object();
 let loader = new THREE.GLTFLoader();
 
 const cameraInitPos = [-42.39557080736188, 67.12576960977573, 69.11641657512034];
-const cameraInitRot = [-0.7707881121192897, -0.41452796950057663, -0.37286075369910404];
 
 let cameraPresPos = [-25.33655459403886, 1.5434268102127795, -1.348041733828591];
-let cameraPresRot = [-2.860791591168681, -1.3083140780567168, -2.8699354895703584];
+let cameraPresControl = [0,0,0];
 
 var animation;
 
@@ -116,23 +115,23 @@ function render() {
     renderer.render( scene, camera );
 }
 
-function moveCameraToDesiredPosition(pos, rot) {
+function moveCameraToDesiredPosition(pos, control=[0,0,0]) {
     var from = {
         x: camera.position.x,
         y: camera.position.y,
         z: camera.position.z,
-        rx: camera.rotation.x,
-        ry: camera.rotation.y,
-        rz: camera.rotation.z
+        cx: controls.target.x,
+        cy: controls.target.y,
+        cz: controls.target.z
     };
 
     var to = {
         x: pos[0],
         y: pos[1],
         z: pos[2],
-        rx: rot[0],
-        ry: rot[1],
-        rz: rot[2]
+        cx: control[0],
+        cy: control[1],
+        cz: control[2]
     };
 
     console.log(from, to);
@@ -142,12 +141,13 @@ function moveCameraToDesiredPosition(pos, rot) {
         .easing(TWEEN.Easing.Linear.None)
         .onUpdate(function () {
             camera.position.set(this.x, this.y, this.z);
-            camera.rotation.set(this.rx, this.ry, this.rz)
-            camera.lookAt(new THREE.Vector3(0, 0, 0));
+            controls.target.set(this.cx, this.cy, this.cz);
+            camera.lookAt(new THREE.Vector3(this.cx, this.cy, this.cz));
         })
         .onComplete(function () {
-            //controls.target.set( 0,0,0 );
-            camera.lookAt(new THREE.Vector3(0, 0, 0));
+            camera.position.set(to.x, to.y, to.z);
+            camera.lookAt(new THREE.Vector3(to.cx, to.cy, to.cz));
+            controls.target.set(to.cx, to.cy, to.cz);
         })
         .start();
 }
