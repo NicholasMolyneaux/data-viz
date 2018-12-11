@@ -375,6 +375,13 @@ h1, h2 {
     fill: none;
 }
 
+.trajectories {
+    vector-effect: non-scaling-stroke;
+    stroke: black;
+    stroke-opacity: 0.1;
+    fill: none;
+}
+
 .the-zones {
     vector-effect: non-scaling-stroke;
     stroke: gray;

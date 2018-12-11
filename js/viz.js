@@ -127,6 +127,10 @@ function prepViz(change3DStyle=false) {
         let pedes_layer = svg.append("g")
             .attr("class", "pedes_layer");
 
+        // layer for showing all trajectories
+        let trajectories_layer = svg.append("g")
+            .attr("class", "trajectories_layer");
+
         // Read json data and draw frameworks (walls and zones)
         drawStructures(structure_layer);
     }
@@ -187,91 +191,7 @@ function prepareChord(data) {
     staticChord(data, getVisibleName, chordKeysOriginalData);
 }
 
-function prepareTrajectories(infra, xmin, xmax, ymin, ymax) {
 
-    // canvas size and chord diagram radii
-    const size = 700;
-
-    var width = $("#ODCont").width();
-
-   /* const svg = d3.select("#trajectoriesOverlay").append("svg")
-        .attr("id", "containerForOD")
-        .attr("preserveAspectRatio", "xMidYMid meet")
-        .attr("viewBox", `${-size/2} ${-size/2} ${size} ${size}`)
-        .append("svg:g");*/
-
-    const margin = 0.01*(xmax-xmin);
-    const ratio = (ymax-ymin)/(xmax-xmin);
-    const pixelWidth = 900;
-
-    let svg = d3.select("#trajectoriesOverlay")
-        .append("svg")
-        .attr("class", "container")
-        .attr("id", "svgCont")
-        .attr("width", pixelWidth)
-        .attr("height", parseInt(ratio * pixelWidth))
-        //.attr("width", pixelWidth)
-        //.attr("height", (ratio * pixelWidth))
-        .attr("viewBox", `${xmin-1} ${ymin} ${xmax} ${ymax}`)
-        .call(d3.zoom().on("zoom", () => svg.attr("transform", d3.event.transform)))
-        .append('g')
-        .attr("id", "subSvgCont");
-
-    let structure_layer = svg.append("g")
-        .attr("class", "structure_layer");
-
-
-    async function plotData(data) {
-
-        var line = d3.line()
-            .x(function(d, i) { return d.x; })
-            .y(function(d, i) { return d.y; })
-            .curve(d3.curveMonotoneX);
-
-        async function drawPath(traj) {
-            const newData = [];
-            for (i = 0; i < traj.x.length; i++) {newData.push({"x": traj.x[i], "y": traj.y[i]})}
-            structure_layer.append("path")
-                .datum(newData)
-                .attr("class", "the-walls")
-                .attr("stroke-opacity", 0.1)
-                .attr("d", line);
-            return new Promise((resolve) => {
-                //data.forEach(traj => drawPath(traj));
-                setTimeout(resolve, 100);
-            });
-        }
-
-        for (lineData of data) {
-            await drawPath(lineData);
-        }
-        //data.forEach(traj => drawPath(traj));
-
-        return new Promise((resolve) => {
-            //data.forEach(traj => drawPath(traj));
-            setTimeout(resolve, 100);
-        });
-    }
-
-    const pedIds = fetch('http://transporsrv2.epfl.ch/api/idlist/lausanne/samplenostrategies').then(r => r.json());
-    pedIds.then(ids => {
-        const chunk = 75;
-        const urls = [];
-        for (i=0, j=ids.length; i<j; i+=chunk) {
-            temparray = ids.slice(i,i+chunk);
-            urls.push("http://transporsrv2.epfl.ch/api/trajectoriesbyid/lausanne/samplenostrategies" + "/" + temparray)
-        }
-
-    const allData = fetch(urls[0])
-        .then(r => {return r.json()})
-        .then(d => { return customStreaming(urls.slice(1), plotData, d); });
-
-        console.log(allData);
-        allData.then(d => console.log(d));
-    });
-
-
-}
 
 // Options specific to a graph. key = graphID (Data + other options)
 let graphOptions = new Object();

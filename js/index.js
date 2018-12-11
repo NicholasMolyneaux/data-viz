@@ -166,7 +166,17 @@ function loadTraj() {
                     trajDataLoaded = true;
                     interPolateData();
                     createSlider();
-                    if (!presentationPlaying) {
+
+                fetch("http://transporsrv2.epfl.ch/api/trajectoriesbyid/" + selectedInfra.name + "/" + selectedTraj.name).then(response => {
+                    return response.json();
+                }).then(data => {
+                    trajectoryDataByID = data;
+                    document.getElementById("all_trajectories_checkbox").removeAttribute('disabled');
+                }).catch(err => {
+                    console.log(err)
+                });
+
+                if (!presentationPlaying) {
                         finishedLoading();
                         runViz();
                     } else {
