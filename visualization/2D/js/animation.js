@@ -7,7 +7,13 @@ function updatePosition2D(time_series_data, ped_speed, svg) {
         .merge(pedes)
         .attr("cx", d => d.x)
         .attr("cy", d => d.y)
-        .attr("r", 0.25)
+        .attr("opacity", d => {
+            if (d.selected) {
+                return 1;
+            } else {
+                return 0.15;
+            }
+        })
         .attr("fill", d => d3.interpolateRdYlGn((ped_speed.filter(p => p.id === d.id)[0].speed)/2));
     pedes.exit().remove();
 
@@ -29,7 +35,7 @@ function runAnimation2D() {
         }
         let current_time = trajDataFiltered[currentTimeShownIdx].time;
         let current_filtered_data_by_od = filterByOD(trajDataFiltered[currentTimeShownIdx].data, trajSummary);
-        checkVoronoi(current_filtered_data_by_od, voronoi_poly_layer, voronoi_canvas);
+        checkVoronoi(current_filtered_data_by_od.filter(d => d.selected), voronoi_poly_layer, voronoi_canvas);
         let ped_speed = current_filtered_data_by_od.map( d => {
             let v = 0;
             if (d3.select("#ped_speed").property("checked")) {

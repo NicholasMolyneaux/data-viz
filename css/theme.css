@@ -337,7 +337,8 @@ h1, h2 {
 .the-walls {
     vector-effect: non-scaling-stroke;
     stroke: black;
-    stroke-width: 1;
+    stroke-width: 3;
+    stroke-linecap: round;
     fill: none;
 }
 
@@ -352,7 +353,13 @@ h1, h2 {
 .controlled-areas {
     vector-effect: non-scaling-stroke;
     stroke: red;
-    stroke-width: 1;
+    stroke-width: 2;
+    fill: none;
+}
+#voronoi-area {
+    vector-effect: non-scaling-stroke;
+    stroke: red;
+    stroke-width: 2;
     fill: none;
 }
 
@@ -366,7 +373,8 @@ h1, h2 {
 .ped-individual {
     vector-effect: non-scaling-stroke;
     stroke: black;
-    stroke-width: 0.2;
+    stroke-width: 1;
+    r: 0.2;
 }
 
 .ped-trajectory {
@@ -382,12 +390,7 @@ h1, h2 {
     fill: none;
 }
 
-#voronoi-area {
-    vector-effect: non-scaling-stroke;
-    stroke: black;
-    stroke-width: 2;
-    fill: none;
-}
+
 
 .drawing_pannel {
     vector-effect: non-scaling-stroke;
