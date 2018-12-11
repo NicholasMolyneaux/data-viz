@@ -84,8 +84,6 @@ function followPedestrian() {
 
         //controls.target.set( 0,-1,0 );
         //controls.update();
-
-        console.log(SELECTED);
     }
 }
 
@@ -93,19 +91,42 @@ function onKeyPress( event ) {
 
     event.preventDefault();
 
-    if (event.code === "Space") {
+    if (event.code === "Space" && !event.shiftKey) {
 
         // Reset camera and controls
-        camera.position.set( -42.39557080736188, 67.12576960977573, 69.11641657512034)
+        moveCameraToDesiredPosition(cameraInitPos, cameraInitRot);
 
+        stopFollowingPed();
+
+    }
+
+    if (event.code === "Space" && event.shiftKey) {
+        // Reset camera and controls
+        moveCameraToDesiredPosition(cameraPresPos, cameraPresRot);
+
+        stopFollowingPed();
+
+    }
+
+    if (event.code === "KeyS") {
+
+        cameraPresPos = [camera.position['x'], camera.position['y'], camera.position['z']];
+        cameraPresRot = [camera.rotation['x'], camera.rotation['y'], camera.rotation['z']];
+
+        window.alert("Position saved!");
+
+    }
+}
+
+function stopFollowingPed() {
+    if (!(Object.keys(SELECTED).length === 0 && SELECTED.constructor === Object)) {
         resizeViz();
 
-        controls.target.set( 0,0,0 );
+        //controls.target.set( 0,0,0 );
         controls.enabled = true;
         controls.update();
         controls.reset();
 
         SELECTED = new Object();
-
     }
 }

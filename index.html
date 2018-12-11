@@ -48,18 +48,18 @@
     </nav>
 
     <!-- Main jumbotron for a primary marketing message or call to action -->
-    <div class="jumbotron jumbotron-fluid mainTitle">
+    <!--<div class="jumbotron jumbotron-fluid mainTitle">
         <div class="container">
             <h1 id="title">The Walking Data</h1>
         </div>
-    </div>
+    </div>-->
 
     <div id="VizCont">
         <div class="container-fluid" id="bigCont">
             <div class="row justify-content-center" id="mainViz">
 
                 <div class="col" id="viz">
-                    <div id="timer">TIMER</div>
+                    <div id="timer" style="display: none;">TIMER</div>
                     <span id="buttons" style="display: none;">
 
                         <a id="optionsButton" role="button" title="Options"><i class="fas fa-plus fa-lg"></i></a>
@@ -74,7 +74,7 @@
 
                             </span>
                             &emsp;
-                            <div id="slider" class="noUi-target noUi-ltr noUi-horizontal"></div>
+                            <div id="slider" class="noUi-target noUi-ltr noUi-horizontal" style="display: none;"></div>
 
                             <span id="rightButtons" class="unselectable">
                                 &emsp;&emsp;
@@ -190,7 +190,7 @@
     </div>
 </div>
 
-<footer id="footer" class="footer" style="display: none">
+<footer id="footer" class="footer">
     <div class="container">
         <span class="text-muted">Footer!</span>
     </div>
@@ -259,6 +259,7 @@
 <script src="js/libraries/customStreaming.js"></script>
 
 <!-- 3D visualization -->
+<script src="js/libraries/tween.min.js"></script>
 <script src="visualization/3D/js/main.js"></script>
 <script src="visualization/3D/js/debug.js"></script>
 <script src="visualization/3D/js/functionality.js"></script>
