@@ -540,39 +540,72 @@ function secondsToHmss(d) {
 
 function presentation() {
 
+    /** TIMING PLAN
+     *
+     * title: 0 to XXX
+     *
+     * text 0: 0 to 4000
+     *
+     *
+     *
+     *
+     */
+
     let idTO;
 
     const animTime = 1000;
 
-    var div = document.createElement("div");
-    div.innerHTML = "<h1 id='titlePres' style='display: none'>Welcome</h1>";
-    div.classList.add("presentation");
+    // Web page title The Walking Data
+    let titleDiv = document.createElement("div");
+    titleDiv.innerHTML = "<h1 id='titleForPres' style='display: none'>The walking data</h1>";
+    titleDiv.classList.add("presentation");
+    titleDiv.classList.add("presentation-title");
+    document.getElementById("mainViz").appendChild(titleDiv);
 
-    document.getElementById("mainViz").appendChild(div);
+    // Main text container 1
+    let firstTextLine = document.createElement("div");
+    firstTextLine.innerHTML = "<h2 id='textLine1' style='display: none'>Welcome to the train station of Lausanne, Switzerland</h2>";
+    firstTextLine.classList.add("presentation");
+    firstTextLine.classList.add("presentation-text");
+    document.getElementById("mainViz").appendChild(firstTextLine);
 
+    // Main text container 2
+    let secondTextLine = document.createElement("div");
+    secondTextLine.innerHTML = "<h2 id='textLine2' style='display: none'>You are here to explore the movements of pedestrians during the morning peak hour.</h2>";
+    secondTextLine.classList.add("presentation");
+    secondTextLine.classList.add("presentation-text");
+    document.getElementById("mainViz").appendChild(secondTextLine);
+
+    // Padding to push the lines of text upwards
+    let paddingDiv = document.createElement("div");
+    paddingDiv.innerHTML = "<h2> </h2>";
+    paddingDiv.classList.add("presentation");
+    paddingDiv.classList.add("presentation-padding");
+    document.getElementById("mainViz").appendChild(paddingDiv);
+
+
+    // skip button
     var button = document.createElement("a");
     button.innerHTML = "<i class=\"fas fa-fast-forward fa-2x\"></i>";
     button.title = "Skip";
     button.setAttribute("role", "button");
-    button.setAttribute("onclick", "skipPresentation()")
+    button.setAttribute("onclick", "skipPresentation()");
     button.id = "skipPresentation";
     button.style.display = "none";
-
     document.getElementById("mainViz").appendChild(button);
 
+
     let time = 0;
+    fadeInFadeOut("titleForPres", 20000, animTime);
 
-    fadeInFadeOut("titlePres");
-    time += 1000 + 2*animTime;
+    time += 0 + 2*animTime;
 
-    idTO = setTimeout(function() {
+    idTO = setTimeout(function() {fadeInFadeOut("textLine1", 20000, animTime);}, time);
+    time += 0 + 2*animTime;
+    timeOutPres.push(idTO);
 
-        div.innerHTML = "<span id='textPres' style='display: none'>The Walking Data is a visualization made to understand pedestrian flows.</span>";
-
-        fadeInFadeOut("textPres", 2000);
-
-    }, time);
-    time += 2000 + 2*animTime;
+    idTO = setTimeout(function() {fadeInFadeOut("textLine2", 20000, animTime);}, time);
+    time += 0 + 2*animTime;
     timeOutPres.push(idTO);
 
 
@@ -590,12 +623,12 @@ function presentation() {
         $(".presentation").remove();
         $("#skipPresentation").remove();
 
-        div = document.createElement("div");
-        div.classList.add("presentationOn3D");
-        div.id = "presOn3D";
-        div.style.height = getVizHeight() + "px";
+        firstTextLine = document.createElement("div");
+        firstTextLine.classList.add("presentationOn3D");
+        firstTextLine.id = "presOn3D";
+        firstTextLine.style.height = getVizHeight() + "px";
 
-        div.innerHTML = "<span id='textPres' style='display: none'>Our journey starts in Lausanne Railway Station.</span>";
+        firstTextLine.innerHTML = "<span id='textPres' style='display: none'>Our journey starts in Lausanne Railway Station.</span>";
 
         viz3D = true;
         prepViz();
@@ -603,7 +636,7 @@ function presentation() {
         controls.autoRotate = true;
         controls.autoRotateSpeed = 3;
 
-        document.getElementById("mainViz").appendChild(div);
+        document.getElementById("mainViz").appendChild(firstTextLine);
         document.getElementById("mainViz").appendChild(button);
 
         fadeInFadeOut("textPres");
@@ -614,7 +647,7 @@ function presentation() {
 
     idTO = setTimeout(function() {
 
-        div.innerHTML = "<span id='textPres' style='display: none'>However, Lausanne doesn't really look like this in the morning.</span>";
+        firstTextLine.innerHTML = "<span id='textPres' style='display: none'>However, Lausanne doesn't really look like this in the morning.</span>";
 
         fadeInFadeOut("textPres");
 
@@ -667,7 +700,7 @@ function presentation() {
 
     idTO = setTimeout(function() {
 
-        div.innerHTML = "<span id='textPres' style='display: none'>Welcome to Lausanne Railway Station at 7:30.</span>";
+        firstTextLine.innerHTML = "<span id='textPres' style='display: none'>Welcome to Lausanne Railway Station at 7:30.</span>";
 
         document.getElementById("timer").innerHTML = secondsToHms(selectedTraj.tmin);
 
@@ -681,7 +714,7 @@ function presentation() {
 
     idTO = setTimeout(function() {
 
-        div.innerHTML = "<span id='textPres' style='display: none'>At this time of the day, without their first coffee, morning commuters tend to look a bit tired.</span>";
+        firstTextLine.innerHTML = "<span id='textPres' style='display: none'>At this time of the day, without their first coffee, morning commuters tend to look a bit tired.</span>";
 
         fadeInFadeOut("textPres");
 
@@ -691,7 +724,7 @@ function presentation() {
 
     idTO = setTimeout(function() {
 
-        div.innerHTML = "<span id='textPres' style='display: none'>Really tired...</span>";
+        firstTextLine.innerHTML = "<span id='textPres' style='display: none'>Really tired...</span>";
 
         runViz();
 
@@ -709,7 +742,7 @@ function presentation() {
 
     idTO = setTimeout(function() {
 
-        div.innerHTML = "<span id='textPres' style='display: none'>You can now explore freely this 3D worls or the 2D visualization as well.</span>";
+        firstTextLine.innerHTML = "<span id='textPres' style='display: none'>You can now explore freely this 3D worls or the 2D visualization as well.</span>";
 
         fadeInFadeOut("textPres");
 

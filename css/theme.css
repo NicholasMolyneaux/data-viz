@@ -11,11 +11,11 @@
     }
 
     h2 {
-        font-size: 35px;
+        font-size: 30px;
     }
 
     #logo-nav {
-        font-size: 25px;
+        font-size: 20px;
     }
 }
 
@@ -76,6 +76,7 @@ h1, h2 {
     text-align: center;
 }
 
+
 .presentation {
     display: flex;
     justify-content: center;
@@ -85,6 +86,19 @@ h1, h2 {
     font-weight: bold;
     font-size: 20px;
 }
+
+.presentation-title {
+    height: 20%;
+}
+
+.presentation-text {
+    height: 10%;
+}
+
+.presentation-padding {
+    height: 60%;
+}
+
 
 .presentationOn3D {
     position: absolute;
@@ -104,7 +118,7 @@ h1, h2 {
     cursor: pointer;
 }
 
-#textPres, #titlePres {
+#textPres, #textPres {
     -webkit-user-select: none; /* Safari */
     -moz-user-select: none; /* Firefox */
     -ms-user-select: none; /* IE10+/Edge */
