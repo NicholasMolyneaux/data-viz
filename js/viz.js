@@ -76,16 +76,34 @@ function prepViz(change3DStyle=false) {
         // stats = new Stats();
         // container.appendChild( stats.dom );
 
-        // Mouse stuff
-        document.addEventListener( 'mousemove', onDocumentMouseMove, false );
-        document.addEventListener( 'mousedown', onDocumentMouseDown, false );
-
-        // Key stuff
-        document.addEventListener( 'keypress', onKeyPress, false);
-
         resizeViz();
 
         renderer.render( scene, camera );
+
+        // Mouse stuff
+
+        const canvas = document.getElementById("canvas");
+
+        canvas.addEventListener("mouseover", () => {
+            document.addEventListener('keypress', onKeyPress, false);
+            document.addEventListener( 'mousemove', onDocumentMouseMove, false);
+            document.addEventListener( 'mousedown', onDocumentMouseDown, false);
+
+        });
+
+
+        canvas.addEventListener("mouseout",function() {
+            document.removeEventListener("keypress", onKeyPress, false);
+            document.removeEventListener( 'mousemove', onDocumentMouseMove, false);
+            document.removeEventListener( 'mousedown', onDocumentMouseDown, false);
+        });
+
+
+        //document.getElementById("canvas").addEventListener( 'mousemove', onDocumentMouseMove, false );
+        //document.getElementById("canvas").addEventListener( 'mousedown', onDocumentMouseDown, false );
+
+        // Key stuff
+        document.getElementById("canvas")
 
         animate();
 
@@ -169,7 +187,7 @@ function updateTimer(time) {
 
 }
 
-function prepareChord(data) {
+function prepareChord() {
 
     // canvas size and chord diagram radii
     const size = 900;
@@ -186,10 +204,9 @@ function prepareChord(data) {
 
     //dynamicChord(data, {});
     const getVisibleName = getVisibleNameMapping({});
-    console.log(getVisibleName);
-    chordKeysOriginalData = Array.from(new Set(data.map(v => getVisibleName(v.o)).concat(data.map(v => getVisibleName(v.d)))));
+    chordKeysOriginalData = Array.from(new Set(trajSummary.map(v => getVisibleName(v.o)).concat(trajSummary.map(v => getVisibleName(v.d)))));
     currentLabels = chordKeysOriginalData.slice();
-    staticChord(data, getVisibleName, chordKeysOriginalData);
+    staticChord(trajSummary, getVisibleName, chordKeysOriginalData);
 }
 
 
@@ -197,13 +214,15 @@ function prepareChord(data) {
 // Options specific to a graph. key = graphID (Data + other options)
 let graphOptions = new Object();
 
-function addHistograms(hist) {
+function addHistograms() {
+
+    console.log(histTT);
 
     $.get('visualization/stats/templates/graph.mst', function(graph) {
         var rendered = Mustache.render(graph, {id: 'tt'});
         $('#TTContainer').append(rendered);
     }).then(() => {
-        graphOptions['tt'] = {'data': hist['tt'], 'xAxis': 'Travel Time [s]'};
+        graphOptions['tt'] = {'data': histTT, 'xAxis': 'Travel Time [s]'};
 
         drawGraph('tt');
     });
@@ -211,14 +230,13 @@ function addHistograms(hist) {
 
 
     $.get('visualization/stats/templates/graph.mst', function(graph) {
-        var rendered = Mustache.render(graph, {id: 'speed'});
-        $('#speedContainer').append(rendered);
+        var rendered = Mustache.render(graph, {id: 'density'});
+        $('#densityContainer').append(rendered);
     }).then(() => {
 
-        graphOptions['speed'] = {'data': hist['density'], 'xAxis': 'Speed [m/s]'};
+        graphOptions['density'] = {'data': histTT, 'xAxis': 'Speed [m/s]'};
 
-        drawGraph('speed');
-
+        drawGraph('density');
     });
 
 }

@@ -11,6 +11,9 @@ let chordKeysOriginalData = [];
 // data used for plotting trajectories of pedestrians
 let trajectoryDataByID = [];
 
+let histTT = null;
+let histDensity = null;
+
 
 const INTERP = 4;
 let interpolatedTrajData = null;
@@ -72,6 +75,8 @@ async function loadTrajData() {
     }).catch(err => {
         console.log(err)
     });
+
+    prepareHistTT();
 }
 
 function interPolateData() {
@@ -109,5 +114,41 @@ function interPolateData() {
             interpolatedTrajData.push(interpObj);
         }
     }
+
+}
+
+function downSampleTrajectories() {
+    fetch("http://transporsrv2.epfl.ch/api/trajectoriesbyid/" + selectedInfra.name + "/" + selectedTraj.name).then(response => {
+        return response.json();
+    }).then(data => {
+        for (ped of data) {
+            let downsampledPed = {};
+            downsampledPed["id"] = ped.id;
+            downsampledPed["time"] = [];
+            downsampledPed["x"] = [];
+            downsampledPed["y"] = [];
+            for (idx = 0; idx < ped.time.length; idx = idx+10) {
+                downsampledPed.time.push(ped.time[idx]);
+                downsampledPed.x.push(ped.x[idx]);
+                downsampledPed.y.push(ped.y[idx]);
+            }
+            trajectoryDataByID.push(downsampledPed);
+        }
+        document.getElementById("all_trajectories_checkbox").removeAttribute('disabled');
+    }).catch(err => {
+        console.log(err)
+    });
+}
+
+function prepareHistTT() {
+
+    histTT = [];
+
+    trajSummary.forEach(ped => {
+        if(ped.en >= minTime && ped.ex <= maxTime) {
+            histTT.push(ped.ex-ped.en);
+        }
+
+    });
 
 }
