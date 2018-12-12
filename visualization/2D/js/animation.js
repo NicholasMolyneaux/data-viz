@@ -1,3 +1,5 @@
+
+
 function updatePosition2D(time_series_data, ped_speed, svg) {
     // Update circles (pedestrians)
     let pedes = svg.selectAll(".ped-individual").data(time_series_data, d => d.id);
@@ -15,7 +17,7 @@ function updatePosition2D(time_series_data, ped_speed, svg) {
                 return 0.15;
             }
         })
-        .attr("fill", d => d3.interpolateRdYlGn((ped_speed.filter(p => p.id === d.id)[0].speed)/2))
+        .attr("fill", d => d3.interpolateRdYlGn((ped_speed.filter(p => p.id === d.id)[0].speed)/maximum_speed))
         .on("click", d => {
             const trajectory_canvas = d3.select(".trajectories_layer");
             if (trajectory_canvas.select(`#${d.id}`).empty()) {
@@ -55,6 +57,7 @@ function runAnimation2D() {
         let ped_speed = current_filtered_data_by_od.map( d => {
             let v = 0;
             if (d3.select("#ped_speed").property("checked")) {
+                d3.selectAll(".colorbar").style("opacity", 1);
                 if (currentTimeShownIdx !== 0) {
                     trajDataFiltered[currentTimeShownIdx - 1].data.map(p => {
                         if (p.id === d.id) {
@@ -62,6 +65,8 @@ function runAnimation2D() {
                         }
                     })
                 }
+            } else {
+                d3.selectAll(".colorbar").style("opacity", 0);
             }
             return {"id":d.id, "speed": v};
         });

@@ -1,3 +1,6 @@
+let maximum_speed = 2;
+let num_of_colors = 10;
+
 class Zone{
     constructor(x, y, width, height, name) {
         this.x = Number(x);
@@ -102,10 +105,51 @@ class Zone{
         od_selection.Destinations.delete(this.name);
     }
 }
+function drawColorbar(svg) {
+    let data = d3.schemeRdYlGn[num_of_colors];
+    svg.append("text")
+        .attr("class", "colorbar text")
+        .attr("x", 65 -1)
+        .attr("y", 1)
+        .attr("dominant-baseline","middle")
+        .attr("text-anchor","middle")
+        .text("Speed [m/s]")
+        .style("font-size", "0.8pt")
+        .attr("fill", "black")
+        .style("opacity", 0);
+    let min_max_speed = ["0", "2"];
+
+    svg.selectAll(".colorbar range")
+        .data(min_max_speed)
+        .enter()
+        .append("text")
+        .attr("class", "colorbar range")
+        .attr("y", 4)
+        .attr("x", (d,i) => 60+i*10 -1)
+        .attr("dominant-baseline","middle")
+        .attr("text-anchor","middle")
+        .text(d => d)
+        .style("font-size", "0.8pt")
+        .attr("fill", "black")
+        .style("opacity", 0);
+
+    let rects = svg.selectAll(".colorbar rects")
+        .data(data)
+        .enter()
+        .append("rect")
+        .attr("class", "colorbar rects")
+        .attr("y", 2)
+        .attr("height", 1)
+        .attr("x", (d,i) => 60+i*1 -1)
+        .attr("width", 1)
+        .attr("fill", d=> d)
+        .style("opacity", 0);
+}
 
 function drawStructures(main_layer) {
     drawWalls(wallsData, main_layer);
     drawGates(gatesData, main_layer);
+    drawColorbar(main_layer);
 }
 
 function drawWalls(wall, svg) {
