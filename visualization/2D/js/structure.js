@@ -20,12 +20,12 @@ class Zone{
             .attr("height", this.height)
             .on("mouseover", d => {
                 console.log(this.name);
-                this.g.select(".tooltip")
-                    .text(`The zone ${this.name}`);
+                this.g.select("#tooltip-text")
+                    .text(`Zone ${this.name}`);
             })
             .on("mouseout", d => {
-                // this.g.select(".tooltip")
-                //     .text("");
+                this.g.select("#tooltip-text")
+                    .text("");
             })
             .on("click", () => {
                 // activate Destination
@@ -53,13 +53,14 @@ class Zone{
             .attr("y", this.y+this.height*2/3)
             .attr("dominant-baseline","middle")
             .attr("text-anchor","middle")
-            .attr("fill", "blue");
+            .attr("fill", "blue")
+            .style("font-size", "1pt");
 
         // for tooltip
         this.g.append("text")
-            .attr("class", "tooltip")
-            .attr("x", this.x)
-            .attr("y", this.y)
+            .attr("id", "tooltip-text")
+            .attr("x", this.x+this.width/2)
+            .attr("y", this.y+this.height/2)
             .attr("dominant-baseline","middle")
             .attr("text-anchor","middle")
             .attr("fill", "black");
