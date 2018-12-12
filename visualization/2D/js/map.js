@@ -29,39 +29,48 @@ function drawAVoronoi(data, polygon, canvas) {
 function filterByOD(time_series_data, od) {
     // Check od set is empty (no click at all)
     if (od_selection.Origins.size === 0 && od_selection.Destinations.size === 0) {
-        return time_series_data;
+        return time_series_data.map(d => {return {"id": d.id, "x": d.x, "y": d.y, "selected": true}});
     }
 
     // Only destinations exist
     if (od_selection.Origins.size === 0) {
-        return time_series_data.filter(ped => {
-            let od_ped = od.filter(o => o.id === ped.id)[0];
+        return time_series_data.map(d => {
+            let isSelected = false;
+            let od_ped = od.filter(o => o.id === d.id)[0];
             if (od_ped === undefined) {
-                return false;
+                isSelected = false;
+            } else {
+                isSelected = od_selection.Destinations.has(od_ped.d);
             }
-            return od_selection.Destinations.has(od_ped.d);
+            return {"id": d.id, "x": d.x, "y": d.y, "selected": isSelected};
         });
     }
 
     // Only origins exist
     if (od_selection.Destinations.size === 0) {
-        return time_series_data.filter(ped => {
-            let od_ped = od.filter(o => o.id === ped.id)[0];
+        return time_series_data.map(d => {
+            let isSelected = false;
+            let od_ped = od.filter(o => o.id === d.id)[0];
             if (od_ped === undefined) {
-                return false;
+                isSelected = false;
+            } else {
+                isSelected = od_selection.Origins.has(od_ped.o);
             }
-            return od_selection.Origins.has(od_ped.o);
+            return {"id": d.id, "x": d.x, "y": d.y, "selected": isSelected};
         });
     }
 
     // Both are exist
-    return time_series_data.filter(ped => {
-        let od_ped = od.filter(o => o.id === ped.id)[0];
+    return time_series_data.map(d => {
+        let isSelected = false;
+        let od_ped = od.filter(o => o.id === d.id)[0];
         if (od_ped === undefined) {
-            return false;
+            isSelected = false;
+        } else {
+            isSelected = od_selection.Origins.has(od_ped.o) && od_selection.Destinations.has(od_ped.d);
         }
-        return od_selection.Origins.has(od_ped.o) && od_selection.Destinations.has(od_ped.d);
-    })
+        return {"id": d.id, "x": d.x, "y": d.y, "selected": isSelected};
+    });
 }
 
 function pedLosColor(p) {
@@ -142,6 +151,7 @@ function setVoronoiArea() {
 
         let pre_circles = Array.from(document.getElementsByClassName('voronoi-pre-circle')).map(d => [Number(d.attributes.cx.value), Number(d.attributes.cy.value)]);
         drawVoronoiArea(voronoi_clip_canvas, pre_circles);
+        d3.selectAll(".voronoi-pre-circle").remove();
 
     } else if (stateControlAreaButton == 'drawn') {
 
