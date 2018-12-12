@@ -77,6 +77,7 @@ function runOneStep2D() {
 
     const voronoi_poly_layer = d3.select(".voronoi_poly_layer");
     const pedes_layer = d3.select(".pedes_layer");
+    const voronoi_canvas = d3.select(".voronoi_canvas");
 
     const timeBounds = [minTime, maxTime];
 

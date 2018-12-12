@@ -58,6 +58,7 @@ body {
     margin: 0;
     padding-bottom:0;
     #font-size: 2vw;
+    overflow-x: hidden;
 }
 
 @font-face {
@@ -201,13 +202,6 @@ h1, h2 {
 
 .min-opt {
     padding: 0;
-}
-
-.opt-graphs {
-    box-sizing: content-box;
-    padding: 10px;
-    border: 2px solid black;
-    background-color: #cccccc;
 }
 
 .optOnGraph {
@@ -675,13 +669,33 @@ path.chord {
 }
 
 .opt-graphs {
-    box-sizing: content-box;
-    padding: 10px;
-    border: 2px solid black;
+    #box-sizing: content-box;
+    #padding: 10px;
+    #border: 2px solid black;
     background-color: #cccccc;
     font-size: 12px;
 }
 
-.opt-graphs-buttons {
-    font-size: 12px;
+.opt-graphs-buttons, .btn-opt {
+    font-size: 10px;
+}
+
+.colStat, .statRow {
+    margin: 0;
+    padding: 0;
+}
+
+#statDiv {
+    background: #E8EBEF;
+}
+
+@media screen and (min-width: 1080px) {
+    #statDiv {
+        overflow-y: auto;
+    }
+
+    body {
+        overflow-y: hidden;
+    }
+
 }

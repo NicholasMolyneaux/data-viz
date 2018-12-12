@@ -128,7 +128,7 @@ function prepViz(change3DStyle=false) {
 
         document.getElementById("mainViz").style.height = 0 + "px";
 
-        vizHeight = $('.footer').offset().top - $('#viz').offset().top;
+        vizHeight = getVizHeight();
 
         document.getElementById("mainViz").style.height = vizHeight + "px";
 
@@ -215,8 +215,6 @@ function prepareChord() {
 let graphOptions = new Object();
 
 function addHistograms() {
-
-    console.log(histTT);
 
     $.get('visualization/stats/templates/graph.mst', function(graph) {
         var rendered = Mustache.render(graph, {id: 'tt'});
@@ -358,6 +356,10 @@ function changeTimes(times) {
     } else {
         do1Step();
     }
+
+    if (statsShown) {
+        reDrawHistTT();
+    }
 }
 
 $( "#threeDButton" ).click(function() {
@@ -424,6 +426,13 @@ $( "#threeDButton" ).click(function() {
         clearInterval(pedMover);
 
         $("#svgCont").remove();
+
+        if (statsShown) {
+            viz.classList.add("col");
+            viz.classList.remove("col-xl-8");
+
+            $('#statDiv').remove();
+        }
 
         if (SPEEDFACTOR <= 2) {
             currentTimeShownIdx *= (INTERP+1);

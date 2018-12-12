@@ -26,8 +26,6 @@
 
 <body>
 
-<div class="allExceptFooter">
-
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <a id="logo-nav" class="navbar-brand" href="./index.html">TWD</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
@@ -92,8 +90,7 @@
 
     </div>
 
-    <div id="StatsCont" style="display: none">
-    <!--<div id="StatsCont">-->
+    <!--<div id="StatsCont" style="display: none">
         <hr>
 
 
@@ -134,7 +131,7 @@
         <div class="container" id="densityContainer">
         </div>
 
-    </div>
+    </div>-->
 
     <div id="dataCont" class="container" style="display: none;">
         <div class="card border-light" id="loadCard">
@@ -182,13 +179,13 @@
             </div>
         </div>
     </div>
-</div>
 
+    <!--
 <footer id="footer" class="footer">
     <div class="container">
         <span class="text-muted">Footer!</span>
     </div>
-</footer>
+</footer>-->
 
 </body>
 
@@ -211,6 +208,17 @@
 <script src="js/libraries/nouislider.min.js"></script>
 <script src="js/index.js"></script>
 <script src="js/data.js"></script>
+
+<!-- Chord diagram -->
+<script src="visualization/stats/js/chord_functions.js"></script>
+<script src="visualization/stats/js/chord.js"></script>
+
+<!-- Histograms -->
+<script src="visualization/stats/js/graphs.js"></script>
+<script src="js/libraries/mustache.min.js"></script>
+<script src="js/libraries/html2canvas.min.js"></script>
+<script src="js/libraries/saveSvgAsPng.js"></script>
+<script src="js/libraries/FileSaver.min.js"></script>
 
 <!-- d3.js -->
 <script src="https://d3js.org/d3.v5.min.js"></script>
@@ -239,17 +247,8 @@
 <script src="visualization/2D/js/animation.js"></script>
 <script src="visualization/2D/js/trajectories.js"></script>
 
-
-<!-- Chord diagram -->
-<script src="visualization/stats/js/chord_functions.js"></script>
-<script src="visualization/stats/js/chord.js"></script>
-
-<!-- Histograms -->
-<script src="visualization/stats/js/graphs.js"></script>
-<script src="js/libraries/mustache.min.js"></script>
-<script src="js/libraries/html2canvas.min.js"></script>
-<script src="js/libraries/saveSvgAsPng.js"></script>
-<script src="js/libraries/FileSaver.min.js"></script>
+<!-- General functions for the stats -->
+<script src="visualization/stats/js/main.js"></script>
 
 <!-- Trajectories -->
 <script src="js/libraries/customStreaming.js"></script>

@@ -26,6 +26,8 @@ let maxTime;
 
 let timeOutPres = [];
 
+let statsShown = false;
+
 $(document).ready(function() {
 
     // Load the infrastructures
@@ -111,6 +113,8 @@ function addInfra() {
             text: infra.name
         }))
     });
+
+    // TODO: To fix later
 
     document.getElementById('descInfra').style.display = '';
     document.getElementById('textDescInfra').innerHTML = infrastructures[idx]['description'];
@@ -460,7 +464,7 @@ window.addEventListener('resize', function(){
 
 function getVizHeight() {
 
-    return $(window).height() - $('#VizCont').offset().top;
+    return window.innerHeight - 56;
 
 }
 
@@ -776,7 +780,7 @@ function endOfPresentation() {
 
     document.getElementById("buttons").style.display = "";
     document.getElementById("slider").style.display = "";
-    document.getElementById("StatsCont").style.display = "";
+    //document.getElementById("StatsCont").style.display = "";
     document.getElementById("timer").style.display = "";
     loadStats();
 }

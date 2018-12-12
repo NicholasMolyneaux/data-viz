@@ -143,12 +143,34 @@ function downSampleTrajectories() {
 function prepareHistTT() {
 
     histTT = [];
+    let add = false;
+    const restrOrigins = od_selection.Origins.size > 0;
+    const restrDest = od_selection.Destinations.size > 0;
+
+
+    console.log(od_selection);
 
     trajSummary.forEach(ped => {
-        if(ped.en >= minTime && ped.ex <= maxTime) {
+
+        add = true;
+
+        if(restrOrigins) {
+            console.log(od_selection.Origins);
+            if (!od_selection.Origins.has(ped.o)){
+                add = false;
+            }
+        }
+
+        if(restrDest) {
+            if (!od_selection.Destinations.has(ped.d)){
+                add = false;
+            }
+        }
+
+        if(ped.en >= minTime && ped.ex <= maxTime && add) {
+
             histTT.push(ped.ex-ped.en);
         }
 
     });
-
 }

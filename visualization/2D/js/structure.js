@@ -32,10 +32,16 @@ class Zone{
                     .style("opacity", 0.2);
                 if (d3.event.shiftKey) {
                     this.setDestination();
+                    if (statsShown) {
+                        reDrawHistTT();
+                    }
                 }
                 // activate Origin
                 else {
                     this.setOrigin();
+                    if (statsShown) {
+                        reDrawHistTT();
+                    }
                 }});
         this.g.append("rect")
             .attr("class", "the-zones")

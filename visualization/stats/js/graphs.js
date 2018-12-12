@@ -20,8 +20,6 @@ function drawGraph(id) {
 function hist(id, state) {
     // State is used for the transitions
 
-    console.log("GOOO");
-
     const transLength = 1000;
 
     const vizId = "viz_" + id;
@@ -31,8 +29,6 @@ function hist(id, state) {
     const formatCountPerc = d3.format(",.1f");
 
     const ttDiv = d3.select("#" + vizId);
-
-    console.log(document.getElementById(vizId));
 
     let margin = {top: 20, right: 20, bottom: 0, left: 0};
 
