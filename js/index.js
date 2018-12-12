@@ -1,6 +1,6 @@
 const baseURL = 'http://transporsrv2.epfl.ch/api/';
 
-let introductionPlaying = true;
+let presentationPlaying = true;
 
 let vizHeight = getVizHeight();
 let landscape = true;
@@ -13,8 +13,10 @@ let selectedTraj = "test10";
 
 let infraSelected = false;
 
-let viz3D = true;
+let viz3D = false;
+let viz2D = false;
 let trajDataLoaded = false;
+let infraDataLoaded = false;
 
 let optionsShown = false;
 
@@ -22,10 +24,14 @@ let slider = null;
 let minTime;
 let maxTime;
 
+let timeOutPres = [];
+
 $(document).ready(function() {
 
     // Load the infrastructures
     loadInfra();
+
+    presentation();
 
     //viz2D();
 
@@ -35,17 +41,6 @@ $(document).ready(function() {
         else
             GoInFullscreen($("#viz").get(0));
     });
-
-    /*$("#threeDButton").on('click', function() {
-        if(fancyViz)
-        {
-            fancyViz = false;
-            viz2D();
-        } else {
-            fancyViz = true;
-            viz3D();
-        }
-    });*/
 
 });
 
@@ -68,10 +63,20 @@ function loadInfra() {
             // Add the infra for the uploading the trajectories data
             addInfra();
             noDataSelected();
-            loadInfraData().then(() => {
+
+            // Without animation
+            /*loadInfraData().then(() => {
                 prepViz();
                 resizeViz();
+            });*/
+
+            infraDataLoaded = false;
+
+            // With animation
+            loadInfraData().then(() => {
+                infraDataLoaded = true;
             });
+
             loadTraj();
         })
         .fail( function(xhr, textStatus, errorThrown) {
@@ -80,7 +85,10 @@ function loadInfra() {
 }
 
 function noDataSelected() {
-    document.getElementById("timer").innerHTML = "No trajectory data!";
+
+    if(!presentationPlaying) {
+        document.getElementById("timer").innerHTML = "No trajectory data!";
+    }
 }
 
 function addInfra() {
@@ -144,11 +152,51 @@ function loadTraj() {
             //trajectories = [{'name': 'traj1-'+selectedInfra.name, 'description': 'asdasdasd'}, {'name': 'traj2-'+selectedInfra.name, 'description': '123123'}, {'name': 'traj3-'+selectedInfra.name, 'description': 'Lorem Ipsum'}];
             addTraj();
             loading();
-            trajDataLoaded = false;
+
+            // Without animation
+            /*trajDataLoaded = false;
             loadTrajData().then(() => {
                 trajDataLoaded = true;
                 finishedLoading();
                 runViz();
+                }*/
+
+            // With animation
+            loadTrajData().then(() => {
+                trajDataLoaded = true;
+                interPolateData();
+                createSlider();
+
+                    // Downsamples the trajectory data
+                // TODO should be moved to somewhere cleaner
+                    fetch("http://transporsrv2.epfl.ch/api/trajectoriesbyid/" + selectedInfra.name + "/" + selectedTraj.name).then(response => {
+                        return response.json();
+                    }).then(data => {
+                        for (ped of data) {
+                            let downsampledPed = {};
+                            downsampledPed["id"] = ped.id;
+                            downsampledPed["time"] = [];
+                            downsampledPed["x"] = [];
+                            downsampledPed["y"] = [];
+                            for (idx = 0; idx < ped.time.length; idx = idx+10) {
+                                downsampledPed.time.push(ped.time[idx]);
+                                downsampledPed.x.push(ped.x[idx]);
+                                downsampledPed.y.push(ped.y[idx]);
+                            }
+                        trajectoryDataByID.push(downsampledPed);
+                        }
+                        document.getElementById("all_trajectories_checkbox").removeAttribute('disabled');
+                    }).catch(err => {
+                    console.log(err)
+                    });
+
+
+                if (!presentationPlaying) {
+                        finishedLoading();
+                        runViz();
+                    } else {
+                        document.getElementById("skipPresentation").style.display = "";
+                    }
                 }
             );
         })
@@ -159,11 +207,13 @@ function loadTraj() {
 }
 
 function loading() {
-    let timer = document.getElementById("timer");
-    timer.innerHTML = "LOADING";
 
-    keepFading($("#timer"));
+    if (!presentationPlaying) {
+        let timer = document.getElementById("timer");
+        timer.innerHTML = "LOADING";
 
+        keepFading($("#timer"));
+    }
 }
 
 function keepFading($obj) {
@@ -175,7 +225,19 @@ function keepFading($obj) {
 }
 
 function finishedLoading() {
+
     $("#timer").stop(true, true);
+
+    document.getElementById("timer").innerHTML = "0 [s.]";
+    document.getElementById("timer").style.opacity = "1";
+    document.getElementById("timer").style.display = "";
+    document.getElementById("buttons").style.display = "";
+
+    prepareChord(trajSummary);
+
+}
+
+function createSlider() {
 
     slider = document.getElementById('slider');
 
@@ -211,18 +273,7 @@ function finishedLoading() {
 
     minTime = selectedTraj.tmin;
     maxTime = selectedTraj.tmax;
-
-    document.getElementById("timer").innerHTML = "0 [s.]";
-    document.getElementById("timer").style.opacity = "1";
-    document.getElementById("timer").style.display = "";
-    document.getElementById("buttons").style.display = "";
-
-    interPolateData();
-
-    prepareChord(trajSummary);
-
 }
-
 
 function addTraj() {
     //console.log(trajectories);
@@ -433,6 +484,12 @@ function getVizHeight() {
 
 }
 
+document.getElementById("mainViz").style.height = 0 + "px";
+
+vizHeight = getVizHeight();
+
+document.getElementById("mainViz").style.height = vizHeight + "px";
+
 function resizeViz() {
 
     document.getElementById("mainViz").style.height = 0 + "px";
@@ -445,10 +502,6 @@ function resizeViz() {
 
         let width = document.body.clientWidth;
 
-        if (introductionPlaying) {
-            width = window.innerWidth
-        }
-
         camera.aspect = width / vizHeight;
         camera.updateProjectionMatrix();
 
@@ -456,7 +509,7 @@ function resizeViz() {
 
         //document.getElementById("canvas").height = vizHeight + "px";
         //document.getElementById("canvas").width = window.innerWidth + "px";
-    } else {
+    } else if (viz2D) {
         document.getElementById("svgCont").style.height = vizHeight + "px";
     }
 }
@@ -485,23 +538,255 @@ function secondsToHmss(d) {
     return hDisplay + ":" + mDisplay + ":" + sDisplay + "." + ss;
 }
 
-// During intro, no scrolling
-$('.allExceptFooter').css('padding-bottom', '0px');
+function presentation() {
 
-setTimeout(function(){
+    let idTO;
 
+    const animTime = 1000;
+
+    var div = document.createElement("div");
+    div.innerHTML = "<h1 id='titlePres' style='display: none'>Welcome</h1>";
+    div.classList.add("presentation");
+
+    document.getElementById("mainViz").appendChild(div);
+
+    var button = document.createElement("a");
+    button.innerHTML = "<i class=\"fas fa-fast-forward fa-2x\"></i>";
+    button.title = "Skip";
+    button.setAttribute("role", "button");
+    button.setAttribute("onclick", "skipPresentation()")
+    button.id = "skipPresentation";
+    button.style.display = "none";
+
+    document.getElementById("mainViz").appendChild(button);
+
+    let time = 0;
+
+    fadeInFadeOut("titlePres");
+    time += 1000 + 2*animTime;
+
+    idTO = setTimeout(function() {
+
+        div.innerHTML = "<span id='textPres' style='display: none'>The Walking Data is a visualization made to understand pedestrian flows.</span>";
+
+        fadeInFadeOut("textPres", 2000);
+
+    }, time);
+    time += 2000 + 2*animTime;
+    timeOutPres.push(idTO);
+
+
+    /*setTimeout(function() {
+
+        div.innerHTML = "<span id='textPres' style='display: none'>Have fun =)</span>";
+
+        fadeInFadeOut("textPres", 2000);
+
+    }, time);
+    time += 2000 + 2*animTime;*/
+
+    idTO = setTimeout(function() {
+
+        $(".presentation").remove();
+        $("#skipPresentation").remove();
+
+        div = document.createElement("div");
+        div.classList.add("presentationOn3D");
+        div.id = "presOn3D";
+        div.style.height = getVizHeight() + "px";
+
+        div.innerHTML = "<span id='textPres' style='display: none'>Our journey starts in Lausanne Railway Station.</span>";
+
+        viz3D = true;
+        prepViz();
+
+        controls.autoRotate = true;
+        controls.autoRotateSpeed = 3;
+
+        document.getElementById("mainViz").appendChild(div);
+        document.getElementById("mainViz").appendChild(button);
+
+        fadeInFadeOut("textPres");
+
+    }, time);
+    time += 2000 + 2*animTime;
+    timeOutPres.push(idTO);
+
+    idTO = setTimeout(function() {
+
+        div.innerHTML = "<span id='textPres' style='display: none'>However, Lausanne doesn't really look like this in the morning.</span>";
+
+        fadeInFadeOut("textPres");
+
+    }, time);
+    time += 2000 + 2*animTime;
+    timeOutPres.push(idTO);
+
+    idTO = setTimeout(function() {
+
+        document.getElementById('presOn3D').style.backgroundColor = "black";
+        document.getElementById('presOn3D').style.display = "none";
+
+        fadeIn("presOn3D");
+
+    }, time);
+    time += 1000;
+    timeOutPres.push(idTO);
+
+    idTO = setTimeout(function() {
+
+        document.getElementById("changeStyle").checked = true;
+        changeStyle3D();
+        controls.autoRotate = true;
+        controls.autoRotateSpeed = 6;
+
+    }, time);
+    time += 100;
+    timeOutPres.push(idTO);
+
+    idTO = setTimeout(function() {
+
+        fadeOut("presOn3D");
+
+
+    }, time);
+    time += 1000;
+    timeOutPres.push(idTO);
+
+    idTO = setTimeout(function() {
+
+        document.getElementById('presOn3D').style.backgroundColor = "";
+        document.getElementById('presOn3D').style.display = "";
+        document.getElementById('presOn3D').style.color = "white";
+
+        fadeIn("presOn3D");
+
+
+    }, time);
+    timeOutPres.push(idTO);
+
+    idTO = setTimeout(function() {
+
+        div.innerHTML = "<span id='textPres' style='display: none'>Welcome to Lausanne Railway Station at 7:30.</span>";
+
+        document.getElementById("timer").innerHTML = secondsToHms(selectedTraj.tmin);
+
+        document.getElementById("timer").style.display = "";
+
+        fadeInFadeOut("textPres");
+
+    }, time);
+    time += 2000 + 2*animTime;
+    timeOutPres.push(idTO);
+
+    idTO = setTimeout(function() {
+
+        div.innerHTML = "<span id='textPres' style='display: none'>At this time of the day, without their first coffee, morning commuters tend to look a bit tired.</span>";
+
+        fadeInFadeOut("textPres");
+
+    }, time);
+    time += 2000 + 2*animTime;
+    timeOutPres.push(idTO);
+
+    idTO = setTimeout(function() {
+
+        div.innerHTML = "<span id='textPres' style='display: none'>Really tired...</span>";
+
+        runViz();
+
+        fadeInFadeOut("textPres");
+
+        controls.autoRotate = false;
+
+        // Weird movement!
+        // TODO: Fix this
+        moveCameraToDesiredPosition(cameraPresPos);
+
+    }, time);
+    time += 10000 + 2*animTime;
+    timeOutPres.push(idTO);
+
+    idTO = setTimeout(function() {
+
+        div.innerHTML = "<span id='textPres' style='display: none'>You can now explore freely this 3D worls or the 2D visualization as well.</span>";
+
+        fadeInFadeOut("textPres");
+
+    }, time);
+    time += 2000 + 2*animTime;
+    timeOutPres.push(idTO);
+
+    idTO = setTimeout(function(){
+        endOfPresentation();
+
+        /*document.getElementById("timer").style.display = "";
+        document.getElementById("StatsCont").style.display = "";
+        document.getElementById("dataCont").style.display = "";
+        document.getElementById("footer").style.display = "";
+
+
+
+        resizeViz();*/
+    }, time);
+    timeOutPres.push(idTO);
+
+}
+
+function skipPresentation() {
+
+    // TODO: careful when the data is not entirely loaded!
+
+    endOfPresentation();
+    document.getElementById("timer").style.display = "";
+
+    for(let i=0; i<timeOutPres.length; i++) {
+        clearTimeout(timeOutPres[i])
+    }
+
+    if (!viz3D) {
+        console.log("HERE!");
+        viz3D = true;
+        prepViz();
+    } else {
+        controls.autoRotate = false;
+    }
+
+    runViz();
+    moveCameraToDesiredPosition(cameraInitPos);
+    prepareChord(trajSummary);
+}
+
+function endOfPresentation() {
+    presentationPlaying = false;
+
+    $(".presentation").remove();
+    $(".presentationOn3D").remove();
+    $("#skipPresentation").remove();
+
+    document.getElementById("buttons").style.display = "";
+    document.getElementById("slider").style.display = "";
     document.getElementById("StatsCont").style.display = "";
-    document.getElementById("dataCont").style.display = "";
-    document.getElementById("footer").style.display = "";
+}
 
-    $('.allExceptFooter').css('padding-bottom', '60px');
+function fadeInFadeOut(id, time=1000, flashTime=1000) {
 
-    $('body').css('background-color', 'white');
+    $.when($("#" + id).fadeIn(flashTime)).then(() => {
+        setTimeout(function() {
+            $("#" + id).fadeOut(flashTime);
+        }, time);
+    });
+}
 
-    introductionPlaying = false;
-    resizeViz();
+function fadeIn(id, flashTime=1000){
 
-}, 5000);
+    $.when($("#" + id).fadeIn(flashTime));
+}
+
+function fadeOut(id, flashTime=1000){
+
+    $.when($("#" + id).fadeOut(flashTime));
+}
 
 
 

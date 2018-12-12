@@ -5,7 +5,12 @@ let areasData = null;
 let trajData = null;
 let trajSummary = null;
 
+// original set of keys for chord diagram
 let chordKeysOriginalData = [];
+
+// data used for plotting trajectories of pedestrians
+let trajectoryDataByID = [];
+
 
 const INTERP = 4;
 let interpolatedTrajData = null;

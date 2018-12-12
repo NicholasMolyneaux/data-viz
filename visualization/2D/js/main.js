@@ -22,6 +22,7 @@ function centerOfRect(rect) {
 function encodeJson(data, areas) {
     return data.map((d,i) => {return {"id": d["id"], "density": 1/areas[i]}});
 }
+
 function publish(json) {
     console.log(json);
 }
@@ -56,5 +57,44 @@ function checkFlow() {
         d3.selectAll(".flow-gates").style("opacity", 1);
     } else {
         d3.selectAll(".flow-gates").style("opacity", 0);
+    }
+}
+
+/**
+ * Triggered when the show all trajectories button is selected in the 2D options.
+ * The voronoi densities and the controlled areas must be removed when plotting the trajectories.
+ * The moving pedestrians must also be removed.
+ */
+function checkTrajectories() {
+    if (d3.select("#all_trajectories_checkbox").property("checked")) {
+
+        // remove densites
+        d3.select("#voronoi_checkbox").property("checked", false);
+        clearCanvas(d3.select(".voronoi_canvas"));
+
+        // removes control areas
+        d3.select("#control_checkbox").property("checked", false);
+        checkControl();
+
+        // pausing time
+        // Copied from viz.js lines 283-285. Wrap all of this into a functio ideally.
+        clearInterval(pedMover);
+        document.getElementById("playPauseButton").innerHTML = "<i class=\"fas fa-play fa-lg\"></i>";
+        paused = true;
+        // removes dots
+        d3.select(".pedes_layer").selectAll(".ped-individual").remove();
+
+        // show trajectories
+        plotAllTrajectories(d3.select(".trajectories_layer"));
+
+    } else {
+        // remove trajectories
+        d3.select(".trajectories_layer").selectAll(".trajectories").remove();
+
+        // add pedestrians again
+        runViz();
+        document.getElementById("playPauseButton").innerHTML = "<i class=\"fas fa-pause fa-lg\"></i>";
+        paused = false;
+
     }
 }
