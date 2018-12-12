@@ -353,10 +353,12 @@ h1, h2 {
 .zone-text-overlay {
     vector-effect: non-scaling-stroke;
     font-size: 0.7pt;
+    cursor: pointer;
 }
 #tooltip-text {
     vector-effect: non-scaling-stroke;
     font-size: 0.5pt;
+    cursor: pointer;
 }
 
 #middle-text {

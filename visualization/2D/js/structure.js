@@ -10,25 +10,26 @@ class Zone{
         this.g = false;
     }
     drawOn(canvas) {
-        this.g = canvas.append("g");
-        this.g.append("rect")
-            .attr("class", "the-zones")
-            .attr("id", this.name)
-            .attr("x", this.x)
-            .attr("y", this.y)
-            .attr("width", this.width)
-            .attr("height", this.height)
+        this.g = canvas.append("g")
             .on("mouseover", d => {
-                console.log(this.name);
                 this.g.select("#tooltip-text")
-                    .text(`Zone ${this.name}`);
+                    .text(`Zone ${this.name}`)
+                    .style("opacity", 1);
+                this.g.selectAll(".zone-text-overlay")
+                    .style("opacity", 0.2);
             })
             .on("mouseout", d => {
                 this.g.select("#tooltip-text")
                     .text("");
+                this.g.selectAll(".zone-text-overlay")
+                    .style("opacity", 1);
             })
             .on("click", () => {
                 // activate Destination
+                this.g.selectAll(".zone-text-overlay")
+                    .style("opacity", 1);
+                this.g.select("#tooltip-text")
+                    .style("opacity", 0.2);
                 if (d3.event.shiftKey) {
                     this.setDestination();
                 }
@@ -36,6 +37,13 @@ class Zone{
                 else {
                     this.setOrigin();
                 }});
+        this.g.append("rect")
+            .attr("class", "the-zones")
+            .attr("id", this.name)
+            .attr("x", this.x)
+            .attr("y", this.y)
+            .attr("width", this.width)
+            .attr("height", this.height);
 
         this.g.append("text")
             .attr("class", "zone-text-overlay")
@@ -53,8 +61,7 @@ class Zone{
             .attr("y", this.y+this.height*2/3)
             .attr("dominant-baseline","middle")
             .attr("text-anchor","middle")
-            .attr("fill", "blue")
-            .style("font-size", "1pt");
+            .attr("fill", "blue");
 
         // for tooltip
         this.g.append("text")
