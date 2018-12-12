@@ -403,6 +403,12 @@ h1, h2 {
 .zone-text-overlay {
     vector-effect: non-scaling-stroke;
     font-size: 0.7pt;
+    pointer-events: none;
+}
+#tooltip-text {
+    vector-effect: non-scaling-stroke;
+    font-size: 0.5pt;
+    pointer-events: none;
 }
 
 #middle-text {
@@ -421,7 +427,8 @@ h1, h2 {
 .the-walls {
     vector-effect: non-scaling-stroke;
     stroke: black;
-    stroke-width: 1;
+    stroke-width: 3;
+    stroke-linecap: round;
     fill: none;
 }
 
@@ -430,19 +437,27 @@ h1, h2 {
     stroke: black;
     stroke-opacity: 0.1;
     fill: none;
+    pointer-events: none;
 }
 
 .the-zones {
     vector-effect: non-scaling-stroke;
-    stroke: gray;
-    stroke-width: 2;
+    stroke-dasharray: 5;
+    stroke: black;
+    stroke-width: 1;
     fill: white;
 }
 
 .controlled-areas {
     vector-effect: non-scaling-stroke;
     stroke: red;
-    stroke-width: 1;
+    stroke-width: 2;
+    fill: none;
+}
+#voronoi-area {
+    vector-effect: non-scaling-stroke;
+    stroke: red;
+    stroke-width: 2;
     fill: none;
 }
 
@@ -456,7 +471,8 @@ h1, h2 {
 .ped-individual {
     vector-effect: non-scaling-stroke;
     stroke: black;
-    stroke-width: 0.2;
+    stroke-width: 1;
+    r: 0.2;
 }
 
 .ped-trajectory {
@@ -469,13 +485,6 @@ h1, h2 {
     vector-effect: non-scaling-stroke;
     stroke: gray;
     stroke-width: 1;
-    fill: none;
-}
-
-#voronoi-area {
-    vector-effect: non-scaling-stroke;
-    stroke: black;
-    stroke-width: 2;
     fill: none;
 }
 

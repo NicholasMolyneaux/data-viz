@@ -13,6 +13,7 @@ async function plotData(data, svg) {
         svg.append("path")
             .datum(newData)
             .attr("class", "trajectories")
+            .attr("id", traj.id)
             .attr("d", line);
     }
 
@@ -20,7 +21,6 @@ async function plotData(data, svg) {
         .x(function(d, i) { return d.x; })
         .y(function(d, i) { return d.y; })
         .curve(d3.curveMonotoneX);
-
 
 
     for (lineData of data) {

@@ -118,12 +118,13 @@ function prepViz(change3DStyle=false) {
 
         let structure_layer = svg.append("g")
             .attr("class", "structure_layer");
-        let voronoi_poly_layer = svg.append("g")
-            .attr("class", "voronoi_poly_layer");
+
         let voronoi_clip_layer = svg.append("g")
             .attr("class", "voronoi_clip_layer");
         let voronoi_canvas = svg.append("g")
             .attr("class", "voronoi_canvas");
+        let voronoi_poly_layer = svg.append("g")
+            .attr("class", "voronoi_poly_layer");
         let pedes_layer = svg.append("g")
             .attr("class", "pedes_layer");
 
