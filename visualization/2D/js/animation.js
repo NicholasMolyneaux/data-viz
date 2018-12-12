@@ -1,7 +1,8 @@
 function updatePosition2D(time_series_data, ped_speed, svg) {
     // Update circles (pedestrians)
     let pedes = svg.selectAll(".ped-individual").data(time_series_data, d => d.id);
-    pedes.enter().append("circle")
+    let circles = pedes.enter().append("circle");
+    circles
         .attr("class", "ped-individual")
         .attr("id", d => d.id)
         .merge(pedes)
@@ -14,7 +15,22 @@ function updatePosition2D(time_series_data, ped_speed, svg) {
                 return 0.15;
             }
         })
-        .attr("fill", d => d3.interpolateRdYlGn((ped_speed.filter(p => p.id === d.id)[0].speed)/2));
+        .attr("fill", d => d3.interpolateRdYlGn((ped_speed.filter(p => p.id === d.id)[0].speed)/2))
+        .on("click", d => {
+            const trajectory_canvas = d3.select(".trajectories_layer");
+            if (trajectory_canvas.select(`#${d.id}`).empty()) {
+                const traj_data = trajectoryDataByID.filter(td => td.id === d.id);
+                plotData(traj_data, trajectory_canvas);
+            } else {
+                trajectory_canvas.select(`#${d.id}`).remove();
+            }
+        })
+        .on("mouseover", function () {
+            d3.select(this).style("r", 0.3);
+        })
+        .on("mouseout", function () {
+            d3.select(this).style("r", 0.2);
+        });
     pedes.exit().remove();
 
 }
