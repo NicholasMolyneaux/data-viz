@@ -540,19 +540,9 @@ function secondsToHmss(d) {
 
 function presentation() {
 
-    /** TIMING PLAN
-     *
-     * title: 0 to XXX
-     *
-     * text 0: 0 to 4000
-     *
-     *
-     *
-     *
-     */
-
     let idTO;
 
+    // Transition time
     const animTime = 1000;
 
     // Web page title The Walking Data
@@ -594,140 +584,187 @@ function presentation() {
     button.style.display = "none";
     document.getElementById("mainViz").appendChild(button);
 
-
+    // Shows the title
     let time = 0;
-    fadeInFadeOut("titleForPres", 20000, animTime);
-
+    fadeIn("titleForPres", animTime);
     time += 0 + 2*animTime;
 
-    idTO = setTimeout(function() {fadeInFadeOut("textLine1", 20000, animTime);}, time);
-    time += 0 + 2*animTime;
-    timeOutPres.push(idTO);
-
-    idTO = setTimeout(function() {fadeInFadeOut("textLine2", 20000, animTime);}, time);
+    // Shows the first line of text
+    idTO = setTimeout(function() {fadeInFadeOut("textLine1", 5000, animTime);}, time);
     time += 0 + 2*animTime;
     timeOutPres.push(idTO);
 
+    // Shows the second line of text
+    idTO = setTimeout(function() {fadeInFadeOut("textLine2", 3000, animTime);}, time);
+    time += 3000 + 2*animTime;
+    timeOutPres.push(idTO);
 
-    /*setTimeout(function() {
+    // After the first two lines have disappeard, show the new first line again
+    idTO = setTimeout(function() {
+            firstTextLine.innerHTML = "<h2 id='textLine1' style='display: none'>This is the western underpass of the station,</h2>";
+            fadeIn("textLine1", animTime);}
+        , time);
+    time += 0 + 1*animTime;
+    timeOutPres.push(idTO);
 
-        div.innerHTML = "<span id='textPres' style='display: none'>Have fun =)</span>";
-
-        fadeInFadeOut("textPres", 2000);
-
-    }, time);
-    time += 2000 + 2*animTime;*/
-
+    // Shows the infrastructure. The texts must be re-built over the animation, hence first we delete the old ones
+    // before creating them again.
     idTO = setTimeout(function() {
 
+        // Deletes all the first presentation objects
         $(".presentation").remove();
+        $(".presentation-text").remove();
+        $(".presentation-title").remove();
+        $(".presentation-padding").remove();
         $("#skipPresentation").remove();
 
-        firstTextLine = document.createElement("div");
+        // Shows the title again. No transition here as we do not want the reader to notice it changes.
+        let titleDiv2Phase = document.createElement("div");
+        titleDiv2Phase.innerHTML = "<h1 id='titleForPres' style='display: none'>The walking data</h1>";
+        titleDiv2Phase.classList.add("presentationOn3D");
+        titleDiv2Phase.classList.add("presentationOn3D-title");
+
+        // Same as title, just replaces the first line of text without the reader noticing
+        let firstTextLine = document.createElement("div");
+        firstTextLine.innerHTML = "<h2 id='textLine1' style='display: none'>This is the western underpass of the station,</h2>";
         firstTextLine.classList.add("presentationOn3D");
-        firstTextLine.id = "presOn3D";
-        firstTextLine.style.height = getVizHeight() + "px";
+        firstTextLine.classList.add("presentationOn3D-text1");
 
-        firstTextLine.innerHTML = "<span id='textPres' style='display: none'>Our journey starts in Lausanne Railway Station.</span>";
-
-        viz3D = true;
-        prepViz();
-
-        controls.autoRotate = true;
-        controls.autoRotateSpeed = 3;
-
+        document.getElementById("mainViz").appendChild(titleDiv2Phase);
         document.getElementById("mainViz").appendChild(firstTextLine);
         document.getElementById("mainViz").appendChild(button);
 
-        fadeInFadeOut("textPres");
+        // Sets the viz to 3D and adds the infrastucture in pretty mode.
+        viz3D = true;
+        prepViz();
+
+        // do not rotate !
+        controls.autoRotate = false;
+
+        // Actually shows the title and first line of text.
+        fadeIn("titleForPres", 0);
+        fadeIn("textLine1", 0);
+    }, time);
+    time += 0 + 2*animTime;
+    timeOutPres.push(idTO);
+
+
+    // Shows the second line of text
+    idTO = setTimeout(function() {
+            // Main text container 2
+            let secondTextLine = document.createElement("div");
+            secondTextLine.innerHTML = "<h2 id='textLine2' style='display: none'>which is used by thousands of humans every morning.</h2>";
+            secondTextLine.classList.add("presentationOn3D");
+            secondTextLine.classList.add("presentationOn3D-text2");
+
+            document.getElementById("mainViz").appendChild(secondTextLine);
+            fadeIn("textLine2", 1000);
+        }
+        , time);
+    time += 0 + 2*animTime;
+    timeOutPres.push(idTO);
+
+    // Shows the third line of text
+    idTO = setTimeout(function() {
+            // Main text container 2
+            let thirdTextLine = document.createElement("div");
+            thirdTextLine.innerHTML = "<h2 id='textLine3' style='display: none'>Nevertheless, before these commuters have woken up,</h2>";
+            thirdTextLine.classList.add("presentationOn3D");
+            thirdTextLine.classList.add("presentationOn3D-text3");
+
+            document.getElementById("mainViz").appendChild(thirdTextLine);
+            fadeIn("textLine3", 1000);
+            }
+        , time);
+    time += 0 + 2*animTime;
+    timeOutPres.push(idTO);
+
+    /*idTO = setTimeout(function() {
 
     }, time);
-    time += 2000 + 2*animTime;
+    time += animTime;
+    timeOutPres.push(idTO);*/
+
+    // transition to TWD theme by first adding a black background.
+    idTO = setTimeout(function() {
+
+        // div for the black transition covers entire mainViz object
+        let transition = document.createElement("div");
+        transition.classList.add("presentationOn3D");
+        transition.id = "transition2D3D";
+        transition.style.backgroundColor = "black";
+        transition.style.display = "none";
+        transition.style.height ="100%";
+
+        document.getElementById("mainViz").insertBefore(transition, document.getElementsByClassName("presentationOn3D-title")[0]);
+
+        // make the transition happen
+        fadeIn("transition2D3D", 1500);
+        fadeOut("titleForPres", 250);
+        fadeOut("textLine1",250);
+        fadeOut("textLine2",250);
+        fadeOut("textLine3",250);
+
+
+    }, time);
+    time += 250;
     timeOutPres.push(idTO);
 
     idTO = setTimeout(function() {
 
-        firstTextLine.innerHTML = "<span id='textPres' style='display: none'>However, Lausanne doesn't really look like this in the morning.</span>";
+        document.getElementById("titleForPres").style.color = "white";
+    document.getElementById("textLine1").style.color = "white";
+    document.getElementById("textLine2").style.color = "white";
+    document.getElementById("textLine3").style.color = "white";
+    fadeIn("titleForPres",250);
+    fadeIn("textLine1",250);
+    fadeIn("textLine2",250);
+    fadeIn("textLine3",250);
 
-        fadeInFadeOut("textPres");
+
 
     }, time);
-    time += 2000 + 2*animTime;
+    time += 2000;
     timeOutPres.push(idTO);
 
     idTO = setTimeout(function() {
 
-        document.getElementById('presOn3D').style.backgroundColor = "black";
-        document.getElementById('presOn3D').style.display = "none";
+        // Text container 4
+        let fourthTextLine = document.createElement("div");
+        fourthTextLine .innerHTML = "<h2 id='textLine4' style='display: none'>the environment looks more like this...</h2>";
+        fourthTextLine .classList.add("presentationOn3D");
+        fourthTextLine .classList.add("presentationOn3D-text4");
+        fourthTextLine.style.color = "white";
 
-        fadeIn("presOn3D");
+        document.getElementById("mainViz").appendChild(fourthTextLine );
 
-    }, time);
-    time += 1000;
-    timeOutPres.push(idTO);
-
-    idTO = setTimeout(function() {
+        fadeIn("textLine4",1000);
+        fadeOut("transition2D3D");
 
         document.getElementById("changeStyle").checked = true;
         changeStyle3D();
-        controls.autoRotate = true;
-        controls.autoRotateSpeed = 6;
 
     }, time);
-    time += 100;
+    time += 1000+animTime;
     timeOutPres.push(idTO);
 
+    // Actually sets the TWD theme.
     idTO = setTimeout(function() {
-
-        fadeOut("presOn3D");
-
-
+        fadeOut("titleForPres");
+        fadeOut("textLine1");
+        fadeOut("textLine2");
+        fadeOut("textLine3");
+        fadeOut("textLine4");
     }, time);
-    time += 1000;
+    time += 2000;
     timeOutPres.push(idTO);
 
+    // Starts the animation to make the zombies appear.
     idTO = setTimeout(function() {
-
-        document.getElementById('presOn3D').style.backgroundColor = "";
-        document.getElementById('presOn3D').style.display = "";
-        document.getElementById('presOn3D').style.color = "white";
-
-        fadeIn("presOn3D");
-
-
-    }, time);
-    timeOutPres.push(idTO);
-
-    idTO = setTimeout(function() {
-
-        firstTextLine.innerHTML = "<span id='textPres' style='display: none'>Welcome to Lausanne Railway Station at 7:30.</span>";
-
-        document.getElementById("timer").innerHTML = secondsToHms(selectedTraj.tmin);
-
-        document.getElementById("timer").style.display = "";
-
-        fadeInFadeOut("textPres");
-
-    }, time);
-    time += 2000 + 2*animTime;
-    timeOutPres.push(idTO);
-
-    idTO = setTimeout(function() {
-
-        firstTextLine.innerHTML = "<span id='textPres' style='display: none'>At this time of the day, without their first coffee, morning commuters tend to look a bit tired.</span>";
-
-        fadeInFadeOut("textPres");
-
-    }, time);
-    time += 2000 + 2*animTime;
-    timeOutPres.push(idTO);
-
-    idTO = setTimeout(function() {
-
-        firstTextLine.innerHTML = "<span id='textPres' style='display: none'>Really tired...</span>";
+        // remove all div used for showing the texts
+        $(".presentationOn3D").remove();
 
         runViz();
-
         fadeInFadeOut("textPres");
 
         controls.autoRotate = false;
@@ -753,17 +790,9 @@ function presentation() {
     idTO = setTimeout(function(){
         endOfPresentation();
 
-        /*document.getElementById("timer").style.display = "";
-        document.getElementById("StatsCont").style.display = "";
-        document.getElementById("dataCont").style.display = "";
-        document.getElementById("footer").style.display = "";
 
-
-
-        resizeViz();*/
     }, time);
     timeOutPres.push(idTO);
-
 }
 
 function skipPresentation() {
@@ -800,6 +829,8 @@ function endOfPresentation() {
     document.getElementById("buttons").style.display = "";
     document.getElementById("slider").style.display = "";
     document.getElementById("StatsCont").style.display = "";
+    prepareChord(trajSummary);
+
 }
 
 function fadeInFadeOut(id, time=1000, flashTime=1000) {

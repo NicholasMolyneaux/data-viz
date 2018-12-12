@@ -65,6 +65,10 @@ body {
     src: url("../assets/font/DeadKansas.ttf") format('truetype');
 }
 
+.mainViz{
+    position: relative;
+}
+
 .mainTitle {
     margin: 0;
     padding: 50px;
@@ -92,11 +96,11 @@ h1, h2 {
 }
 
 .presentation-text {
-    height: 10%;
+    height: 15%;
 }
 
 .presentation-padding {
-    height: 60%;
+    height: 50%;
 }
 
 
@@ -109,6 +113,37 @@ h1, h2 {
     font-weight: bold;
     font-size: 20px;
 }
+
+.presentationOn3D-title {
+    position: absolute;
+    top: 0%;
+    height: 20%;
+}
+
+.presentationOn3D-text1 {
+    position: absolute;
+    top: 20%;
+    height: 15%;
+}
+
+.presentationOn3D-text2 {
+    position: absolute;
+    top: 35%;
+    height: 15%;
+}
+
+.presentationOn3D-text3 {
+    position: absolute;
+    top: 50%;
+    height: 15%;
+}
+
+.presentationOn3D-text4 {
+    position: absolute;
+    top: 65%;
+    height: 15%;
+}
+
 
 #skipPresentation {
     position: absolute;
@@ -137,6 +172,7 @@ h1, h2 {
 .allExceptFooter {
     padding-bottom: 60px; /* this needs to be bigger than footer height*/
     #min-height: 100vh;
+    position: relative;
 }
 
 .footer {
