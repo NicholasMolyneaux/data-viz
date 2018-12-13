@@ -765,8 +765,6 @@ function presentation() {
         $(".presentationOn3D").remove();
 
         runViz();
-        fadeInFadeOut("textPres");
-
         controls.autoRotate = false;
 
         // Weird movement!
@@ -777,20 +775,9 @@ function presentation() {
     time += 10000 + 2*animTime;
     timeOutPres.push(idTO);
 
-    idTO = setTimeout(function() {
-
-        firstTextLine.innerHTML = "<span id='textPres' style='display: none'>You can now explore freely this 3D worls or the 2D visualization as well.</span>";
-
-        fadeInFadeOut("textPres");
-
-    }, time);
-    time += 2000 + 2*animTime;
-    timeOutPres.push(idTO);
 
     idTO = setTimeout(function(){
         endOfPresentation();
-
-
     }, time);
     timeOutPres.push(idTO);
 }
