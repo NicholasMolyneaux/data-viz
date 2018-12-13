@@ -142,6 +142,9 @@ function setVoronoiArea() {
         })
 
     } else if (stateControlAreaButton == 'drawing') {
+        d3.select("#control_checkbox").property("checked", false);
+        d3.select("#control_checkbox").property("disabled", true);
+        d3.selectAll(".controlled-areas").remove();
 
         stateControlAreaButton = 'drawn';
         document.getElementById("control_area").innerHTML = "Delete Control Area";
@@ -157,7 +160,7 @@ function setVoronoiArea() {
         reDrawHistDensity();
 
     } else if (stateControlAreaButton == 'drawn') {
-
+        d3.select("#control_checkbox").property("disabled", false);
         stateControlAreaButton = 'idle';
         document.getElementById("control_area").innerHTML = "Draw Control Area";
 

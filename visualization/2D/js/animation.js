@@ -53,7 +53,7 @@ function runAnimation2D() {
         }
         let current_time = trajDataFiltered[currentTimeShownIdx].time;
         let current_filtered_data_by_od = filterByOD(trajDataFiltered[currentTimeShownIdx].data, trajSummary);
-        checkVoronoi(current_filtered_data_by_od.filter(d => d.selected), voronoi_poly_layer, voronoi_canvas);
+        checkVoronoi(current_filtered_data_by_od, voronoi_poly_layer, voronoi_canvas);
         let ped_speed = current_filtered_data_by_od.map( d => {
             let v = 0;
             if (d3.select("#ped_speed").property("checked")) {
