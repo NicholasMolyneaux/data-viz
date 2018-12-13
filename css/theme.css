@@ -739,3 +739,7 @@ path.chord {
 #chord-group-name {
     height: 100%;
 }
+
+.chordlabels {
+    font-size: 18px;
+}
