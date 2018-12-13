@@ -38,16 +38,29 @@ function showStatistics() {
             addHistograms();
         });
 
-
-
         document.getElementById("showStats").innerHTML = "Hide Statistics";
 
     }
 
 }
 
+function reDrawHist() {
+    reDrawHistTT();
+    reDrawHistDensity();
+}
+
 function reDrawHistTT() {
     prepareHistTT();
     graphOptions['tt']['data'] = histTT;
     hist('tt', 'start');
+
+    prepareHistDensity();
+    graphOptions['density']['data'] = histDensity;
+    hist('density', 'start');
+}
+
+function reDrawHistDensity() {
+    prepareHistDensity();
+    graphOptions['density']['data'] = histDensity;
+    hist('density', 'start');
 }

@@ -213,13 +213,6 @@ function finishedLoading() {
     document.getElementById("timer").style.display = "";
     document.getElementById("buttons").style.display = "";
 
-    loadStats();
-
-}
-
-function loadStats() {
-    prepareChord();
-    addHistograms();
 }
 
 function createSlider() {
@@ -780,9 +773,7 @@ function endOfPresentation() {
 
     document.getElementById("buttons").style.display = "";
     document.getElementById("slider").style.display = "";
-    //document.getElementById("StatsCont").style.display = "";
     document.getElementById("timer").style.display = "";
-    loadStats();
 }
 
 function fadeInFadeOut(id, time=1000, flashTime=1000) {

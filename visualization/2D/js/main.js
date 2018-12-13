@@ -28,13 +28,7 @@ function publish(json) {
 }
 
 //checkboxes
-function toggleZone(checkbox, target) {
-    if (d3.select(checkbox).property("checked")) {
-        d3.selectAll(target).style("opacity", 1);
-    } else {
-        d3.selectAll(target).style("opacity", 0);
-    }
-}
+
 function checkZone() {
     if (d3.select("#zone_checkbox").property("checked")) {
         drawZones(zonesData, d3.select(".structure_layer"));

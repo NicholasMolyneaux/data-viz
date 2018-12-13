@@ -152,6 +152,8 @@ function prepViz(change3DStyle=false) {
 
         // Read json data and draw frameworks (walls and zones)
         drawStructures(structure_layer);
+
+        prepareDensityData();
     }
 
     if (!change3DStyle) {
@@ -232,7 +234,7 @@ function addHistograms() {
         $('#densityContainer').append(rendered);
     }).then(() => {
 
-        graphOptions['density'] = {'data': histTT, 'xAxis': 'Speed [m/s]'};
+        graphOptions['density'] = {'data': histDensity, 'xAxis': 'Ped/m^2 [m^-2]'};
 
         drawGraph('density');
     });
@@ -345,6 +347,12 @@ function changeTimes(times) {
 
     currentTimeShownIdx -= nbrIdx;
 
+    let middleChanged = false;
+
+    if (tmin == minTime && tmax == maxTime) {
+        middleChanged = true;
+    }
+
     minTime = tmin;
     maxTime = tmax;
 
@@ -357,8 +365,8 @@ function changeTimes(times) {
         do1Step();
     }
 
-    if (statsShown) {
-        reDrawHistTT();
+    if (statsShown && !middleChanged) {
+        reDrawHist();
     }
 }
 

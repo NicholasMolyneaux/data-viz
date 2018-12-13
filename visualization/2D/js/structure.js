@@ -158,3 +158,15 @@ function drawControlAreas(areas, layer) {
 
     } );
 }
+
+function drawHiddenControlAreas(areas, layer) {
+    // Draw controlled area
+    areas.map( (c) => {
+        layer.append("polygon")
+            .attr("class", "controlled-areas-hidden")
+            .attr("style", "display: none;")
+            .attr("id", c["name"])
+            .attr("points", `${c.x1},${c.y1} ${c.x2},${c.y2} ${c.x3},${c.y3} ${c.x4},${c.y4}`);
+
+    } );
+}

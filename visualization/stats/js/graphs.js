@@ -35,6 +35,10 @@ function hist(id, state) {
     margin['bottom'] = 20+2*graphOptions[id]['fontSize'];
     margin['left'] = 30+2*graphOptions[id]['fontSize'];
 
+    if (id === 'density') {
+        margin.left += 25;
+    }
+
     const width = 960,
         height = 600;
 

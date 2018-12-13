@@ -12,6 +12,7 @@ let chordKeysOriginalData = [];
 let trajectoryDataByID = [];
 
 let histTT = null;
+let densityData = null;
 let histDensity = null;
 
 
@@ -147,9 +148,6 @@ function prepareHistTT() {
     const restrOrigins = od_selection.Origins.size > 0;
     const restrDest = od_selection.Destinations.size > 0;
 
-
-    console.log(od_selection);
-
     trajSummary.forEach(ped => {
 
         add = true;
@@ -173,4 +171,61 @@ function prepareHistTT() {
         }
 
     });
+}
+
+function prepareDensityData() {
+
+    const voronoi_poly_layer = d3.select(".voronoi_poly_layer");
+
+    densityData = [];
+
+    if (stateControlAreaButton != 'drawn') {
+        drawHiddenControlAreas(areasData, voronoi_poly_layer);
+    }
+
+    console.log(voronoi_poly_layer.selectAll("*"));
+
+    trajData.forEach(data => {
+
+        let timedData = new Object();
+        timedData.time = data.time;
+        let tmp  = [];
+
+
+        voronoi_poly_layer.selectAll("*").each(function () {
+            tmp.push(computeDensities(data.data, d3.select(this)))
+        });
+
+        timedData.area = tmp.flat();
+
+        densityData.push(timedData);
+    });
+
+    if (stateControlAreaButton != 'drawn') {
+        d3.selectAll(".controlled-areas-hidden").remove();
+    }
+
+    prepareHistDensity();
+}
+
+function prepareHistDensity() {
+
+    let tmp = densityData.filter(d => (d.time <= maxTime && d.time >= minTime)).map(a => a.area);
+
+    let areas = tmp.flat();
+
+    histDensity = areas.map(val => 1.0/val);
+}
+
+function computeDensities(data, polygon) {
+    let rect = rectangleContainPolygon(polygon);
+    let v = d3.voronoi()
+        .extent(rect);
+    let clip = polygonToArray(polygon);
+    let data_in_voronoi_area = filterPointInPolygon(data, polygon);
+    let voronoi_polygons = v.polygons(data_in_voronoi_area.map(d => [d.x, d.y]));
+    if (polygon.attr("id") === "voronoi-area") {
+        voronoi_polygons = voronoi_polygons.map(p =>d3.polygonClip(clip, p));
+    }
+    return voronoi_polygons.map(d => d3.polygonArea(d));
 }
