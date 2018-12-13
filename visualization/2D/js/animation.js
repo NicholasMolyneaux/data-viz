@@ -10,6 +10,7 @@ function updatePosition2D(time_series_data, ped_speed, svg) {
         .merge(pedes)
         .attr("cx", d => d.x)
         .attr("cy", d => d.y)
+        .attr("r", 0.2)
         .attr("opacity", d => {
             if (d.selected) {
                 return 1;

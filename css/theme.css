@@ -466,7 +466,6 @@ h1, h2 {
     vector-effect: non-scaling-stroke;
     stroke: black;
     stroke-width: 1;
-    r: 0.2;
 }
 
 .ped-trajectory {
