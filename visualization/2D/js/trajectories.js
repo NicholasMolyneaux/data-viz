@@ -13,7 +13,7 @@ async function plotData(data, svg) {
         svg.append("path")
             .datum(newData)
             .attr("class", "trajectories")
-            .attr("id", traj.id)
+            .attr("id", `traj_${traj.id}`)
             .attr("d", line);
     }
 
