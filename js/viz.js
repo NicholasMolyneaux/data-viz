@@ -76,16 +76,34 @@ function prepViz(change3DStyle=false) {
         // stats = new Stats();
         // container.appendChild( stats.dom );
 
-        // Mouse stuff
-        document.addEventListener( 'mousemove', onDocumentMouseMove, false );
-        document.addEventListener( 'mousedown', onDocumentMouseDown, false );
-
-        // Key stuff
-        document.addEventListener( 'keypress', onKeyPress, false);
-
         resizeViz();
 
         renderer.render( scene, camera );
+
+        // Mouse stuff
+
+        const canvas = document.getElementById("canvas");
+
+        canvas.addEventListener("mouseover", () => {
+            document.addEventListener('keypress', onKeyPress, false);
+            document.addEventListener( 'mousemove', onDocumentMouseMove, false);
+            document.addEventListener( 'mousedown', onDocumentMouseDown, false);
+
+        });
+
+
+        canvas.addEventListener("mouseout",function() {
+            document.removeEventListener("keypress", onKeyPress, false);
+            document.removeEventListener( 'mousemove', onDocumentMouseMove, false);
+            document.removeEventListener( 'mousedown', onDocumentMouseDown, false);
+        });
+
+
+        //document.getElementById("canvas").addEventListener( 'mousemove', onDocumentMouseMove, false );
+        //document.getElementById("canvas").addEventListener( 'mousedown', onDocumentMouseDown, false );
+
+        // Key stuff
+        document.getElementById("canvas")
 
         animate();
 
@@ -110,7 +128,7 @@ function prepViz(change3DStyle=false) {
 
         document.getElementById("mainViz").style.height = 0 + "px";
 
-        vizHeight = $('.footer').offset().top - $('#viz').offset().top;
+        vizHeight = getVizHeight();
 
         document.getElementById("mainViz").style.height = vizHeight + "px";
 
@@ -134,6 +152,8 @@ function prepViz(change3DStyle=false) {
 
         // Read json data and draw frameworks (walls and zones)
         drawStructures(structure_layer);
+
+        prepareDensityData();
     }
 
     if (!change3DStyle) {
@@ -169,7 +189,7 @@ function updateTimer(time) {
 
 }
 
-function prepareChord(data) {
+function prepareChord() {
 
     // canvas size and chord diagram radii
     const size = 900;
@@ -186,10 +206,9 @@ function prepareChord(data) {
 
     //dynamicChord(data, {});
     const getVisibleName = getVisibleNameMapping({});
-    console.log(getVisibleName);
-    chordKeysOriginalData = Array.from(new Set(data.map(v => getVisibleName(v.o)).concat(data.map(v => getVisibleName(v.d)))));
+    chordKeysOriginalData = Array.from(new Set(trajSummary.map(v => getVisibleName(v.o)).concat(trajSummary.map(v => getVisibleName(v.d)))));
     currentLabels = chordKeysOriginalData.slice();
-    staticChord(data, getVisibleName, chordKeysOriginalData);
+    staticChord(trajSummary, getVisibleName, chordKeysOriginalData);
 }
 
 
@@ -197,13 +216,13 @@ function prepareChord(data) {
 // Options specific to a graph. key = graphID (Data + other options)
 let graphOptions = new Object();
 
-function addHistograms(hist) {
+function addHistograms() {
 
     $.get('visualization/stats/templates/graph.mst', function(graph) {
         var rendered = Mustache.render(graph, {id: 'tt'});
         $('#TTContainer').append(rendered);
     }).then(() => {
-        graphOptions['tt'] = {'data': hist['tt'], 'xAxis': 'Travel Time [s]'};
+        graphOptions['tt'] = {'data': histTT, 'xAxis': 'Travel Time [s]'};
 
         drawGraph('tt');
     });
@@ -211,14 +230,13 @@ function addHistograms(hist) {
 
 
     $.get('visualization/stats/templates/graph.mst', function(graph) {
-        var rendered = Mustache.render(graph, {id: 'speed'});
-        $('#speedContainer').append(rendered);
+        var rendered = Mustache.render(graph, {id: 'density'});
+        $('#densityContainer').append(rendered);
     }).then(() => {
 
-        graphOptions['speed'] = {'data': hist['density'], 'xAxis': 'Speed [m/s]'};
+        graphOptions['density'] = {'data': histDensity, 'xAxis': 'Ped/m^2 [m^-2]'};
 
-        drawGraph('speed');
-
+        drawGraph('density');
     });
 
 }
@@ -329,6 +347,12 @@ function changeTimes(times) {
 
     currentTimeShownIdx -= nbrIdx;
 
+    let middleChanged = false;
+
+    if (tmin == minTime && tmax == maxTime) {
+        middleChanged = true;
+    }
+
     minTime = tmin;
     maxTime = tmax;
 
@@ -339,6 +363,10 @@ function changeTimes(times) {
         runViz();
     } else {
         do1Step();
+    }
+
+    if (statsShown && !middleChanged) {
+        reDrawHist();
     }
 }
 
@@ -406,6 +434,13 @@ $( "#threeDButton" ).click(function() {
         clearInterval(pedMover);
 
         $("#svgCont").remove();
+
+        if (statsShown) {
+            viz.classList.add("col");
+            viz.classList.remove("col-xl-8");
+
+            $('#statDiv').remove();
+        }
 
         if (SPEEDFACTOR <= 2) {
             currentTimeShownIdx *= (INTERP+1);

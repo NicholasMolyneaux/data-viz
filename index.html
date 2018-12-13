@@ -26,8 +26,6 @@
 
 <body>
 
-<div class="allExceptFooter" id="containerForEverything">
-
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <a id="logo-nav" class="navbar-brand" href="./index.html">TWD</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
@@ -46,13 +44,6 @@
             </ul>
         </div>
     </nav>
-
-    <!-- Main jumbotron for a primary marketing message or call to action -->
-    <!--<div class="jumbotron jumbotron-fluid mainTitle">
-        <div class="container">
-            <h1 id="title">The Walking Data</h1>
-        </div>
-    </div>-->
 
     <div id="VizCont">
         <div class="container-fluid" id="bigCont">
@@ -88,56 +79,6 @@
 
             </div>
 
-        </div>
-
-    </div>
-
-    <div id="StatsCont" style="display: none">
-    <!--<div id="StatsCont">-->
-        <hr>
-
-
-        <div class="container jumbotron">
-            <h1 id="statsTitle">Statistics</h1>
-        </div>
-
-        <h2>OD Chord Diagram</h2>
-
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-12" id="ODCont">
-
-                </div>
-                <div class="col-12 opt-graphs">
-                    <p>The options for the OD chord diagrams will be shown here.</p>
-                    <div class="col text-center">
-                        <button class="btn btn-primary" id="chord_add_group" onclick="groupingChordGroups()">Group ODs</button>
-                        <input type="text" class="form-control" id="chord-group-name" value="Default value" style="display: none;">
-                    </div>
-                    <div class="col text-center">
-                        <button class="btn btn-primary" id="chord_delete_groups" onclick="deleteCustomGroups()">Delete all groups</button>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-
-        <h2>Trajectories</h2>
-        <div class="container" id="trajectoriesOverlay">
-        </div>
-
-        <br>
-
-        <h2>Travel Time</h2>
-
-        <div class="container" id="TTContainer">
-        </div>
-
-        <br>
-
-        <h2>Speed</h2>
-
-        <div class="container" id="speedContainer">
         </div>
 
     </div>
@@ -188,13 +129,13 @@
             </div>
         </div>
     </div>
-</div>
 
+    <!--
 <footer id="footer" class="footer">
     <div class="container">
         <span class="text-muted">Footer!</span>
     </div>
-</footer>
+</footer>-->
 
 </body>
 
@@ -217,6 +158,17 @@
 <script src="js/libraries/nouislider.min.js"></script>
 <script src="js/index.js"></script>
 <script src="js/data.js"></script>
+
+<!-- Chord diagram -->
+<script src="visualization/stats/js/chord_functions.js"></script>
+<script src="visualization/stats/js/chord.js"></script>
+
+<!-- Histograms -->
+<script src="visualization/stats/js/graphs.js"></script>
+<script src="js/libraries/mustache.min.js"></script>
+<script src="js/libraries/html2canvas.min.js"></script>
+<script src="js/libraries/saveSvgAsPng.js"></script>
+<script src="js/libraries/FileSaver.min.js"></script>
 
 <!-- d3.js -->
 <script src="https://d3js.org/d3.v5.min.js"></script>
@@ -245,17 +197,8 @@
 <script src="visualization/2D/js/animation.js"></script>
 <script src="visualization/2D/js/trajectories.js"></script>
 
-
-<!-- Chord diagram -->
-<script src="visualization/stats/js/chord_functions.js"></script>
-<script src="visualization/stats/js/chord.js"></script>
-
-<!-- Histograms -->
-<script src="visualization/stats/js/graphs.js"></script>
-<script src="js/libraries/mustache.min.js"></script>
-<script src="js/libraries/html2canvas.min.js"></script>
-<script src="js/libraries/saveSvgAsPng.js"></script>
-<script src="js/libraries/FileSaver.min.js"></script>
+<!-- General functions for the stats -->
+<script src="visualization/stats/js/main.js"></script>
 
 <!-- Trajectories -->
 <script src="js/libraries/customStreaming.js"></script>

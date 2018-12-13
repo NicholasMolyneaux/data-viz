@@ -89,6 +89,7 @@ function followPedestrian() {
 
 function onKeyPress( event ) {
 
+    console.log(event.code);
     event.preventDefault();
 
     if (event.code === "Space" && !event.shiftKey) {
@@ -98,23 +99,21 @@ function onKeyPress( event ) {
 
         stopFollowingPed();
 
-    }
-
-    if (event.code === "Space" && event.shiftKey) {
+    } else if (event.code === "Space" && event.shiftKey) {
         // Reset camera and controls
         moveCameraToDesiredPosition(cameraPresPos, cameraPresControl);
 
         stopFollowingPed();
 
-    }
-
-    if (event.code === "KeyS") {
+    } else if (event.code === "KeyS") {
 
         cameraPresPos = [camera.position['x'], camera.position['y'], camera.position['z']];
         cameraPresControl = [controls.target.x, controls.target.y, controls.target.z];
 
         window.alert("Position saved!");
 
+    } else {
+        return false;
     }
 }
 

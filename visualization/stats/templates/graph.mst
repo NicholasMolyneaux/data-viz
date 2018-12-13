@@ -1,9 +1,9 @@
-<div class="row justify-content-center" id="stats_{{ id }}">
-    <div class="col-lg-9" id="{{ id }}">
+<div class="row justify-content-center statRow" id="stats_{{ id }}">
+    <div class="col-12 colStat" id="{{ id }}">
             <div class="graph col" id="viz_{{ id }}">
         </div>
     </div>
-    <div class="col-lg-2 col-10 opt-graphs">
+    <div class="col-lg-3 col-10 opt-graphs" style="display: none;">
         <!--<h4 class="subtitle">Options:</h4>
         <br>-->
         <label for="nbrBins_{{ id }}">Number of Bins:</label>
@@ -18,7 +18,7 @@
         <br>
         <div class="form-check">
             <input class="form-check-input" type="checkbox" id="nbrs_{{ id }}" onchange="changeShowNumbers(this, '{{ id }}')">
-            <label class="form-check-label" for="nbrs_{{ id }}">Numbers on bars</label>
+            <label class="form-check-label" for="nbrs_{{ id }}">Numbers</label>
 
         </div>
         <br>
@@ -32,19 +32,19 @@
         </select>
         <br>
         <div class="col text-center">
-            <button type="button" class="btn btn-primary btn-block" data-toggle="modal" data-target="#colorModal_{{ id }}">
+            <button type="button" class="btn btn-primary btn-block btn-opt" data-toggle="modal" data-target="#colorModal_{{ id }}">
                 Colors
             </button>
         </div>
         <br>
         <div class="col text-center">
-            <button type="button" class="btn btn-primary btn-block" data-toggle="modal" data-target="#AxesValue_{{ id }}">
-                Axes Values
+            <button type="button" class="btn btn-primary btn-block btn-opt" data-toggle="modal" data-target="#AxesValue_{{ id }}">
+                Axes
             </button>
         </div>
         <br><br>
         <div class="col-lg9 text-center">
-            <!--<input class="btn btn-primary btn-lg btn-block export" type="button" id="save_{{ id }}asPNG" value="Export" onclick="saveAsPNG('{{ id }}')">-->
+            <!--<input class="btn btn-primary btn-lg btn-block btn-opt export" type="button" id="save_{{ id }}asPNG" value="Export" onclick="saveAsPNG('{{ id }}')">-->
             <input class="btn btn-primary btn-lg btn-block export" type="button" data-toggle="modal" data-target="#exportModal_{{ id }}" value="Export">
         </div>
     </div>

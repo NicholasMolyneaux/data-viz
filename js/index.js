@@ -26,6 +26,8 @@ let maxTime;
 
 let timeOutPres = [];
 
+let statsShown = false;
+
 $(document).ready(function() {
 
     // Load the infrastructures
@@ -112,6 +114,8 @@ function addInfra() {
         }))
     });
 
+    // TODO: To fix later
+
     document.getElementById('descInfra').style.display = '';
     document.getElementById('textDescInfra').innerHTML = infrastructures[idx]['description'];
 
@@ -149,7 +153,6 @@ function loadTraj() {
             trajectories = data;
             //console.log(trajectories);
             // DEBUG
-            //trajectories = [{'name': 'traj1-'+selectedInfra.name, 'description': 'asdasdasd'}, {'name': 'traj2-'+selectedInfra.name, 'description': '123123'}, {'name': 'traj3-'+selectedInfra.name, 'description': 'Lorem Ipsum'}];
             addTraj();
             loading();
 
@@ -166,38 +169,15 @@ function loadTraj() {
                 trajDataLoaded = true;
                 interPolateData();
                 createSlider();
-
-                    // Downsamples the trajectory data
-                // TODO should be moved to somewhere cleaner
-                    fetch("http://transporsrv2.epfl.ch/api/trajectoriesbyid/" + selectedInfra.name + "/" + selectedTraj.name).then(response => {
-                        return response.json();
-                    }).then(data => {
-                        for (ped of data) {
-                            let downsampledPed = {};
-                            downsampledPed["id"] = ped.id;
-                            downsampledPed["time"] = [];
-                            downsampledPed["x"] = [];
-                            downsampledPed["y"] = [];
-                            for (idx = 0; idx < ped.time.length; idx = idx+10) {
-                                downsampledPed.time.push(ped.time[idx]);
-                                downsampledPed.x.push(ped.x[idx]);
-                                downsampledPed.y.push(ped.y[idx]);
-                            }
-                        trajectoryDataByID.push(downsampledPed);
-                        }
-                        document.getElementById("all_trajectories_checkbox").removeAttribute('disabled');
-                    }).catch(err => {
-                    console.log(err)
-                    });
-
+                downSampleTrajectories();
 
                 if (!presentationPlaying) {
-                        finishedLoading();
-                        runViz();
-                    } else {
-                        document.getElementById("skipPresentation").style.display = "";
-                    }
+                    finishedLoading();
+                    runViz();
+                } else {
+                    document.getElementById("skipPresentation").style.display = "";
                 }
+            }
             );
         })
         .fail( function(xhr, textStatus, errorThrown) {
@@ -232,8 +212,6 @@ function finishedLoading() {
     document.getElementById("timer").style.opacity = "1";
     document.getElementById("timer").style.display = "";
     document.getElementById("buttons").style.display = "";
-
-    prepareChord(trajSummary);
 
 }
 
@@ -270,9 +248,6 @@ function createSlider() {
 
     //let origins = slider.getElementsByClassName('noUi-origin');
     //origins[1].setAttribute('disabled', true);
-
-    minTime = selectedTraj.tmin;
-    maxTime = selectedTraj.tmax;
 }
 
 function addTraj() {
@@ -300,6 +275,8 @@ function addTraj() {
         }))
     });
 
+    minTime = selectedTraj.tmin;
+    maxTime = selectedTraj.tmax;
 
     document.getElementById('descTraj').style.display = '';
     document.getElementById('textDescTraj').innerHTML = trajectories[idx]['description'];
@@ -480,7 +457,7 @@ window.addEventListener('resize', function(){
 
 function getVizHeight() {
 
-    return $(window).height() - $('#VizCont').offset().top;
+    return window.innerHeight - 56;
 
 }
 
@@ -787,14 +764,12 @@ function skipPresentation() {
     // TODO: careful when the data is not entirely loaded!
 
     endOfPresentation();
-    document.getElementById("timer").style.display = "";
 
     for(let i=0; i<timeOutPres.length; i++) {
         clearTimeout(timeOutPres[i])
     }
 
     if (!viz3D) {
-        console.log("HERE!");
         viz3D = true;
         prepViz();
     } else {
@@ -803,7 +778,6 @@ function skipPresentation() {
 
     runViz();
     moveCameraToDesiredPosition(cameraInitPos);
-    prepareChord(trajSummary);
 }
 
 function endOfPresentation() {
@@ -815,9 +789,7 @@ function endOfPresentation() {
 
     document.getElementById("buttons").style.display = "";
     document.getElementById("slider").style.display = "";
-    document.getElementById("StatsCont").style.display = "";
-    prepareChord(trajSummary);
-
+    document.getElementById("timer").style.display = "";
 }
 
 function fadeInFadeOut(id, time=1000, flashTime=1000) {

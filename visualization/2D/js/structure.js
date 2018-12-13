@@ -35,10 +35,16 @@ class Zone{
                     .style("opacity", 0.2);
                 if (d3.event.shiftKey) {
                     this.setDestination();
+                    if (statsShown) {
+                        reDrawHistTT();
+                    }
                 }
                 // activate Origin
                 else {
                     this.setOrigin();
+                    if (statsShown) {
+                        reDrawHistTT();
+                    }
                 }});
         this.g.append("rect")
             .attr("class", "the-zones")
@@ -191,6 +197,18 @@ function drawControlAreas(areas, layer) {
     areas.map( (c) => {
         layer.append("polygon")
             .attr("class", "controlled-areas")
+            .attr("id", c["name"])
+            .attr("points", `${c.x1},${c.y1} ${c.x2},${c.y2} ${c.x3},${c.y3} ${c.x4},${c.y4}`);
+
+    } );
+}
+
+function drawHiddenControlAreas(areas, layer) {
+    // Draw controlled area
+    areas.map( (c) => {
+        layer.append("polygon")
+            .attr("class", "controlled-areas-hidden")
+            .attr("style", "display: none;")
             .attr("id", c["name"])
             .attr("points", `${c.x1},${c.y1} ${c.x2},${c.y2} ${c.x3},${c.y3} ${c.x4},${c.y4}`);
 

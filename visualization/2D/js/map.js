@@ -12,7 +12,7 @@ function drawAVoronoi(data, polygon, canvas) {
     }
     let areas = voronoi_polygons.map(d => d3.polygonArea(d));
     let voronoi_polygons_with_id = voronoi_polygons.map((d,i) => {return {"d":d, "id":data_in_voronoi_area[i].id}});
-
+    
     // DEBUG
     // let publish_json = encodeJson(data_in_voronoi_area, areas);
     // publish(publish_json);
@@ -153,6 +153,9 @@ function setVoronoiArea() {
         drawVoronoiArea(voronoi_clip_canvas, pre_circles);
         d3.selectAll(".voronoi-pre-circle").remove();
 
+        prepareDensityData();
+        reDrawHistDensity();
+
     } else if (stateControlAreaButton == 'drawn') {
 
         stateControlAreaButton = 'idle';
@@ -160,6 +163,9 @@ function setVoronoiArea() {
 
         d3.select("#voronoi-area").remove();
         clearCanvas(voronoi_clip_canvas);
+
+        prepareDensityData();
+        reDrawHistDensity();
     }
 
     /*

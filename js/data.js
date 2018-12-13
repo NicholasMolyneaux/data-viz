@@ -11,6 +11,10 @@ let chordKeysOriginalData = [];
 // data used for plotting trajectories of pedestrians
 let trajectoryDataByID = [];
 
+let histTT = null;
+let densityData = null;
+let histDensity = null;
+
 
 const INTERP = 4;
 let interpolatedTrajData = null;
@@ -72,6 +76,8 @@ async function loadTrajData() {
     }).catch(err => {
         console.log(err)
     });
+
+    prepareHistTT();
 }
 
 function interPolateData() {
@@ -110,4 +116,116 @@ function interPolateData() {
         }
     }
 
+}
+
+function downSampleTrajectories() {
+    fetch("http://transporsrv2.epfl.ch/api/trajectoriesbyid/" + selectedInfra.name + "/" + selectedTraj.name).then(response => {
+        return response.json();
+    }).then(data => {
+        for (ped of data) {
+            let downsampledPed = {};
+            downsampledPed["id"] = ped.id;
+            downsampledPed["time"] = [];
+            downsampledPed["x"] = [];
+            downsampledPed["y"] = [];
+            for (idx = 0; idx < ped.time.length; idx = idx+10) {
+                downsampledPed.time.push(ped.time[idx]);
+                downsampledPed.x.push(ped.x[idx]);
+                downsampledPed.y.push(ped.y[idx]);
+            }
+            trajectoryDataByID.push(downsampledPed);
+        }
+        document.getElementById("all_trajectories_checkbox").removeAttribute('disabled');
+    }).catch(err => {
+        console.log(err)
+    });
+}
+
+function prepareHistTT() {
+
+    histTT = [];
+    let add = false;
+    const restrOrigins = od_selection.Origins.size > 0;
+    const restrDest = od_selection.Destinations.size > 0;
+
+    trajSummary.forEach(ped => {
+
+        add = true;
+
+        if(restrOrigins) {
+            console.log(od_selection.Origins);
+            if (!od_selection.Origins.has(ped.o)){
+                add = false;
+            }
+        }
+
+        if(restrDest) {
+            if (!od_selection.Destinations.has(ped.d)){
+                add = false;
+            }
+        }
+
+        if(ped.en >= minTime && ped.ex <= maxTime && add) {
+
+            histTT.push(ped.ex-ped.en);
+        }
+
+    });
+}
+
+function prepareDensityData() {
+
+    const voronoi_poly_layer = d3.select(".voronoi_poly_layer");
+
+    densityData = [];
+
+    if (stateControlAreaButton != 'drawn') {
+        drawHiddenControlAreas(areasData, voronoi_poly_layer);
+    }
+
+    console.log(voronoi_poly_layer.selectAll("*"));
+
+    trajData.forEach(data => {
+
+        let timedData = new Object();
+        timedData.time = data.time;
+        let tmp  = [];
+
+
+        voronoi_poly_layer.selectAll("*").each(function () {
+            tmp.push(computeDensities(data.data, d3.select(this)))
+        });
+
+        timedData.area = tmp.flat();
+
+        densityData.push(timedData);
+    });
+
+    if (stateControlAreaButton != 'drawn') {
+        d3.selectAll(".controlled-areas-hidden").remove();
+    }
+
+    prepareHistDensity();
+}
+
+function prepareHistDensity() {
+
+    let tmp = densityData.filter(d => (d.time <= maxTime && d.time >= minTime)).map(a => a.area);
+
+    let areas = tmp.flat();
+
+    histDensity = areas.map(val => 1.0/val);
+}
+
+function computeDensities(data, polygon) {
+    let rect = rectangleContainPolygon(polygon);
+    let v = d3.voronoi()
+        .extent(rect);
+    let clip = polygonToArray(polygon);
+    let data_in_voronoi_area = filterPointInPolygon(data, polygon);
+    let voronoi_polygons = v.polygons(data_in_voronoi_area.map(d => [d.x, d.y]));
+    if (polygon.attr("id") === "voronoi-area") {
+        voronoi_polygons = voronoi_polygons.map(p =>d3.polygonClip(clip, p));
+    }
+    return voronoi_polygons.map(d => d3.polygonArea(d));
 }
