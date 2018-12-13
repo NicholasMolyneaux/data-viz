@@ -1,51 +1,64 @@
-<div class="row justify-content-center statRow" id="stats_{{ id }}">
-    <div class="col-12 colStat" id="{{ id }}">
-            <div class="graph col" id="viz_{{ id }}">
+<div class="justify-content-center statRow" id="stats_{{ id }}">
+    <div class="row">
+        <div class="col-12 colStat" id="{{ id }}">
+                <div class="graph col" id="viz_{{ id }}">
+            </div>
         </div>
     </div>
-    <div class="col-lg-3 col-10 opt-graphs" style="display: none;">
-        <!--<h4 class="subtitle">Options:</h4>
-        <br>-->
-        <label for="nbrBins_{{ id }}">Number of Bins:</label>
-        <div class="row">
-            <div class="col-lg-8 col-md-10 col-10 sliderDiv">
-                <input type="range" min="1" max="100" value="20" class="slider" id="nbrBins_{{ id }}" onchange="changeBins(this, '{{ id }}')" oninput="nbrBinsValue_{{ id }}.value = nbrBins_{{ id }}.value">
+    <div class="opt-graphs rounded row">
+        <div class="col">
+            <div class="row">
+                <div class="col-4 middleVert">
+                    <div class="row">
+                        <div class="col-10 sliderDiv">
+                            <label for="nbrBins_{{ id }}">Number of Bins:</label>
+                        </div>
+                        <div class="col-2 text-center sliderDisp">
+                            <output id="nbrBinsValue_{{ id }}">20</output>
+                        </div>
+                        <div class="col-12">
+                            <input type="range" min="1" max="100" value="20" class="slider" id="nbrBins_{{ id }}" onchange="changeBins(this, '{{ id }}')" oninput="nbrBinsValue_{{ id }}.value = nbrBins_{{ id }}.value">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4 middleVert">
+                    <div class="input-group-prepend">
+                        <label class="input-group-text" for="fontSize_{{ id }}">Font Size</label>
+                    </div>
+                    <input class="form-control opt-graphs-buttons" type="number" min="1" max="50" value="20" id="fontSize_{{ id }}" onchange="changeFontSize(this, '{{ id }}')">
+                </div>
+                <div class="col-4 middleVert">
+                    <div class="input-group-prepend">
+                        <label class="input-group-text" for="yAxis_{{ id }}">Units</label>
+                    </div>
+                    <select class="form-control opt-graphs-buttons" id="yAxis_{{ id }}" onchange="changeYAxis(this, '{{ id }}')">
+                        <option value="count">Count</option>
+                        <option value="percentage">Percentage</option>
+                    </select>
+                </div>
             </div>
-            <div class="col-lg-4 col-md-2 col-2 text-center sliderDisp">
-                <output id="nbrBinsValue_{{ id }}">20</output>
+            <br>
+            <div class="row">
+                <div class="col-3 middleVert" >
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="nbrs_{{ id }}" onchange="changeShowNumbers(this, '{{ id }}')">
+                        <label class="form-check-label" for="nbrs_{{ id }}">Show numbers</label>
+                    </div>
+               </div>
+                <div class="col-3 text-center middleVert">
+                    <button type="button" class="btn btn-primary btn-block btn-opt" data-toggle="modal" data-target="#colorModal_{{ id }}">
+                        Colors
+                    </button>
+                </div>
+                <div class="col-3 text-center middleVert">
+                    <button type="button" class="btn btn-primary btn-block btn-opt" data-toggle="modal" data-target="#AxesValue_{{ id }}">
+                        Axes
+                    </button>
+                </div>
+                <div class="col-3 text-center">
+                    <input class="btn btn-primary btn-block btn-opt export" type="button" data-toggle="modal" data-target="#exportModal_{{ id }}" value="Export">
+                </div>
             </div>
-        </div>
-        <br>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" id="nbrs_{{ id }}" onchange="changeShowNumbers(this, '{{ id }}')">
-            <label class="form-check-label" for="nbrs_{{ id }}">Numbers</label>
-
-        </div>
-        <br>
-        <label for="fontSize_{{ id }}">Font size:</label>
-        <input class="form-control opt-graphs-buttons" type="number" min="1" max="50" value="20" id="fontSize_{{ id }}" onchange="changeFontSize(this, '{{ id }}')">
-        <br>
-        <label for="yAxis_{{ id }}">Unit Axis y:</label>
-        <select class="form-control opt-graphs-buttons" id="yAxis_{{ id }}" onchange="changeYAxis(this, '{{ id }}')">
-            <option value="count">Count</option>
-            <option value="percentage">Percentage</option>
-        </select>
-        <br>
-        <div class="col text-center">
-            <button type="button" class="btn btn-primary btn-block btn-opt" data-toggle="modal" data-target="#colorModal_{{ id }}">
-                Colors
-            </button>
-        </div>
-        <br>
-        <div class="col text-center">
-            <button type="button" class="btn btn-primary btn-block btn-opt" data-toggle="modal" data-target="#AxesValue_{{ id }}">
-                Axes
-            </button>
-        </div>
-        <br><br>
-        <div class="col-lg9 text-center">
-            <!--<input class="btn btn-primary btn-lg btn-block btn-opt export" type="button" id="save_{{ id }}asPNG" value="Export" onclick="saveAsPNG('{{ id }}')">-->
-            <input class="btn btn-primary btn-lg btn-block export" type="button" data-toggle="modal" data-target="#exportModal_{{ id }}" value="Export">
         </div>
     </div>
 

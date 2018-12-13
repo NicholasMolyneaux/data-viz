@@ -1,23 +1,67 @@
+<br>
 <h2>OD Chord Diagram</h2>
 
 <div class="container">
-    <div class="row justify-content-center">
-        <div class="col-12" id="ODCont">
+    <div class="justify-content-center statRow">
+        <div class="row">
+            <div class="col-12" id="viz_OD">
 
+            </div>
         </div>
-        <div class="col-12 opt-graphs" style="display: none;">
-            <p>The options for the OD chord diagrams will be shown here.</p>
-            <div class="col text-center">
-                <button class="btn btn-primary" id="chord_add_group" onclick="groupingChordGroups()">Group ODs</button>
-                <input type="text" class="form-control" id="chord-group-name" value="Default value" style="display: none;">
+        <div class="opt-graphs rounded row">
+            <div class="col-4 text-center btnOptChord">
+                <button class="btn btn-primary btn-block btn-opt" id="chord_add_group" onclick="groupingChordGroups()">Group ODs</button>
             </div>
-            <div class="col text-center">
-                <button class="btn btn-primary" id="chord_delete_groups" onclick="deleteCustomGroups()">Delete all groups</button>
+            <div class="col-3 text-center txtOptChord" style="display: none;">
+                <input type="text" class="form-control" id="chord-group-name" value="">
             </div>
+            <div class="col-4 text-center btnOptChord">
+                <button class="btn btn-primary btn-block btn-opt" id="chord_delete_groups" onclick="deleteCustomGroups()">Delete all</button>
+            </div>
+            <div class="col-4 text-center btnOptChord">
+                <input class="btn btn-primary btn-block btn-opt export" type="button" data-toggle="modal" data-target="#exportModal_OD" value="Export">
+            </div>
+        </div>
+    </div>
 
+    <!-- Modal for the exporting -->
+    <div class="modal fade" id="exportModal_OD" tabindex="-1" role="dialog" aria-labelledby="exportModalTitle_OD" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Export</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="row modal-body form-group">
+                    <div class="col-8">
+                        <input class="form-control opt-graphs-buttons" type="text" id="exportName_OD" placeholder="name">
+                    </div>
+                    <div class="col-1">
+                        <input type="text" readonly class="form-control-plaintext dot" value=".">
+                    </div>
+                    <div class="col-3">
+                        <select class="form-control opt-graphs-buttons" id="exportType_OD" placeholder="type">
+                            <option value="" disabled selected>Type</option>
+                            <option value="png">PNG</option>
+                            <option value="svg">SVG</option>
+                        </select>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary download" onclick="exportGraph('OD')">
+                        Download!
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
 </div>
+
+</div>
+<br>
 
 <h2>Travel Time</h2>
 

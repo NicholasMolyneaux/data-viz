@@ -453,6 +453,21 @@ window.addEventListener('resize', function(){
 
     resizeViz();
 
+    $('html,body').scrollTop(0);
+
+    if (statsShown) {
+
+        if (window.innerWidth >= 1200) {
+            $('body').css("overflow-y", "hidden");
+            document.getElementById("statDiv").style.overflowY = 'auto';
+        } else {
+            $('body').css("overflow-y", "auto");
+            document.getElementById("statDiv").style.overflowY = 'hidden';
+        }
+    } else {
+        $('body').css("overflow-y", "hidden");
+    }
+
 }, true);
 
 function getVizHeight() {

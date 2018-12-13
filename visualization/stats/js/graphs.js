@@ -396,7 +396,13 @@ function saveAsPNG(id, name) {
 
     console.log(svg);
 
-    saveSvgAsPng(svg, name + ".png", {scale: 2, backgroundColor: '#FFFFFF', height: graphOptions[id]['height'], top:15, encoderOptions: 0.2});
+    let height = 900;
+
+    if (id != 'OD') {
+        height = graphOptions[id]['height']
+    }
+
+    saveSvgAsPng(svg, name + ".png", {scale: 1, backgroundColor: '#FFFFFF', height: height, top:0, encoderOptions: 0.2});
 
 }
 

@@ -59,14 +59,18 @@ function groupingChordGroups() {
         makingNewGroup = [];
         newGroupLabel = "";
         document.getElementById("chord-group-name").value = "";
-        document.getElementById("chord-group-name").setAttribute("style", "");
+
+        $(".btnOptChord").removeClass("col-4");
+        $(".btnOptChord").addClass("col-3");
+        $(".txtOptChord").show();
 
     } else if (stateButtonChord === SELECTING) {
         // When the button show "make group"
         stateButtonChord = IDLE;
 
-        document.getElementById("chord-group-name").setAttribute("style", "display: none");
-        console.log(currentLabels);
+        $(".btnOptChord").removeClass("col-3");
+        $(".btnOptChord").addClass("col-4");
+        $(".txtOptChord").hide();
 
         // For elements which have been selected (clicked), create new grouping object with name specified in th
         // input box which is filled by default with the concatenation of sub names.
@@ -247,7 +251,7 @@ function dynamicChord(data, groupedZones) {
     //////////////////////////////////// General chord settings //////////////////////////////////
     //////////////////////////////////////////////////////////////////////////////////////////////
 
-    const svgUp = d3.select("#ODCont");
+    const svgUp = d3.select("#viz_OD");
 
     const w = 800;//svgUp.node().offsetWidth,//.getBoundingClientRect().width,
     const h = 800;//svgUp.offsetHeight;//node().getBoundingClientRect().height;

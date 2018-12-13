@@ -13,6 +13,7 @@ function showStatistics() {
 
         $('#statDiv').remove();
 
+        $('body').css("overflow-y", "hidden");
 
     } else {
         statsShown = true;
@@ -39,6 +40,14 @@ function showStatistics() {
         });
 
         document.getElementById("showStats").innerHTML = "Hide Statistics";
+
+        if (window.innerWidth >= 1200) {
+            $('body').css("overflow-y", "hidden");
+            document.getElementById("statDiv").style.overflowY = 'auto';
+        } else {
+            $('body').css("overflow-y", "auto");
+            document.getElementById("statDiv").style.overflowY = 'hidden';
+        }
 
     }
 

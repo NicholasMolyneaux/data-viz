@@ -194,12 +194,10 @@ function prepareChord() {
     // canvas size and chord diagram radii
     const size = 900;
 
-    //var width = $("#ODCont").width();
-
-    const svg = d3.select("#ODCont").append("svg")
-        .attr("id", "containerForOD")
+    const svg = d3.select("#viz_OD").append("svg")
         .attr("preserveAspectRatio", "xMidYMid meet")
         .attr("viewBox", `${-size/2} ${-size/2} ${size} ${size}`)
+        .attr("id", "svgViz_OD")
         .append("svg:g")
         .attr("id", "circle");
 
@@ -342,8 +340,6 @@ function changeTimes(times) {
     }
 
     let nbrIdx = parseInt(mult*(tmin-minTime));
-
-    console.log(nbrIdx);
 
     currentTimeShownIdx -= nbrIdx;
 
