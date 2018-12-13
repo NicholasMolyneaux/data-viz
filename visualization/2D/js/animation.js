@@ -33,7 +33,12 @@ function updatePosition2D(time_series_data, ped_speed, svg) {
         .on("mouseout", function () {
             d3.select(this).style("r", 0.2);
         });
-    pedes.exit().remove();
+    pedes.exit()
+        .each(d => {
+            const trajectory_canvas = d3.select(".trajectories_layer");
+            trajectory_canvas.select(`#traj_${d.id}`).remove();
+        })
+        .remove();
 
 }
 
