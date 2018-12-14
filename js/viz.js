@@ -164,13 +164,13 @@ function prepViz(change3DStyle=false) {
         let viewBox = svg.attr("viewBox").split(" ").map(d => Number(d));
         let padding = 1;
         let r = [1/10, 1/7];
-        drawColorbar("colorbar", svg, d3.schemeRdYlGn[10], [0,2], viewBox[2]-(viewBox[2]-viewBox[0])*(r[0]+r[1])-3*padding,
-            viewBox[3]-5, (viewBox[2]-viewBox[0])*r[0], 5, padding, "Speed [m/s]");
+
 
         let los_colors = ["rgb(255,0,0)","rgb(255,128,0)","rgb(255,255,0)","rgb(0,255,0)","rgb(0,255,255)","rgb(0,0,255)"];
         let boundaries = [0, 0.46, 0.93, 1.39, 2.32, 3.24, "∞"];
-
-        drawColorbar("voronoi-los", svg, los_colors, boundaries, viewBox[2]-(viewBox[2]-viewBox[0])*r[1], viewBox[3]-5, (viewBox[2]-viewBox[0])*r[1], 5, padding, "Level of service [m^2/ped]");
+        drawColorbar("colorbar", svg, d3.schemeRdYlGn[10], [0,2], viewBox[2]-(viewBox[2]-viewBox[0])*r[0],
+            viewBox[3]-5, (viewBox[2]-viewBox[0])*r[0], 5, padding, "Speed [m/s]");
+        drawColorbar("voronoi-los", svg, los_colors, boundaries, viewBox[2]-(viewBox[2]-viewBox[0])*(r[1]+r[0])-3*padding, viewBox[3]-5, (viewBox[2]-viewBox[0])*r[1], 5, padding, "Level of service [m^2/ped]");
 
 
         //drawColorbar("", svg, los_colors, boundaries, );
