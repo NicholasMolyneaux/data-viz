@@ -74,7 +74,7 @@ function checkTrajectories() {
         // Copied from viz.js lines 283-285. Wrap all of this into a functio ideally.
         clearInterval(pedMover);
         document.getElementById("playPauseButton").innerHTML = "<i class=\"fas fa-play fa-lg\"></i>";
-        paused = true;
+        vizPaused = true;
         // removes dots
         d3.select(".pedes_layer").selectAll(".ped-individual").remove();
 
@@ -88,7 +88,7 @@ function checkTrajectories() {
         // add pedestrians again
         runViz();
         document.getElementById("playPauseButton").innerHTML = "<i class=\"fas fa-pause fa-lg\"></i>";
-        paused = false;
+        vizPaused = false;
 
     }
 }

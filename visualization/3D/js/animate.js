@@ -28,7 +28,7 @@ function runAnimation3D() {
     }
 
     pedMover = setInterval(walkData, interval/SPEEDFACTOR);
-
+    vizPaused = false;
 }
 
 function runOneStep3D() {

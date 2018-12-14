@@ -52,7 +52,7 @@ function animate() {
 
         //console.log(camera.position, camera.rotation);
 
-        if (!paused) {
+        if (!vizPaused) {
             if (mixers.length > 0) {
                 for (var i = 0; i < mixers.length; i++) {
                     mixers[i].update(SPEEDFACTOR*clocks[i].getDelta());

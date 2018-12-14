@@ -110,6 +110,7 @@ function rectangleContainPolygon(polygon) {
     let y_coordinates = polygon_array.map(d => d[1]);
     return [[d3.min(x_coordinates), d3.min(y_coordinates)], [d3.max(x_coordinates), d3.max(y_coordinates)]];
 }
+
 function checkVoronoi(data, voronoi_poly_layer, voronoi_canvas) {
     if (d3.select("#voronoi_checkbox").property("checked")) {
         clearCanvas(voronoi_canvas);
@@ -123,6 +124,7 @@ function checkVoronoi(data, voronoi_poly_layer, voronoi_canvas) {
         clearCanvas(voronoi_canvas);
     }
 }
+
 function setVoronoiArea() {
 
     let svg = d3.select("svg");
