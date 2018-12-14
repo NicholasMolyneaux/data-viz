@@ -645,7 +645,7 @@ function presentation() {
     idTO = setTimeout(function() {
             // Main text container 2
             let thirdTextLine = document.createElement("div");
-            thirdTextLine.innerHTML = "<h2 id='textLine3' style='display: none'>Nevertheless, before these commuters have woken up,</h2>";
+            thirdTextLine.innerHTML = "<h2 id='textLine3' style='display: none'>Nevertheless, before these commuters have woken up...</h2>";
             thirdTextLine.classList.add("presentationOn3D");
             thirdTextLine.classList.add("presentationOn3D-text3");
 
@@ -690,15 +690,13 @@ function presentation() {
     idTO = setTimeout(function() {
 
         document.getElementById("titleForPres").style.color = "white";
-    document.getElementById("textLine1").style.color = "white";
-    document.getElementById("textLine2").style.color = "white";
-    document.getElementById("textLine3").style.color = "white";
-    fadeIn("titleForPres",250);
-    fadeIn("textLine1",250);
-    fadeIn("textLine2",250);
-    fadeIn("textLine3",250);
-
-
+        document.getElementById("textLine1").style.color = "white";
+        document.getElementById("textLine2").style.color = "white";
+        document.getElementById("textLine3").style.color = "white";
+        fadeIn("titleForPres",250);
+        fadeIn("textLine1",250);
+        fadeIn("textLine2",250);
+        fadeIn("textLine3",250);
 
     }, time);
     time += 2000;
@@ -708,7 +706,7 @@ function presentation() {
 
         // Text container 4
         let fourthTextLine = document.createElement("div");
-        fourthTextLine .innerHTML = "<h2 id='textLine4' style='display: none'>the environment looks more like this...</h2>";
+        fourthTextLine .innerHTML = "<h2 id='textLine4' style='display: none'>the environment looks more like this !</h2>";
         fourthTextLine .classList.add("presentationOn3D");
         fourthTextLine .classList.add("presentationOn3D-text4");
         fourthTextLine.style.color = "white";
@@ -741,6 +739,7 @@ function presentation() {
         // remove all div used for showing the texts
         $(".presentationOn3D").remove();
 
+        currentTimeShownIdx = 300;
         runViz();
         controls.autoRotate = false;
 
@@ -749,9 +748,108 @@ function presentation() {
         moveCameraToDesiredPosition(cameraPresPos);
 
     }, time);
-    time += 10000 + 2*animTime;
+    time += 10500 + 2*animTime;
     timeOutPres.push(idTO);
 
+
+    // Becomes serious.
+    idTO = setTimeout(function() {
+
+        // Same as title, just replaces the first line of text without the reader noticing
+        let firstTextLine = document.createElement("div");
+        firstTextLine.innerHTML = "<h2 id='textLine1' style='display: none'>Although this situation seems unrealistic, this work is still serious science.</h2>";
+        firstTextLine.style.color = "white";
+        firstTextLine.classList.add("presentationOn3D");
+        firstTextLine.classList.add("presentationOn3D-title");
+
+        document.getElementById("mainViz").appendChild(firstTextLine);
+        fadeIn("textLine1",1000);
+
+    }, time);
+    time += 2000;
+    timeOutPres.push(idTO);
+
+    idTO = setTimeout(function() {
+        let transition = document.createElement("div");
+    transition.classList.add("presentationOn3D");
+    transition.id = "transition3D2D";
+    transition.style.backgroundColor = "white";
+    transition.style.display = "none";
+    transition.style.height ="100%";
+
+    document.getElementById("mainViz").insertBefore(transition, document.getElementsByClassName("presentationOn3D-title")[0]);
+
+    // make the transition happen
+    fadeIn("transition3D2D", 1500);
+        fadeOut("textLine1",250);
+
+    }, time);
+    time += 250;
+    timeOutPres.push(idTO);
+
+    idTO = setTimeout(function() {
+        document.getElementById("textLine1").style.color = "black";
+        fadeIn("textLine1",250);
+
+    }, time);
+    time += 1000;
+    timeOutPres.push(idTO);
+
+    idTO = setTimeout(function(){
+        transitionBetween2D3D();
+
+    }, time);
+    timeOutPres.push(idTO);
+    time +=1000;
+
+
+
+
+    // Becomes serious.
+    idTO = setTimeout(function() {
+        d3.select("#control_checkbox").property("checked", true);
+        d3.select("#voronoi_checkbox").property("checked", true);
+        checkControl();
+
+        // Same as title, just replaces the first line of text without the reader noticing
+        let secondTextLine = document.createElement("div");
+        secondTextLine .innerHTML = "<h2 id='textLine1' style='display: none'>The 2D analytics mode allows you to explore some of the specifities of pedestrian dynamics.</h2>";
+        secondTextLine .style.color = "black";
+        secondTextLine .classList.add("presentationOn3D");
+        secondTextLine .classList.add("presentationOn3D-text1");
+
+        document.getElementById("mainViz").appendChild(secondTextLine );
+        fadeIn("textLine1",1000);
+        fadeOut("transition3D2D",1000);
+
+    }, time);
+    time += 2000;
+    timeOutPres.push(idTO);
+
+    // Becomes serious.
+    idTO = setTimeout(function() {
+
+        // Same as title, just replaces the first line of text without the reader noticing
+        let thirdTextLine = document.createElement("div");
+        thirdTextLine  .innerHTML = "<h2 id='textLine4' style='display: none'>You can now freely explore The walking data visualization !</h2>";
+        thirdTextLine  .style.color = "black";
+        thirdTextLine.style.top = "75%";
+        thirdTextLine  .classList.add("presentationOn3D");
+        thirdTextLine  .classList.add("presentationOn3D-text4");
+
+        document.getElementById("mainViz").appendChild(thirdTextLine);
+        fadeIn("textLine4",1000);
+
+    }, time);
+    time += 5000;
+    timeOutPres.push(idTO);
+
+    idTO = setTimeout(function(){
+        fadeOut("textLine1",1000);
+        fadeOut("textLine4",1000);
+        }, time);
+    timeOutPres.push(idTO);
+    time +=1000;
 
     idTO = setTimeout(function(){
         endOfPresentation();

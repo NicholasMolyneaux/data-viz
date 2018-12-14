@@ -103,7 +103,7 @@ function prepViz(change3DStyle=false) {
         //document.getElementById("canvas").addEventListener( 'mousedown', onDocumentMouseDown, false );
 
         // Key stuff
-        document.getElementById("canvas")
+        document.getElementById("canvas");
 
         animate();
 
@@ -370,7 +370,7 @@ function changeTimes(times) {
     }
 }
 
-$( "#threeDButton" ).click(function() {
+function transitionBetween2D3D() {
 
     $("#dragOpt").remove();
     document.getElementById("optionsButton").innerHTML = "<i class=\"fas fa-plus fa-lg\"></i>";
@@ -455,6 +455,10 @@ $( "#threeDButton" ).click(function() {
     } else {
         runViz();
     }
+}
+
+$( "#threeDButton" ).click(function() {
+    transitionBetween2D3D()
 });
 
 function changeStyle3D() {

@@ -183,8 +183,6 @@ function prepareDensityData() {
         drawHiddenControlAreas(areasData, voronoi_poly_layer);
     }
 
-    console.log(voronoi_poly_layer.selectAll("*"));
-
     trajData.forEach(data => {
 
         let timedData = new Object();
@@ -196,7 +194,7 @@ function prepareDensityData() {
             tmp.push(computeDensities(data.data, d3.select(this)))
         });
 
-        timedData.area = tmp.flat();
+        timedData.area = [].concat.apply([], tmp);
 
         densityData.push(timedData);
     });
@@ -212,7 +210,7 @@ function prepareHistDensity() {
 
     let tmp = densityData.filter(d => (d.time <= maxTime && d.time >= minTime)).map(a => a.area);
 
-    let areas = tmp.flat();
+    let areas = [].concat.apply([], tmp);
 
     histDensity = areas.map(val => 1.0/val);
 }
