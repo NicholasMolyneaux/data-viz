@@ -4,7 +4,7 @@
 ////////////////// Dynamic chord elements ///////////////////////
 /////////////////////////////////////////////////////////////////
 
-// the animation object which can be paused and started again.
+// the animation object which can be vizPaused and started again.
 let chordAnimation;
 
 // boolean indicating the state of the simulation

@@ -82,6 +82,7 @@ function runAnimation2D() {
     }
 
     pedMover = setInterval(walkData, INTERVAL2D/SPEEDFACTOR);
+    vizPaused = false;
 }
 
 function runOneStep2D() {

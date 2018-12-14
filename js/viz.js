@@ -3,7 +3,6 @@ let pedMover;
 let currentTimeShownIdx = 0;
 const INTERVAL2D = 100;
 let SPEEDFACTOR = 1;
-let paused = false;
 
 function prepViz(change3DStyle=false) {
 
@@ -161,7 +160,7 @@ function prepViz(change3DStyle=false) {
     }
 
     resizeViz();
-
+    vizPrepared = true;
 }
 
 function runViz() {
@@ -260,7 +259,7 @@ $( "#forward" ).click(function() {
             document.getElementById("speed").innerHTML = "&#215;" + SPEEDFACTOR;
         }
 
-        if (!paused) {
+        if (!vizPaused) {
             runViz();
         }
     }
@@ -285,7 +284,7 @@ $( "#backward" ).click(function() {
             document.getElementById("speed").innerHTML = "&#215;" + SPEEDFACTOR;
         }
 
-        if (!paused) {
+        if (!vizPaused) {
             runViz();
         }
     }
@@ -294,14 +293,14 @@ $( "#backward" ).click(function() {
 
 $( "#playPauseButton" ).click(function() {
 
-    if (paused) {
+    if (vizPaused) {
         runViz();
         document.getElementById("playPauseButton").innerHTML = "<i class=\"fas fa-pause fa-lg\"></i>";
-        paused = false;
+        vizPaused = false;
     } else {
         clearInterval(pedMover);
         document.getElementById("playPauseButton").innerHTML = "<i class=\"fas fa-play fa-lg\"></i>";
-        paused = true;
+        vizPaused = true;
     }
 
 });
@@ -358,7 +357,7 @@ function changeTimes(times) {
 
     currentTimeShownIdx = parseInt(mult*(current-minTime));
 
-    if (!paused) {
+    if (!vizPaused) {
         clearInterval(pedMover);
         runViz();
     } else {
@@ -450,7 +449,7 @@ function transitionBetween2D3D() {
 
     prepViz();
 
-    if(paused) {
+    if(vizPaused) {
         do1Step();
     } else {
         runViz();
@@ -504,7 +503,7 @@ function changeStyle3D() {
     prepViz(true);
 
     if (!presentationPlaying) {
-        if(paused) {
+        if(vizPaused) {
             do1Step();
         } else {
             runViz();

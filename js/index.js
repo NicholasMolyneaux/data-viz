@@ -1,6 +1,14 @@
 const baseURL = 'http://transporsrv2.epfl.ch/api/';
 
+// indicates whether the animation is finished or not
 let presentationPlaying = true;
+
+// indicated whether the the prepViz function has already been called.
+// This is needed for the skip button to determine at which stage of the animation we are
+let vizPrepared = false;
+
+// Indicator whether the viz is actually running or not. This should be changed when the play/pause button is clicked.
+let vizPaused = true;
 
 let vizHeight = getVizHeight();
 let landscape = true;
@@ -169,7 +177,7 @@ function loadTraj() {
                 trajDataLoaded = true;
                 interPolateData();
                 createSlider();
-                downSampleTrajectories();
+                    downSampleTrajectories();
 
                 if (!presentationPlaying) {
                     finishedLoading();
@@ -861,12 +869,27 @@ function skipPresentation() {
 
     // TODO: careful when the data is not entirely loaded!
 
-    endOfPresentation();
+    // tidies up the divs used for the introduction and shows the buttons
 
-    for(let i=0; i<timeOutPres.length; i++) {
-        clearTimeout(timeOutPres[i])
+    // clears away all the timeouts
+    for(let i=0; i<timeOutPres.length; i++) { clearTimeout(timeOutPres[i]) }
+
+    // prepares the viz if skip is called very early on.
+    if (!vizPrepared) {
+        viz3D = false;
+        viz2D = true;
+        prepViz();
+        runViz();
     }
 
+    if (vizPaused) {
+        runViz()
+    }
+
+    endOfPresentation();
+
+
+    /*
     if (!viz3D) {
         viz3D = true;
         prepViz();
@@ -876,6 +899,7 @@ function skipPresentation() {
 
     runViz();
     moveCameraToDesiredPosition(cameraInitPos);
+    */
 }
 
 function endOfPresentation() {
