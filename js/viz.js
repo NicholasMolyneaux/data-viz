@@ -4,6 +4,7 @@ let currentTimeShownIdx = 0;
 const INTERVAL2D = 100;
 let SPEEDFACTOR = 1;
 let paused = false;
+let threeDButtonDisabled = false;
 
 function prepViz(change3DStyle=false) {
 
@@ -368,88 +369,99 @@ function changeTimes(times) {
 
 $( "#threeDButton" ).click(function() {
 
-    $("#dragOpt").remove();
-    document.getElementById("optionsButton").innerHTML = "<i class=\"fas fa-plus fa-lg\"></i>";
-    optionsShown = false;
 
-    if(viz3D) {
+    if (!threeDButtonDisabled) {
 
-        document.getElementById("threeDButton").innerHTML = "<i class=\"fas fa-cube fa-lg\"></i>";
-        document.getElementById("threeDButton").title = "3D viz";
+        threeDButtonDisabled = true;
 
-        document.getElementById("help").title = "Scroll for zoom/dezoom; Click + Mouse to move around; Click on a zone to select it as an origin and ctrl+click to select it as a destination."
+        setTimeout(function() {
+            threeDButtonDisabled = false;
+        }, 1000);
 
-        viz3D = false;
-        viz2D = true;
+        $("#dragOpt").remove();
+        document.getElementById("optionsButton").style.display = "";
+        optionsShown = false;
 
-        clearInterval(pedMover);
+        if(viz3D) {
 
-        $("#canvas").remove();
+            document.getElementById("threeDButton").innerHTML = "<i class=\"fas fa-cube fa-lg\"></i>";
+            document.getElementById("threeDButton").title = "3D viz";
+
+            document.getElementById("help").title = "Scroll for zoom/dezoom; Click + Mouse to move around; Click on a zone to select it as an origin and ctrl+click to select it as a destination."
+
+            viz3D = false;
+            viz2D = true;
+
+            clearInterval(pedMover);
+
+            $("#canvas").remove();
 
 
-        // Have to delete correctly these stuff.
-        topFloor = null;
-        bottomFloor = null;
-        ceiling = null;
-        walls = [];
-        clocks = [];
-        lights = [];
+            // Have to delete correctly these stuff.
+            topFloor = null;
+            bottomFloor = null;
+            ceiling = null;
+            walls = [];
+            clocks = [];
+            lights = [];
 
-        while(scene.children.length > 0){
-            scene.remove(scene.children[0]);
+            while(scene.children.length > 0){
+                scene.remove(scene.children[0]);
+            }
+
+            dctPed = new Object();
+            mixers = [];
+
+            container = null;
+            stats = null;
+            controls = null;
+            raycaster = null;
+            camera = null;
+            scene = null;
+            renderer = null;
+            light = null;
+
+
+            if (SPEEDFACTOR <= 2) {
+                currentTimeShownIdx = Math.floor(currentTimeShownIdx/(INTERP+1));
+            }
+
+
+        } else if (viz2D) {
+
+            document.getElementById("threeDButton").innerHTML = "<i class=\"fas fa-square fa-lg\"></i>";
+            document.getElementById("threeDButton").title = "2D viz";
+
+            document.getElementById("help").title = "Scroll for zoom/dezoom; CTRL+Mouse/Arrow keys to more; Mouse to rotate."
+
+            viz3D = true;
+            viz2D = false;
+
+            clearInterval(pedMover);
+
+            $("#svgCont").remove();
+
+            if (statsShown) {
+                viz.classList.add("col");
+                viz.classList.remove("col-xl-8");
+
+                $('#statDiv').remove();
+            }
+
+            if (SPEEDFACTOR <= 2) {
+                currentTimeShownIdx *= (INTERP+1);
+            }
+
         }
 
-        dctPed = new Object();
-        mixers = [];
+        prepViz();
 
-        container = null;
-        stats = null;
-        controls = null;
-        raycaster = null;
-        camera = null;
-        scene = null;
-        renderer = null;
-        light = null;
-
-
-        if (SPEEDFACTOR <= 2) {
-            currentTimeShownIdx = Math.floor(currentTimeShownIdx/(INTERP+1));
+        if(paused) {
+            do1Step();
+        } else {
+            runViz();
         }
 
-
-    } else if (viz2D) {
-
-        document.getElementById("threeDButton").innerHTML = "<i class=\"fas fa-square fa-lg\"></i>";
-        document.getElementById("threeDButton").title = "2D viz";
-
-        document.getElementById("help").title = "Scroll for zoom/dezoom; CTRL+Mouse/Arrow keys to more; Mouse to rotate."
-
-        viz3D = true;
-        viz2D = false;
-
-        clearInterval(pedMover);
-
-        $("#svgCont").remove();
-
-        if (statsShown) {
-            viz.classList.add("col");
-            viz.classList.remove("col-xl-8");
-
-            $('#statDiv').remove();
-        }
-
-        if (SPEEDFACTOR <= 2) {
-            currentTimeShownIdx *= (INTERP+1);
-        }
-
-    }
-
-    prepViz();
-
-    if(paused) {
-        do1Step();
-    } else {
-        runViz();
     }
 });
 

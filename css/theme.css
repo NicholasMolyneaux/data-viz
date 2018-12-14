@@ -237,6 +237,13 @@ h1, h2 {
     left:10px;
 }
 
+#hideButton{
+    cursor: pointer;
+    position:absolute;
+    top:0px;
+    right:5px;
+}
+
 .min-opt {
     padding: 0;
 }

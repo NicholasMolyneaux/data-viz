@@ -411,8 +411,8 @@ function appendOptions() {
 
         document.getElementById("dragOpt").style.display = "none";
 
-        document.getElementById("dragOpt").style.top = 10 + "px";
-        document.getElementById("dragOpt").style.left = 10 + "px";
+        document.getElementById("dragOpt").style.top = 0 + "px";
+        document.getElementById("dragOpt").style.left = 0 + "px";
 
         $( function() {
             $( "#dragOpt" ).draggable(
@@ -436,18 +436,22 @@ function appendOptions() {
 }
 
 $('#optionsButton').click(() => {
-    if (optionsShown) {
-        document.getElementById("optionsButton").innerHTML = "<i class=\"fas fa-plus fa-lg\"></i>";
-        document.getElementById("dragOpt").style.display = "none";
 
-        optionsShown = false;
-    } else {
-        document.getElementById("optionsButton").innerHTML = "<i class=\"fas fa-minus fa-lg\"></i>";
-        document.getElementById("dragOpt").style.display = "";
+    document.getElementById("optionsButton").style.display = "none";
+    document.getElementById("dragOpt").style.display = "";
 
-        optionsShown = true;
-    }
+    optionsShown = true;
 });
+
+function hideOptions() {
+
+    console.log("LOOOOL");
+
+    document.getElementById("optionsButton").style.display = "";
+    document.getElementById("dragOpt").style.display = "none";
+
+    optionsShown = false;
+}
 
 window.addEventListener('resize', function(){
 
