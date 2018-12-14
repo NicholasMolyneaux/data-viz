@@ -113,11 +113,13 @@ function rectangleContainPolygon(polygon) {
 function checkVoronoi(data, voronoi_poly_layer, voronoi_canvas) {
     if (d3.select("#voronoi_checkbox").property("checked")) {
         clearCanvas(voronoi_canvas);
+        d3.selectAll(".voronoi-los").style("opacity",1);
         voronoi_poly_layer.selectAll("*").each(function () {
             drawAVoronoi(data, d3.select(this), voronoi_canvas);
         })
 
     } else {
+        d3.selectAll(".voronoi-los").style("opacity",0);
         clearCanvas(voronoi_canvas);
     }
 }

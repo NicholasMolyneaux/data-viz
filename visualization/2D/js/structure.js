@@ -111,51 +111,60 @@ class Zone{
         od_selection.Destinations.delete(this.name);
     }
 }
-function drawColorbar(svg) {
-    let data = d3.schemeRdYlGn[num_of_colors];
+
+function drawColorbar(id, svg, colors, boundaries, x, y, width, height, padding, title) {
+    let width_rect = width/colors.length;
+    svg.append("rect")
+        .style("opacity", 0)
+        .attr("class", `${id} boundary`)
+        .attr("x", x-padding)
+        .attr("y", y)
+        .attr("width", width+2*padding)
+        .attr("height", height)
+        .attr("rx", 1)
+        .attr("ry", 1);
+
     svg.append("text")
-        .attr("class", "colorbar text")
-        .attr("x", 65 -1)
-        .attr("y", 1)
+        .style("opacity", 0)
+        .attr("class", `${id} text`)
+        .attr("x", x+width/2)
+        .attr("y", y+height/5)
         .attr("dominant-baseline","middle")
         .attr("text-anchor","middle")
-        .text("Speed [m/s]")
-        .style("font-size", "0.8pt")
-        .attr("fill", "black")
-        .style("opacity", 0);
-    let min_max_speed = ["0", "2"];
+        .text(title)
+        .style("font-size", "0.7pt")
+        .attr("fill", "black");
 
-    svg.selectAll(".colorbar range")
-        .data(min_max_speed)
+    svg.selectAll(`.${id} range`)
+        .data(boundaries)
         .enter()
         .append("text")
-        .attr("class", "colorbar range")
-        .attr("y", 4)
-        .attr("x", (d,i) => 60+i*10 -1)
+        .style("opacity", 0)
+        .attr("class", `${id} range`)
+        .attr("y", y+height/5*4)
+        .attr("x", (d,i) => x+i*width/(boundaries.length-1))
         .attr("dominant-baseline","middle")
         .attr("text-anchor","middle")
         .text(d => d)
-        .style("font-size", "0.8pt")
-        .attr("fill", "black")
-        .style("opacity", 0);
+        .style("font-size", "0.6pt")
+        .attr("fill", "black");
 
-    let rects = svg.selectAll(".colorbar rects")
-        .data(data)
+    let rects = svg.selectAll(`.${id} rects`)
+        .data(colors)
         .enter()
         .append("rect")
-        .attr("class", "colorbar rects")
-        .attr("y", 2)
-        .attr("height", 1)
-        .attr("x", (d,i) => 60+i*1 -1)
-        .attr("width", 1)
-        .attr("fill", d=> d)
-        .style("opacity", 0);
+        .style("opacity", 0)
+        .attr("class", `${id} rects`)
+        .attr("height", height/5)
+        .attr("y", y+height/5*2)
+        .attr("x", (d,i) => x+i*width_rect)
+        .attr("width", width_rect)
+        .attr("fill", d=> d);
 }
 
 function drawStructures(main_layer) {
     drawWalls(wallsData, main_layer);
     drawGates(gatesData, main_layer);
-    drawColorbar(main_layer);
 }
 
 function drawWalls(wall, svg) {

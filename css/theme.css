@@ -411,7 +411,12 @@ h1, h2 {
     font-size: 20px;
     font-weight: bolder;
 }
-
+.boundary {
+    stroke-width: 1;
+    vector-effect: non-scaling-stroke;
+    fill: white;
+    stroke: black;
+}
 .voronoi-poly {
     stroke-width: 0.1;
     stroke: black;

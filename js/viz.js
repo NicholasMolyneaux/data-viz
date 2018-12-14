@@ -121,10 +121,17 @@ function prepViz(change3DStyle=false) {
             .attr("class", "container-fluid")
             .attr("id", "svgCont")
             .attr("height", vizHeight)
-            .attr("viewBox", `${xmin-1} ${ymin} ${xmax} ${ymax}`)
-            .call(d3.zoom().on("zoom", () => svg.attr("transform", d3.event.transform)))
-            .append('g')
+            .attr("viewBox", `${xmin-1} ${ymin} ${xmax} ${ymax+10}`);
+        let svg_zoom = svg.append('g')
             .attr("id", "subSvgCont");
+
+        svg.call(d3.zoom().on("zoom", () => {
+            console.log("hello");
+            svg_zoom.attr("transform", d3.event.transform);
+            }
+        ));
+
+
 
         document.getElementById("mainViz").style.height = 0 + "px";
 
@@ -134,16 +141,16 @@ function prepViz(change3DStyle=false) {
 
         document.getElementById("svgCont").style.height = vizHeight + "px";
 
-        let structure_layer = svg.append("g")
+        let structure_layer = svg_zoom.append("g")
             .attr("class", "structure_layer");
 
-        let voronoi_clip_layer = svg.append("g")
+        let voronoi_clip_layer = svg_zoom.append("g")
             .attr("class", "voronoi_clip_layer");
-        let voronoi_canvas = svg.append("g")
+        let voronoi_canvas = svg_zoom.append("g")
             .attr("class", "voronoi_canvas");
-        let voronoi_poly_layer = svg.append("g")
+        let voronoi_poly_layer = svg_zoom.append("g")
             .attr("class", "voronoi_poly_layer");
-        let pedes_layer = svg.append("g")
+        let pedes_layer = svg_zoom.append("g")
             .attr("class", "pedes_layer");
 
         // layer for showing all trajectories
@@ -151,8 +158,23 @@ function prepViz(change3DStyle=false) {
             .attr("class", "trajectories_layer");
 
         // Read json data and draw frameworks (walls and zones)
+
         drawStructures(structure_layer);
 
+        let viewBox = svg.attr("viewBox").split(" ").map(d => Number(d));
+        let padding = 1;
+        let r = [1/10, 1/7];
+        drawColorbar("colorbar", svg, d3.schemeRdYlGn[10], [0,2], viewBox[2]-(viewBox[2]-viewBox[0])*(r[0]+r[1])-3*padding,
+            viewBox[3]-5, (viewBox[2]-viewBox[0])*r[0], 5, padding, "Speed [m/s]");
+
+        let los_colors = ["rgb(255,0,0)","rgb(255,128,0)","rgb(255,255,0)","rgb(0,255,0)","rgb(0,255,255)","rgb(0,0,255)"];
+        let boundaries = [0, 0.46, 0.93, 1.39, 2.32, 3.24, "∞"];
+
+        drawColorbar("voronoi-los", svg, los_colors, boundaries, viewBox[2]-(viewBox[2]-viewBox[0])*r[1], viewBox[3]-5, (viewBox[2]-viewBox[0])*r[1], 5, padding, "Level of service [m^2/ped]");
+
+
+        //drawColorbar("", svg, los_colors, boundaries, );
+        //drawLOSColorbar(svg);
         prepareDensityData();
     }
 
