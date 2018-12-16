@@ -3,6 +3,8 @@ let pedMover;
 let currentTimeShownIdx = 0;
 const INTERVAL2D = 100;
 let SPEEDFACTOR = 1;
+let paused = false;
+let threeDButtonDisabled = false;
 
 function prepViz(change3DStyle=false) {
 
@@ -96,13 +98,6 @@ function prepViz(change3DStyle=false) {
             document.removeEventListener( 'mousemove', onDocumentMouseMove, false);
             document.removeEventListener( 'mousedown', onDocumentMouseDown, false);
         });
-
-
-        //document.getElementById("canvas").addEventListener( 'mousemove', onDocumentMouseMove, false );
-        //document.getElementById("canvas").addEventListener( 'mousedown', onDocumentMouseDown, false );
-
-        // Key stuff
-        document.getElementById("canvas");
 
         animate();
 
@@ -215,12 +210,10 @@ function prepareChord() {
     // canvas size and chord diagram radii
     const size = 900;
 
-    //var width = $("#ODCont").width();
-
-    const svg = d3.select("#ODCont").append("svg")
-        .attr("id", "containerForOD")
+    const svg = d3.select("#viz_OD").append("svg")
         .attr("preserveAspectRatio", "xMidYMid meet")
         .attr("viewBox", `${-size/2} ${-size/2} ${size} ${size}`)
+        .attr("id", "svgViz_OD")
         .append("svg:g")
         .attr("id", "circle");
 
@@ -364,8 +357,6 @@ function changeTimes(times) {
 
     let nbrIdx = parseInt(mult*(tmin-minTime));
 
-    console.log(nbrIdx);
-
     currentTimeShownIdx -= nbrIdx;
 
     let middleChanged = false;
@@ -391,96 +382,102 @@ function changeTimes(times) {
     }
 }
 
-function transitionBetween2D3D() {
-
-    $("#dragOpt").remove();
-    document.getElementById("optionsButton").innerHTML = "<i class=\"fas fa-plus fa-lg\"></i>";
-    optionsShown = false;
-
-    if(viz3D) {
-
-        document.getElementById("threeDButton").innerHTML = "<i class=\"fas fa-cube fa-lg\"></i>";
-        document.getElementById("threeDButton").title = "3D viz";
-
-        document.getElementById("help").title = "Scroll for zoom/dezoom; Click + Mouse to move around; Click on a zone to select it as an origin and ctrl+click to select it as a destination."
-
-        viz3D = false;
-        viz2D = true;
-
-        clearInterval(pedMover);
-
-        $("#canvas").remove();
-
-
-        // Have to delete correctly these stuff.
-        topFloor = null;
-        bottomFloor = null;
-        ceiling = null;
-        walls = [];
-        clocks = [];
-        lights = [];
-
-        while(scene.children.length > 0){
-            scene.remove(scene.children[0]);
-        }
-
-        dctPed = new Object();
-        mixers = [];
-
-        container = null;
-        stats = null;
-        controls = null;
-        raycaster = null;
-        camera = null;
-        scene = null;
-        renderer = null;
-        light = null;
-
-
-        if (SPEEDFACTOR <= 2) {
-            currentTimeShownIdx = Math.floor(currentTimeShownIdx/(INTERP+1));
-        }
-
-
-    } else if (viz2D) {
-
-        document.getElementById("threeDButton").innerHTML = "<i class=\"fas fa-square fa-lg\"></i>";
-        document.getElementById("threeDButton").title = "2D viz";
-
-        document.getElementById("help").title = "Scroll for zoom/dezoom; CTRL+Mouse/Arrow keys to more; Mouse to rotate."
-
-        viz3D = true;
-        viz2D = false;
-
-        clearInterval(pedMover);
-
-        $("#svgCont").remove();
-
-        if (statsShown) {
-            viz.classList.add("col");
-            viz.classList.remove("col-xl-8");
-
-            $('#statDiv').remove();
-        }
-
-        if (SPEEDFACTOR <= 2) {
-            currentTimeShownIdx *= (INTERP+1);
-        }
-
-    }
-
-    prepViz();
-
-    if(vizPaused) {
-        do1Step();
-    } else {
-        runViz();
-    }
-}
-
 $( "#threeDButton" ).click(function() {
     transitionBetween2D3D()
 });
+
+function transitionBetween2D3D() {
+
+    if (!threeDButtonDisabled) {
+
+        threeDButtonDisabled = true;
+
+        setTimeout(function() {
+            threeDButtonDisabled = false;
+        }, 1000);
+
+        $("#dragOpt").remove();
+        document.getElementById("optionsButton").style.display = "";
+        optionsShown = false;
+
+        if(viz3D) {
+
+            document.getElementById("threeDButton").innerHTML = "<i class=\"fas fa-cube fa-lg\"></i>";
+            document.getElementById("threeDButton").title = "3D viz";
+
+            document.getElementById("help").title = "Scroll for zoom/dezoom; Click + Mouse to move around; Click on a zone to select it as an origin and ctrl+click to select it as a destination."
+
+            viz3D = false;
+            viz2D = true;
+
+            clearInterval(pedMover);
+
+            $("#canvas").remove();
+
+            deleteStuff3D();
+
+            if (SPEEDFACTOR <= 2) {
+                currentTimeShownIdx = Math.floor(currentTimeShownIdx/(INTERP+1));
+            }
+
+
+        } else if (viz2D) {
+
+            document.getElementById("threeDButton").innerHTML = "<i class=\"fas fa-square fa-lg\"></i>";
+            document.getElementById("threeDButton").title = "2D viz";
+
+            document.getElementById("help").title = "Scroll for zoom/dezoom; CTRL+Mouse/Arrow keys to more; Mouse to rotate."
+
+            viz3D = true;
+            viz2D = false;
+
+            clearInterval(pedMover);
+
+            deleteStuff2D();
+
+            if (SPEEDFACTOR <= 2) {
+                currentTimeShownIdx *= (INTERP+1);
+            }
+
+        }
+
+        prepViz();
+
+        if(paused) {
+            do1Step();
+        } else {
+            runViz();
+        }
+    }
+}
+
+function deleteStuff3D() {
+    // Have to delete correctly these stuff.
+    topFloor = null;
+    bottomFloor = null;
+    ceiling = null;
+    walls = [];
+    clocks = [];
+    lights = [];
+
+    while (scene.children.length > 0) {
+        scene.remove(scene.children[0]);
+    }
+
+    dctPed = new Object();
+    mixers = [];
+}
+
+function deleteStuff2D() {
+    $("#svgCont").remove();
+
+    if (statsShown) {
+        viz.classList.add("col");
+        viz.classList.remove("col-xl-8");
+
+        $('#statDiv').remove();
+    }
+}
 
 function changeStyle3D() {
 

@@ -35,6 +35,7 @@ let maxTime;
 let timeOutPres = [];
 
 let statsShown = false;
+let allTrajLoaded = false;
 
 $(document).ready(function() {
 
@@ -72,7 +73,6 @@ function loadInfra() {
             infrastructures = data;
             // Add the infra for the uploading the trajectories data
             addInfra();
-            noDataSelected();
 
             // Without animation
             /*loadInfraData().then(() => {
@@ -94,12 +94,6 @@ function loadInfra() {
         });
 }
 
-function noDataSelected() {
-
-    if(!presentationPlaying) {
-        document.getElementById("timer").innerHTML = "No trajectory data!";
-    }
-}
 
 function addInfra() {
     //(infrastructures);
@@ -139,6 +133,26 @@ function updateDescriptionInfra(e) {
     selectedInfra = infrastructures[idx];
 
     document.getElementById('textDescInfra').innerHTML = selectedInfra['description'];
+
+    infraSelected = true;
+
+    const url = baseURL + 'trajlist/' + selectedInfra['name'];
+
+    // We will have to take into account the infra.
+
+    $.ajax({
+        type: "GET",
+        dataType: "json",
+        url: url,
+        crossDomain : true,
+    })
+        .done(function( data ) {
+            trajectories = data;
+            //console.log(trajectories);
+            // DEBUG
+            addTraj();
+        });
+
 }
 
 /* TRAJECTORIES */
@@ -174,7 +188,11 @@ function loadTraj() {
 
             // With animation
             loadTrajData().then(() => {
+                minTime = selectedTraj.tmin;
+                maxTime = selectedTraj.tmax;
                 trajDataLoaded = true;
+
+                prepareHistTT();
                 interPolateData();
                 createSlider();
                     downSampleTrajectories();
@@ -262,19 +280,22 @@ function addTraj() {
     //console.log(trajectories);
 
     // Remove all options
-    var select = document.getElementById("trajData");
-    var length = select.options.length;
-    for (i = 0; i < length; i++) {
-        select.options[i] = null;
-    }
+    $('#trajData').children('option').remove();
 
     let idx = -1;
 
+    $('#trajData').append($('<option>', {
+        value: "None",
+        text: "No trajectory data"
+    }))
+
     trajectories.forEach((traj, index) => {
 
-        if(traj.name == selectedTraj) {
-            selectedTraj = traj;
-            idx = index;
+        if (presentationPlaying) {
+            if(traj.name == selectedTraj) {
+                selectedTraj = traj;
+                idx = index;
+            }
         }
 
         $('#trajData').append($('<option>', {
@@ -283,14 +304,63 @@ function addTraj() {
         }))
     });
 
-    minTime = selectedTraj.tmin;
-    maxTime = selectedTraj.tmax;
-
     document.getElementById('descTraj').style.display = '';
-    document.getElementById('textDescTraj').innerHTML = trajectories[idx]['description'];
 
-    document.getElementById("trajData").selectedIndex = idx;
+    if (presentationPlaying) {
+        document.getElementById('textDescTraj').innerHTML = trajectories[idx]['description'];
 
+        document.getElementById("trajData").selectedIndex = idx;
+    } else {
+        document.getElementById('textDescTraj').innerHTML = "Only show the structure";
+
+        document.getElementById("trajData").selectedIndex = 0;
+
+        selectedTraj = {'value': 'None'};
+    }
+
+}
+
+function dataSelected() {
+
+    $("#dragOpt").remove();
+    document.getElementById("optionsButton").style.display = "";
+    optionsShown = false;
+
+    console.log(selectedInfra, selectedTraj);
+
+    if (selectedTraj.value === "None") {
+        loadInfraData().then(() => {
+            infraDataLoaded = true;
+
+            clearInterval(pedMover);
+            document.getElementById("playPauseButton").innerHTML = "<i class=\"fas fa-play fa-lg\"></i>";
+            paused = true;
+
+            document.getElementById("timer").innerHTML = "No trajectory data!";
+
+            if (viz3D) {
+                deleteStuff3D();
+            } else {
+                deleteStuff2D();
+            }
+
+            if (selectedInfra.name === "denhaag") {
+                viz3D = false;
+                viz2D = true;
+                document.getElementById("threeDButton").style.display = "none";
+            } else {
+                document.getElementById("threeDButton").style.display = "";
+            }
+
+            document.getElementById("slider").style.visibility = "hidden";
+            document.getElementById("leftButtons").style.visibility = "hidden";
+
+            prepViz();
+        });
+
+    } else {
+
+    }
 }
 
 function updateDescriptionTraj(e) {
@@ -298,6 +368,7 @@ function updateDescriptionTraj(e) {
 
     //console.log(e);
     const trajName = e.options[e.selectedIndex].value;
+
     function isSelectedTraj(traj){return traj.name === trajName}
 
     //console.log(trajName);
@@ -305,13 +376,20 @@ function updateDescriptionTraj(e) {
     //console.log();
     const idx = trajectories.findIndex(isSelectedTraj);//trajectories.map(function(e) { return e.name; }).indexOf(trajName);
 
-    //console.log(idx);
+    if (idx == -1) {
+        selectedTraj = null;
+        document.getElementById('textDescTraj').innerHTML = "Only show the structure";
 
-    selectedTraj = trajectories[idx];
+        minTime = 0;
+        maxTime = 0;
+    } else {
+        selectedTraj = trajectories[idx];
+        document.getElementById('textDescTraj').innerHTML = selectedTraj['description'];
 
-    //console.log(selectedTraj);
+        minTime = selectedTraj.tmin;
+        maxTime = selectedTraj.tmax;
+    }
 
-    document.getElementById('textDescTraj').innerHTML = selectedTraj['description'];
 }
 
 /* Is currently in full screen or not */
@@ -419,8 +497,8 @@ function appendOptions() {
 
         document.getElementById("dragOpt").style.display = "none";
 
-        document.getElementById("dragOpt").style.top = 10 + "px";
-        document.getElementById("dragOpt").style.left = 10 + "px";
+        document.getElementById("dragOpt").style.top = 0 + "px";
+        document.getElementById("dragOpt").style.left = 0 + "px";
 
         $( function() {
             $( "#dragOpt" ).draggable(
@@ -438,28 +516,88 @@ function appendOptions() {
                     },
                 });
         } );
+
+        if (viz2D && !allTrajLoaded) {
+            document.getElementById("voronoi_checkbox").disabled = true;
+
+            if (!allTrajLoaded) {
+                document.getElementById("all_trajectories_checkbox").disabled = true;
+            }
+
+            $( "#optionsStatsButton" ).click(function() {
+
+                if(document.getElementById("optODChord").style.display === "") {
+
+                    document.getElementById("optionsStatsButton").innerHTML = "<i class=\"fas fa-plus fa-lg\"></i>";
+
+                    document.getElementById("optODChord").style.display = "none";
+                    document.getElementById("opt_tt").style.display = "none";
+                    document.getElementById("opt_density").style.display = "none";
+
+
+                } else {
+
+                    document.getElementById("optionsStatsButton").innerHTML = "<i class=\"fas fa-minus fa-lg\"></i>"
+
+                    document.getElementById("optODChord").style.display = "";
+                    document.getElementById("opt_tt").style.display = "";
+                    document.getElementById("opt_density").style.display = "";
+
+
+                }
+
+
+
+            });
+
+            if (selectedTraj.value === "None") {
+                document.getElementById("optTraj").style.display = "none";
+
+            }
+        }
+
     });
+
+
+
 
 
 }
 
 $('#optionsButton').click(() => {
-    if (optionsShown) {
-        document.getElementById("optionsButton").innerHTML = "<i class=\"fas fa-plus fa-lg\"></i>";
-        document.getElementById("dragOpt").style.display = "none";
 
-        optionsShown = false;
-    } else {
-        document.getElementById("optionsButton").innerHTML = "<i class=\"fas fa-minus fa-lg\"></i>";
-        document.getElementById("dragOpt").style.display = "";
+    document.getElementById("optionsButton").style.display = "none";
+    document.getElementById("dragOpt").style.display = "";
 
-        optionsShown = true;
-    }
+    optionsShown = true;
 });
+
+function hideOptions() {
+
+    document.getElementById("optionsButton").style.display = "";
+    document.getElementById("dragOpt").style.display = "none";
+
+    optionsShown = false;
+}
 
 window.addEventListener('resize', function(){
 
     resizeViz();
+
+    $('html,body').scrollTop(0);
+
+    if (statsShown) {
+
+        if (window.innerWidth >= 1200) {
+            $('body').css("overflow-y", "hidden");
+            document.getElementById("statDiv").style.overflowY = 'auto';
+        } else {
+            $('body').css("overflow-y", "auto");
+            document.getElementById("statDiv").style.overflowY = 'hidden';
+        }
+    } else {
+        $('body').css("overflow-y", "hidden");
+    }
 
 }, true);
 
@@ -878,6 +1016,12 @@ function skipPresentation() {
     if (!vizPrepared) {
         viz3D = false;
         viz2D = true;
+
+        document.getElementById("threeDButton").innerHTML = "<i class=\"fas fa-cube fa-lg\"></i>";
+        document.getElementById("threeDButton").title = "3D viz";
+
+        document.getElementById("help").title = "Scroll for zoom/dezoom; Click + Mouse to move around; Click on a zone to select it as an origin and ctrl+click to select it as a destination."
+
         prepViz();
         runViz();
     }

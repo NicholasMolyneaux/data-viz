@@ -76,8 +76,6 @@ async function loadTrajData() {
     }).catch(err => {
         console.log(err)
     });
-
-    prepareHistTT();
 }
 
 function interPolateData() {
@@ -135,7 +133,9 @@ function downSampleTrajectories() {
             }
             trajectoryDataByID.push(downsampledPed);
         }
-        document.getElementById("all_trajectories_checkbox").removeAttribute('disabled');
+        allTrajLoaded = true;
+
+        document.getElementById("all_trajectories_checkbox").disabled = false;
     }).catch(err => {
         console.log(err)
     });

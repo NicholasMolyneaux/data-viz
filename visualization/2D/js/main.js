@@ -42,8 +42,15 @@ function checkZone() {
 function checkControl() {
     if (d3.select("#control_checkbox").property("checked")) {
         drawControlAreas(areasData, d3.select(".voronoi_poly_layer"));
+
+        document.getElementById("voronoi_checkbox").disabled = false;
+
+
     } else {
         d3.selectAll(".controlled-areas").remove();
+
+        document.getElementById("voronoi_checkbox").disabled = true;
+        document.getElementById("voronoi_checkbox").checked = false;
     }
 }
 function checkFlow() {
@@ -62,6 +69,7 @@ function checkFlow() {
 function checkTrajectories() {
     if (d3.select("#all_trajectories_checkbox").property("checked")) {
 
+        /*
         // remove densites
         d3.select("#voronoi_checkbox").property("checked", false);
         clearCanvas(d3.select(".voronoi_canvas"));
@@ -76,7 +84,7 @@ function checkTrajectories() {
         document.getElementById("playPauseButton").innerHTML = "<i class=\"fas fa-play fa-lg\"></i>";
         vizPaused = true;
         // removes dots
-        d3.select(".pedes_layer").selectAll(".ped-individual").remove();
+        d3.select(".pedes_layer").selectAll(".ped-individual").remove();*/
 
         // show trajectories
         plotAllTrajectories(d3.select(".trajectories_layer"));
@@ -86,9 +94,9 @@ function checkTrajectories() {
         d3.select(".trajectories_layer").selectAll(".trajectories").remove();
 
         // add pedestrians again
-        runViz();
+        /*runViz();
         document.getElementById("playPauseButton").innerHTML = "<i class=\"fas fa-pause fa-lg\"></i>";
-        vizPaused = false;
+        paused = false;*/
 
     }
 }

@@ -59,6 +59,7 @@ body {
     padding-bottom:0;
     #font-size: 2vw;
     overflow-x: hidden;
+    overflow-y: hidden;
 }
 
 @font-face {
@@ -236,6 +237,13 @@ h1, h2 {
     left:10px;
 }
 
+#hideButton{
+    cursor: pointer;
+    position:absolute;
+    top:0px;
+    right:5px;
+}
+
 .min-opt {
     padding: 0;
 }
@@ -250,6 +258,10 @@ h1, h2 {
     top: 0;
     left: 0;
     cursor: move;
+}
+
+#optionsStatsButton {
+    cursor: pointer;
 }
 
 .col-centered{
@@ -555,7 +567,7 @@ path.chord {
     margin-right:auto;
 }
 
-#ODCont {
+#viz_OD {
     text-align: center
 }
 
@@ -704,20 +716,25 @@ path.chord {
     position: absolute;
     left: 0;
     bottom: 0;
-    background-color: white;
     width: 100%;
 }
 
 .opt-graphs {
-    #box-sizing: content-box;
-    #padding: 10px;
-    #border: 2px solid black;
+    box-sizing: content-box;
+    padding: 10px;
+    border: 2px solid black;
     background-color: #cccccc;
     font-size: 12px;
 }
 
-.opt-graphs-buttons, .btn-opt {
-    font-size: 10px;
+.opt-graphs-buttons, .btn-opt, .input-group-text, #chord-group-name {
+    font-size: 12px;
+}
+
+.input-group-text {
+    background-color: transparent;
+    border: transparent;
+    color: #262A2D;
 }
 
 .colStat, .statRow {
@@ -729,13 +746,19 @@ path.chord {
     background: #E8EBEF;
 }
 
-@media screen and (min-width: 1080px) {
-    #statDiv {
-        overflow-y: auto;
-    }
+.middleVert{
+    display: flex;
+    align-items: center;
+}
 
-    body {
-        overflow-y: hidden;
-    }
+#chord-group-name {
+    height: 100%;
+}
 
+.chordlabels {
+    font-size: 18px;
+}
+
+#descInfra, #descTraj {
+    margin-bottom: 0px;
 }

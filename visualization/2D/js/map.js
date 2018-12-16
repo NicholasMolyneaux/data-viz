@@ -132,6 +132,8 @@ function setVoronoiArea() {
 
     if (stateControlAreaButton == 'idle') {
 
+        d3.selectAll(".controlled-areas").remove();
+
         stateControlAreaButton = 'drawing';
         document.getElementById("control_area").innerHTML = "Make Control Area";
 
@@ -143,7 +145,14 @@ function setVoronoiArea() {
                 .attr("cx", mouse[0])
                 .attr("cy", mouse[1])
                 .attr("r", 0.15);
-        })
+        });
+
+        document.getElementById("voronoi_checkbox").checked = false;
+        document.getElementById("voronoi_checkbox").disabled = true;
+
+        document.getElementById("control_checkbox").checked = false;
+        document.getElementById("control_checkbox").disabled = true;
+
 
     } else if (stateControlAreaButton == 'drawing') {
         d3.select("#control_checkbox").property("checked", false);
@@ -161,7 +170,12 @@ function setVoronoiArea() {
         d3.selectAll(".voronoi-pre-circle").remove();
 
         prepareDensityData();
-        reDrawHistDensity();
+
+        if (statsShown) {
+            reDrawHistDensity();
+        }
+
+        document.getElementById("voronoi_checkbox").disabled = false;
 
     } else if (stateControlAreaButton == 'drawn') {
         d3.select("#control_checkbox").property("disabled", false);
@@ -172,7 +186,15 @@ function setVoronoiArea() {
         clearCanvas(voronoi_clip_canvas);
 
         prepareDensityData();
-        reDrawHistDensity();
+        if (statsShown) {
+            reDrawHistDensity();
+        }
+
+        document.getElementById("voronoi_checkbox").disabled = true;
+        document.getElementById("voronoi_checkbox").checked = false;
+        document.getElementById("control_checkbox").disabled = false;
+
+
     }
 
     /*

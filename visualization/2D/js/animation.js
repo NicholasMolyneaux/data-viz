@@ -97,18 +97,28 @@ function runOneStep2D() {
 
     let current_time = trajDataFiltered[currentTimeShownIdx].time;
     let current_filtered_data_by_od = filterByOD(trajDataFiltered[currentTimeShownIdx].data, trajSummary);
-    checkVoronoi(current_filtered_data_by_od, voronoi_poly_layer, voronoi_canvas);
+    try {
+        checkVoronoi(current_filtered_data_by_od, voronoi_poly_layer, voronoi_canvas);
+    } catch (e) {
+        // Do Nothing;
+    }
+
     let ped_speed = current_filtered_data_by_od.map( d => {
-        let v = 0;
-        if (d3.select("#ped_speed").property("checked")) {
-            if (currentTimeShownIdx !== 0) {
-                trajDataFiltered[currentTimeShownIdx - 1].data.map(p => {
-                    if (p.id === d.id) {
-                        v = Math.abs(Math.sqrt(Math.pow(p.x - d.x, 2) + Math.pow(p.y - d.y, 2))) / (Number(trajDataFiltered[currentTimeShownIdx].time) - Number(trajDataFiltered[currentTimeShownIdx - 1].time));
+            let v = 0;
+            try {
+                if (d3.select("#ped_speed").property("checked")) {
+                    if (currentTimeShownIdx !== 0) {
+                        trajDataFiltered[currentTimeShownIdx - 1].data.map(p => {
+                            if (p.id === d.id) {
+                                v = Math.abs(Math.sqrt(Math.pow(p.x - d.x, 2) + Math.pow(p.y - d.y, 2))) / (Number(trajDataFiltered[currentTimeShownIdx].time) - Number(trajDataFiltered[currentTimeShownIdx - 1].time));
+                            }
+                        })
                     }
-                })
+                }
+            } catch (e) {
+                // Do Nothing!
             }
-        }
+
             return {"id":d.id, "speed": v};
         });
 

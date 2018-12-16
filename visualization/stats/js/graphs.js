@@ -382,21 +382,63 @@ function exportGraph(id) {
             saveAsPNG(id, name);
         } else if (type == 'csv') {
             saveAsCSV(id, name);
-        } else if (type == 'svg') {
-            saveAsSVG(id, name);
-        } else if (type == 'pdf') {
-            saveAsPDF(id, name);
         }
     }
 }
 
+function saveMainViz(id) {
+
+    const name = document.getElementById("exportName_" + id).value;
+
+    saveAsPNG(id, name);
+}
+
 function saveAsPNG(id, name) {
 
-    const svg = d3.select("#svgViz_" + id).node();
+    let svg;
+
+    if (id !== "mainViz") {
+        svg = d3.select("#svgViz_" + id).node();
+    } else {
+        svg = d3.select("#svgCont").node();
+    }
 
     console.log(svg);
 
-    saveSvgAsPng(svg, name + ".png", {scale: 2, backgroundColor: '#FFFFFF', height: graphOptions[id]['height'], top:15, encoderOptions: 0.2});
+    let height;
+
+    if (id === 'tt' || id === 'density') {
+        height = graphOptions[id]['height']
+    } else if (id === 'OD') {
+        height = 900;
+    } else if (id === "mainVIz") {
+        height = getVizHeight();
+    }
+
+    let scale;
+
+    if ( id==="tt" || id === "density") {
+        scale = 2;
+    } else if (id === 'OD') {
+        scale = 1;
+    } else if (id === "mainViz") {
+        scale = 50;
+    }
+
+    let left = 0;
+
+    if (id === "OD") {
+        left = -450;
+    }
+
+    let top = 0;
+
+    if (id === "OD") {
+        top = -450;
+    }
+
+
+    saveSvgAsPng(svg, name + ".png", {scale: scale, backgroundColor: '#FFFFFF', height: height, top:top, left:left, encoderOptions: 0.2});
 
 }
 
@@ -445,16 +487,4 @@ function saveAsCSV(id, name) {
 
     download(csvContent, name + '.csv', 'text/csv;encoding:utf-8');
 
-}
-
-function saveAsSVG(id, name){
-    var svgData = $("#svgViz_" + id)[0].outerHTML;
-    var svgBlob = new Blob([svgData], {type:"image/svg+xml;charset=utf-8"});
-    var svgUrl = URL.createObjectURL(svgBlob);
-    var downloadLink = document.createElement("a");
-    downloadLink.href = svgUrl;
-    downloadLink.download = name + ".svg";
-    document.body.appendChild(downloadLink);
-    downloadLink.click();
-    document.body.removeChild(downloadLink);
 }
