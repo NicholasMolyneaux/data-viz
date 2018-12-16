@@ -260,6 +260,10 @@ h1, h2 {
     cursor: move;
 }
 
+#optionsStatsButton {
+    cursor: pointer;
+}
+
 .col-centered{
     float: none;
     margin: 0 auto;
@@ -749,4 +753,8 @@ path.chord {
 
 .chordlabels {
     font-size: 18px;
+}
+
+#descInfra, #descTraj {
+    margin-bottom: 0px;
 }

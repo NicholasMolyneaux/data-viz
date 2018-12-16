@@ -6,7 +6,13 @@ function showStatistics() {
     if (statsShown) {
         statsShown = false;
 
-        document.getElementById("showStats").innerHTML = "Show Statistics";
+        let showStats = document.getElementById("showStats");
+
+        showStats.innerHTML = "Show Statistics";
+        //showStats.classList.remove("col-12");
+        //showStats.classList.add("col");
+
+        document.getElementById("divOptStats").style.display = "none";
 
         viz.classList.add("col");
         viz.classList.remove("col-xl-8");
@@ -17,6 +23,13 @@ function showStatistics() {
 
     } else {
         statsShown = true;
+
+        document.getElementById("divOptStats").style.display = "";
+
+        let showStats = document.getElementById("showStats");
+
+        //showStats.classList.remove("col");
+        //showStats.classList.add("col-12");
 
         viz.classList.remove("col");
         viz.classList.add("col-xl-8");
@@ -39,7 +52,7 @@ function showStatistics() {
             addHistograms();
         });
 
-        document.getElementById("showStats").innerHTML = "Hide Statistics";
+        document.getElementById("showStats").innerHTML = "Hide Stats";
 
         if (window.innerWidth >= 1200) {
             $('body').css("overflow-y", "hidden");

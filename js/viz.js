@@ -99,13 +99,6 @@ function prepViz(change3DStyle=false) {
             document.removeEventListener( 'mousedown', onDocumentMouseDown, false);
         });
 
-
-        //document.getElementById("canvas").addEventListener( 'mousemove', onDocumentMouseMove, false );
-        //document.getElementById("canvas").addEventListener( 'mousedown', onDocumentMouseDown, false );
-
-        // Key stuff
-        document.getElementById("canvas")
-
         animate();
 
     } else if (viz2D) {
@@ -396,31 +389,7 @@ $( "#threeDButton" ).click(function() {
 
             $("#canvas").remove();
 
-
-            // Have to delete correctly these stuff.
-            topFloor = null;
-            bottomFloor = null;
-            ceiling = null;
-            walls = [];
-            clocks = [];
-            lights = [];
-
-            while(scene.children.length > 0){
-                scene.remove(scene.children[0]);
-            }
-
-            dctPed = new Object();
-            mixers = [];
-
-            container = null;
-            stats = null;
-            controls = null;
-            raycaster = null;
-            camera = null;
-            scene = null;
-            renderer = null;
-            light = null;
-
+            deleteStuff3D();
 
             if (SPEEDFACTOR <= 2) {
                 currentTimeShownIdx = Math.floor(currentTimeShownIdx/(INTERP+1));
@@ -439,14 +408,7 @@ $( "#threeDButton" ).click(function() {
 
             clearInterval(pedMover);
 
-            $("#svgCont").remove();
-
-            if (statsShown) {
-                viz.classList.add("col");
-                viz.classList.remove("col-xl-8");
-
-                $('#statDiv').remove();
-            }
+            deleteStuff2D();
 
             if (SPEEDFACTOR <= 2) {
                 currentTimeShownIdx *= (INTERP+1);
@@ -464,6 +426,43 @@ $( "#threeDButton" ).click(function() {
 
     }
 });
+
+function deleteStuff3D() {
+    // Have to delete correctly these stuff.
+    topFloor = null;
+    bottomFloor = null;
+    ceiling = null;
+    walls = [];
+    clocks = [];
+    lights = [];
+
+    while(scene.children.length > 0){
+        scene.remove(scene.children[0]);
+    }
+
+    dctPed = new Object();
+    mixers = [];
+
+    container = null;
+    stats = null;
+    controls = null;
+    raycaster = null;
+    camera = null;
+    scene = null;
+    renderer = null;
+    light = null;
+}
+
+function deleteStuff2D() {
+    $("#svgCont").remove();
+
+    if (statsShown) {
+        viz.classList.add("col");
+        viz.classList.remove("col-xl-8");
+
+        $('#statDiv').remove();
+    }
+}
 
 function changeStyle3D() {
 

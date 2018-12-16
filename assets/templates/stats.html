@@ -8,7 +8,7 @@
 
             </div>
         </div>
-        <div class="opt-graphs rounded row">
+        <div class="opt-graphs rounded row" id="optODChord" style="display: none;">
             <div class="col-4 text-center btnOptChord">
                 <button class="btn btn-primary btn-block btn-opt" id="chord_add_group" onclick="groupingChordGroups()">Group ODs</button>
             </div>
@@ -35,18 +35,11 @@
                     </button>
                 </div>
                 <div class="row modal-body form-group">
-                    <div class="col-8">
+                    <div class="col-10">
                         <input class="form-control opt-graphs-buttons" type="text" id="exportName_OD" placeholder="name">
                     </div>
-                    <div class="col-1">
-                        <input type="text" readonly class="form-control-plaintext dot" value=".">
-                    </div>
-                    <div class="col-3">
-                        <select class="form-control opt-graphs-buttons" id="exportType_OD" placeholder="type">
-                            <option value="" disabled selected>Type</option>
-                            <option value="png">PNG</option>
-                            <option value="svg">SVG</option>
-                        </select>
+                    <div class="col-2">
+                        <input type="text" readonly class="form-control-plaintext dot" value=".PNG">
                     </div>
 
                 </div>

@@ -5,7 +5,7 @@
             </div>
         </div>
     </div>
-    <div class="opt-graphs rounded row">
+    <div class="opt-graphs rounded row" id="opt_{{ id }}" style="display: none;">
         <div class="col">
             <div class="row">
                 <div class="col-4 middleVert">
@@ -144,7 +144,6 @@
                             <option value="" disabled selected>Type</option>
                             <option value="png">PNG</option>
                             <option value="csv">CSV</option>
-                            <option value="svg">SVG</option>
                         </select>
                     </div>
 

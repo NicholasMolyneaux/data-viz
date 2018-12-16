@@ -3,88 +3,93 @@
 
     <div class="container">
         <h2>Options</h2>
-        <hr>
-        <div class="row">
-            <div class="col-4">
-                <span>Structure</span>
-            </div>
-            <div class="col-8">
-                <div class="row" style="margin-bottom:10px;">
-                    <div class="col-5 min-opt">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="zone_checkbox" onclick="checkZone()">
-                            <label class="form-check-label" for="zone_checkbox">Zones</label>
-                        </div>
-                    </div>
-                    <div class="col-8 min-opt">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="control_checkbox" onclick="checkControl()">
-                            <label class="form-check-label" for="control_checkbox">Control Areas</label>
-                        </div>
-                    </div>
-                    <!--
-                    <div class="col-4 min-opt">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="flow_checkbox" onclick="checkFlow()">
-                            <label class="form-check-label" for="flow_checkbox">Flow Gates</label>
-                        </div>
-                    </div>
-                    -->
+        <span id="optTraj">
+            <hr>
+            <div class="row">
+                <div class="col-4">
+                    <span>Structure</span>
                 </div>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col text-center">
-                <button class="btn btn-primary btn-block" id="control_area" onclick="setVoronoiArea()">Draw Control Area</button>
-            </div>
-        </div>
-        <hr>
-        <div class="row">
-            <div class="col-4">
-                <span>Overlays</span>
-            </div>
-            <div class="col-8">
-                <div class="row">
-                    <div class="col-6 min-opt">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="voronoi_checkbox" disabled>
-                            <label class="form-check-label" for="voronoi_checkbox">Density</label>
+                <div class="col-8">
+                    <div class="row" style="margin-bottom:10px;">
+                        <div class="col-5 min-opt">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="zone_checkbox" onclick="checkZone()">
+                                <label class="form-check-label" for="zone_checkbox">Zones</label>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-6 min-opt">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="ped_speed">
-                            <label class="form-check-label" for="ped_speed">Speed</label>
+                        <div class="col-8 min-opt">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="control_checkbox" onclick="checkControl()">
+                                <label class="form-check-label" for="control_checkbox">Control Areas</label>
+                            </div>
                         </div>
+                        <!--
+                        <div class="col-4 min-opt">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="flow_checkbox" onclick="checkFlow()">
+                                <label class="form-check-label" for="flow_checkbox">Flow Gates</label>
+                            </div>
+                        </div>
+                        -->
                     </div>
                 </div>
             </div>
-        </div>
 
-        <hr>
-        <div class="row">
-            <div class="col-1">
-
-            </div>
-            <div class="col-10">
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="all_trajectories_checkbox" onclick="checkTrajectories()" disabled>
-                    <label class="form-check-label" for="all_trajectories_checkbox">Show all trajectories</label>
+            <div class="row">
+                <div class="col text-center">
+                    <button class="btn btn-primary btn-block" id="control_area" onclick="setVoronoiArea()">Draw Control Area</button>
                 </div>
             </div>
-        </div>
-
-        <hr>
-        <div class="row">
-            <div class="col text-center">
-                <button class="btn btn-primary btn-block" id="showStats" onclick="showStatistics()">Show Statistics</button>
+            <hr>
+            <div class="row">
+                <div class="col-4">
+                    <span>Overlays</span>
+                </div>
+                <div class="col-8">
+                    <div class="row">
+                        <div class="col-6 min-opt">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="voronoi_checkbox">
+                                <label class="form-check-label" for="voronoi_checkbox">Density</label>
+                            </div>
+                        </div>
+                        <div class="col-6 min-opt">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="ped_speed">
+                                <label class="form-check-label" for="ped_speed">Speed</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
-        <hr>
+
+            <hr>
+            <div class="row">
+                <div class="col-1">
+
+                </div>
+                <div class="col-10">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="all_trajectories_checkbox" onclick="checkTrajectories()">
+                        <label class="form-check-label" for="all_trajectories_checkbox">Show all trajectories</label>
+                    </div>
+                </div>
+            </div>
+
+            <hr>
+            <div class="row">
+                <div class="col text-center" id="divShowStats">
+                    <button class="btn btn-primary btn-block" id="showStats" onclick="showStatistics()">Show Statistics</button>
+                </div>
+                <div class="col-3 text-center middleVert" id="divOptStats" style="display: none;">
+                    <a id="optionsStatsButton" role="button" title="Options"><i class="fas fa-plus fa-lg"></i></a>
+                </div>
+            </div>
+            <hr>
+        </span>
         <div class="row">
             <div class="col text-center">
-                <button class="btn btn-primary btn-block" id="changeData" onclick="">Change Data</button>
+                <input class="btn btn-primary btn-block" type="button" data-toggle="modal" data-target="#modelChangeData" value="Change Data">
             </div>
         </div>
         <hr>
