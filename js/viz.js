@@ -3,7 +3,6 @@ let pedMover;
 let currentTimeShownIdx = 0;
 const INTERVAL2D = 100;
 let SPEEDFACTOR = 1;
-let paused = false;
 let threeDButtonDisabled = false;
 
 function prepViz(change3DStyle=false) {
@@ -199,7 +198,12 @@ function do1Step() {
 }
 
 function updateTimer(time) {
-    document.getElementById("timer").innerHTML = secondsToHms(time);
+
+    if (selectedTraj.value === "None") {
+        document.getElementById("timer").innerHTML = "No trajectory data!";
+    } else {
+        document.getElementById("timer").innerHTML = secondsToHms(time);
+    }
 
     slider.noUiSlider.setHandle(1, time, true);
 
@@ -412,8 +416,6 @@ function transitionBetween2D3D() {
 
             clearInterval(pedMover);
 
-            $("#canvas").remove();
-
             deleteStuff3D();
 
             if (SPEEDFACTOR <= 2) {
@@ -443,7 +445,7 @@ function transitionBetween2D3D() {
 
         prepViz();
 
-        if(paused) {
+        if(vizPaused) {
             do1Step();
         } else {
             runViz();
@@ -452,6 +454,9 @@ function transitionBetween2D3D() {
 }
 
 function deleteStuff3D() {
+
+    $("#canvas").remove();
+
     // Have to delete correctly these stuff.
     topFloor = null;
     bottomFloor = null;
@@ -460,10 +465,17 @@ function deleteStuff3D() {
     clocks = [];
     lights = [];
 
-    while (scene.children.length > 0) {
-        scene.remove(scene.children[0]);
+    function clearThree(obj){
+        while(obj.children.length > 0){
+            clearThree(obj.children[0])
+            obj.remove(obj.children[0]);
+        }
+        if(obj.geometry) obj.geometry.dispose()
+        if(obj.material) obj.material.dispose()
+        if(obj.texture) obj.texture.dispose()
     }
 
+    clearThree(scene);
     dctPed = new Object();
     mixers = [];
 }
@@ -480,6 +492,8 @@ function deleteStuff2D() {
 }
 
 function changeStyle3D() {
+
+    document.getElementById("changeStyle").disabled = true;
 
     cancelAnimationFrame(animation);
 
@@ -528,5 +542,10 @@ function changeStyle3D() {
             runViz();
         }
     }
+
+    setTimeout(function() {
+            document.getElementById("changeStyle").disabled = false;
+        }, 2000);
+
 }
 

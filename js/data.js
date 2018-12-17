@@ -50,8 +50,9 @@ async function loadInfraData() {
     }).then(monitoredareas => {
         areasData = monitoredareas;
     }).catch(err => {
-        console.log(err)
+        //Do nothing
     });
+
 
 }
 

@@ -42,6 +42,8 @@ $(document).ready(function() {
     // Load the infrastructures
     loadInfra();
 
+    resizeViz();
+
     presentation();
 
     //viz2D();
@@ -176,15 +178,6 @@ function loadTraj() {
             //console.log(trajectories);
             // DEBUG
             addTraj();
-            loading();
-
-            // Without animation
-            /*trajDataLoaded = false;
-            loadTrajData().then(() => {
-                trajDataLoaded = true;
-                finishedLoading();
-                runViz();
-                }*/
 
             // With animation
             loadTrajData().then(() => {
@@ -203,8 +196,7 @@ function loadTraj() {
                 } else {
                     document.getElementById("skipPresentation").style.display = "";
                 }
-            }
-            );
+            });
         })
         .fail( function(xhr, textStatus, errorThrown) {
             alert("Error, please reload the website.");
@@ -237,13 +229,18 @@ function finishedLoading() {
     document.getElementById("timer").innerHTML = "0 [s.]";
     document.getElementById("timer").style.opacity = "1";
     document.getElementById("timer").style.display = "";
-    document.getElementById("buttons").style.display = "";
 
 }
 
 function createSlider() {
 
     slider = document.getElementById('slider');
+
+    try {
+        slider.noUiSlider.destroy();
+    } catch (e) {
+        // Do nothing
+    };
 
     noUiSlider.create(slider, {
         start: [selectedTraj.tmin, selectedTraj.tmin, selectedTraj.tmax],
@@ -257,7 +254,7 @@ function createSlider() {
             to: secondsToHmss,
             from: Number
         }
-    });
+    }, true);
 
     slider.noUiSlider.on('slide', function () {
 
@@ -322,43 +319,92 @@ function addTraj() {
 
 function dataSelected() {
 
+    trajDataLoaded = false;
+
     $("#dragOpt").remove();
     document.getElementById("optionsButton").style.display = "";
     optionsShown = false;
 
     console.log(selectedInfra, selectedTraj);
 
+    clearInterval(pedMover);
+    document.getElementById("playPauseButton").innerHTML = "<i class=\"fas fa-play fa-lg\"></i>";
+    vizPaused = true;
+
+    loading();
+    document.getElementById("slider").style.visibility = "hidden";
+    document.getElementById("leftButtons").style.visibility = "hidden";
+
+    if (viz3D) {
+        deleteStuff3D();
+    } else {
+        deleteStuff2D();
+    }
+
     if (selectedTraj.value === "None") {
         loadInfraData().then(() => {
             infraDataLoaded = true;
 
-            clearInterval(pedMover);
-            document.getElementById("playPauseButton").innerHTML = "<i class=\"fas fa-play fa-lg\"></i>";
-            paused = true;
-
-            document.getElementById("timer").innerHTML = "No trajectory data!";
-
-            if (viz3D) {
-                deleteStuff3D();
+            if (selectedInfra.name === "denhaag") {
+                if (viz3D) {
+                    transitionBetween2D3D();
+                } else {
+                    prepViz();
+                }
+                document.getElementById("threeDButton").style.display = "none";
             } else {
-                deleteStuff2D();
+                document.getElementById("threeDButton").style.display = "";
+
+                prepViz();
             }
 
+            trajDataLoaded = true;
+
+            finishedLoading();
+            document.getElementById("timer").innerHTML = "No trajectory data!";
+        });
+
+    } else {
+        loadInfraData().then(() => {
+            infraDataLoaded = true;
+
+            document.getElementById("threeDButton").style.display = "";
+
             if (selectedInfra.name === "denhaag") {
-                viz3D = false;
-                viz2D = true;
+                if (viz3D) {
+                    viz3D = false;
+                    viz2D = true;
+                }
                 document.getElementById("threeDButton").style.display = "none";
             } else {
                 document.getElementById("threeDButton").style.display = "";
             }
 
-            document.getElementById("slider").style.visibility = "hidden";
-            document.getElementById("leftButtons").style.visibility = "hidden";
-
             prepViz();
-        });
 
-    } else {
+            // With animation
+            loadTrajData().then(() => {
+                minTime = selectedTraj.tmin;
+                maxTime = selectedTraj.tmax;
+                trajDataLoaded = true;
+
+                currentTimeShownIdx = 0;
+
+                prepareHistTT();
+                interPolateData();
+                createSlider();
+                downSampleTrajectories();
+
+                trajDataLoaded = true;
+                finishedLoading();
+                document.getElementById("slider").style.visibility = "visible";
+                document.getElementById("leftButtons").style.visibility = "visible";
+                runViz();
+
+            });
+
+
+        });
 
     }
 }
@@ -473,7 +519,6 @@ $(document).on('fullscreenchange webkitfullscreenchange mozfullscreenchange MSFu
         }
 
 
-
         document.getElementById("dragOpt").style.top = 10 + "px";
         document.getElementById("dragOpt").style.left = 10 + "px";
 
@@ -524,45 +569,40 @@ function appendOptions() {
                 document.getElementById("all_trajectories_checkbox").disabled = true;
             }
 
-            $( "#optionsStatsButton" ).click(function() {
-
-                if(document.getElementById("optODChord").style.display === "") {
-
-                    document.getElementById("optionsStatsButton").innerHTML = "<i class=\"fas fa-plus fa-lg\"></i>";
-
-                    document.getElementById("optODChord").style.display = "none";
-                    document.getElementById("opt_tt").style.display = "none";
-                    document.getElementById("opt_density").style.display = "none";
-
-
-                } else {
-
-                    document.getElementById("optionsStatsButton").innerHTML = "<i class=\"fas fa-minus fa-lg\"></i>"
-
-                    document.getElementById("optODChord").style.display = "";
-                    document.getElementById("opt_tt").style.display = "";
-                    document.getElementById("opt_density").style.display = "";
-
-
-                }
-
-
-
-            });
-
             if (selectedTraj.value === "None") {
                 document.getElementById("optTraj").style.display = "none";
 
             }
         }
 
+        if (viz3D && STYLE == "TWD") {
+
+            document.getElementById("changeStyle").checked = true;
+        }
+
     });
 
 
-
-
-
 }
+
+$( "#optionsStatsButton" ).click(function() {
+
+    if(document.getElementById("optODChord").style.display === "") {
+
+        document.getElementById("optionsStatsButton").innerHTML = "<i class=\"fas fa-plus fa-lg\"></i>";
+
+        document.getElementById("optODChord").style.display = "none";
+        document.getElementById("opt_tt").style.display = "none";
+        document.getElementById("opt_density").style.display = "none";
+    } else {
+
+        document.getElementById("optionsStatsButton").innerHTML = "<i class=\"fas fa-minus fa-lg\"></i>"
+
+        document.getElementById("optODChord").style.display = "";
+        document.getElementById("opt_tt").style.display = "";
+        document.getElementById("opt_density").style.display = "";
+    }
+});
 
 $('#optionsButton').click(() => {
 
@@ -583,21 +623,6 @@ function hideOptions() {
 window.addEventListener('resize', function(){
 
     resizeViz();
-
-    $('html,body').scrollTop(0);
-
-    if (statsShown) {
-
-        if (window.innerWidth >= 1200) {
-            $('body').css("overflow-y", "hidden");
-            document.getElementById("statDiv").style.overflowY = 'auto';
-        } else {
-            $('body').css("overflow-y", "auto");
-            document.getElementById("statDiv").style.overflowY = 'hidden';
-        }
-    } else {
-        $('body').css("overflow-y", "hidden");
-    }
 
 }, true);
 
@@ -634,6 +659,21 @@ function resizeViz() {
         //document.getElementById("canvas").width = window.innerWidth + "px";
     } else if (viz2D) {
         document.getElementById("svgCont").style.height = vizHeight + "px";
+    }
+
+    $('html,body').scrollTop(0);
+
+    if (statsShown) {
+
+        if (window.innerWidth >= 1200) {
+            $('body').css("overflow-y", "hidden");
+            document.getElementById("statDiv").style.overflowY = 'auto';
+        } else {
+            $('body').css("overflow-y", "auto");
+            document.getElementById("statDiv").style.overflowY = 'hidden';
+        }
+    } else {
+        $('body').css("overflow-y", "hidden");
     }
 }
 

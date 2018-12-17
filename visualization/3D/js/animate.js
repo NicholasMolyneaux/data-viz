@@ -42,8 +42,10 @@ function runOneStep3D() {
         trajDataFiltered = trajData.filter(v => v.time > timeBounds[0] && v.time <= timeBounds[1]);
     }
 
-    animatePedestrians(trajDataFiltered[currentTimeShownIdx].data);
-    updateTimer(trajDataFiltered[currentTimeShownIdx].time);
+    if (selectedTraj.value !== "None") {
+        animatePedestrians(trajDataFiltered[currentTimeShownIdx].data);
+        updateTimer(trajDataFiltered[currentTimeShownIdx].time);
+    }
 }
 
 function animatePedestrians(json) {

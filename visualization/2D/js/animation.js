@@ -122,6 +122,10 @@ function runOneStep2D() {
             return {"id":d.id, "speed": v};
         });
 
-    updatePosition2D(current_filtered_data_by_od, ped_speed, pedes_layer);
-    updateTimer(current_time);
+    if (selectedTraj.value !== "None") {
+        updatePosition2D(current_filtered_data_by_od, ped_speed, pedes_layer);
+        updateTimer(current_time);
+    } else {
+        d3.selectAll('.ped-individual').remove();
+    }
 }
