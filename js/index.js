@@ -835,10 +835,10 @@ function presentation() {
 
     idTO = setTimeout(function() {
 
-        document.getElementById("titleForPres").style.color = "white";
-        document.getElementById("textLine1").style.color = "white";
-        document.getElementById("textLine2").style.color = "white";
-        document.getElementById("textLine3").style.color = "white";
+        document.getElementById("titleForPres").style.color = "#F7F4EA";
+        document.getElementById("textLine1").style.color = "#F7F4EA";
+        document.getElementById("textLine2").style.color = "#F7F4EA";
+        document.getElementById("textLine3").style.color = "#F7F4EA";
         fadeIn("titleForPres",250);
         fadeIn("textLine1",250);
         fadeIn("textLine2",250);
@@ -855,7 +855,7 @@ function presentation() {
         fourthTextLine .innerHTML = "<h2 id='textLine4' style='display: none'>the environment looks more like this !</h2>";
         fourthTextLine .classList.add("presentationOn3D");
         fourthTextLine .classList.add("presentationOn3D-text4");
-        fourthTextLine.style.color = "white";
+        fourthTextLine.style.color = "#F7F4EA";
 
         document.getElementById("mainViz").appendChild(fourthTextLine );
 
@@ -919,7 +919,7 @@ function presentation() {
         let transition = document.createElement("div");
     transition.classList.add("presentationOn3D");
     transition.id = "transition3D2D";
-    transition.style.backgroundColor = "white";
+    transition.style.backgroundColor = "#F7F4EA";
     transition.style.display = "none";
     transition.style.height ="100%";
 
@@ -934,7 +934,7 @@ function presentation() {
     timeOutPres.push(idTO);
 
     idTO = setTimeout(function() {
-        document.getElementById("textLine1").style.color = "black";
+        document.getElementById("textLine1").style.color = "#1D1B0D";
         fadeIn("textLine1",250);
 
     }, time);
@@ -960,7 +960,7 @@ function presentation() {
         // Same as title, just replaces the first line of text without the reader noticing
         let secondTextLine = document.createElement("div");
         secondTextLine .innerHTML = "<h2 id='textLine1' style='display: none'>The 2D analytics mode allows you to explore some of the specifities of pedestrian dynamics.</h2>";
-        secondTextLine .style.color = "black";
+        secondTextLine .style.color = "#1D1B0D";
         secondTextLine .classList.add("presentationOn3D");
         secondTextLine .classList.add("presentationOn3D-text1");
 
@@ -978,7 +978,7 @@ function presentation() {
         // Same as title, just replaces the first line of text without the reader noticing
         let thirdTextLine = document.createElement("div");
         thirdTextLine  .innerHTML = "<h2 id='textLine4' style='display: none'>You can now freely explore The walking data visualization !</h2>";
-        thirdTextLine  .style.color = "black";
+        thirdTextLine  .style.color = "#1D1B0D";
         thirdTextLine.style.top = "75%";
         thirdTextLine  .classList.add("presentationOn3D");
         thirdTextLine  .classList.add("presentationOn3D-text4");

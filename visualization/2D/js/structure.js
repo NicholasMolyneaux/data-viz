@@ -122,7 +122,8 @@ function drawColorbar(id, svg, colors, boundaries, x, y, width, height, padding,
         .attr("width", width+2*padding)
         .attr("height", height)
         .attr("rx", 1)
-        .attr("ry", 1);
+        .attr("ry", 1)
+        .attr("fill", "#F7F4EA");
 
     svg.append("text")
         .style("opacity", 0)

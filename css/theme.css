@@ -60,6 +60,8 @@ body {
     #font-size: 2vw;
     overflow-x: hidden;
     overflow-y: hidden;
+    color: #1D1B0D;
+    background-color: #F7F4EA;
 }
 
 @font-face {
@@ -67,6 +69,35 @@ body {
     src: url("../assets/font/DeadKansas.ttf") format('truetype');
 }
 
+/* Navbar */
+.navbar-custom {
+    background-color: #1D1B0D;
+}
+/* change the brand and text color */
+.navbar-custom .navbar-brand,
+.navbar-custom .navbar-text, .nav-icon {
+    color: #D8CC99;
+}
+/* change the link color */
+.navbar-custom .navbar-nav .nav-link {
+    color: #D8CC99;
+}
+/* change the color of active or hovered links */
+.navbar-custom .nav-item.active .nav-link,
+.navbar-custom .nav-item:hover .nav-link {
+    color: #D8CC99;
+}
+
+/* change the link color and padding  */
+.navbar-custom .navbar-nav .nav-link {
+    color: #D8CC99;
+}
+
+/* change the color and background color of active links */
+.navbar-custom .nav-item.active .nav-link,
+.navbar-custom .nav-item:hover .nav-link {
+    color: #F7F4EA;
+}
 .mainViz{
     position: relative;
 }
@@ -91,6 +122,7 @@ h1, h2 {
     height: 100%;
     font-weight: bold;
     font-size: 20px;
+    color: #1D1B0D;
 }
 
 .presentation-title {
@@ -114,36 +146,42 @@ h1, h2 {
     width: 100%;
     font-weight: bold;
     font-size: 20px;
+    color: #1D1B0D;
 }
 
 .presentationOn3D-title {
     position: absolute;
     top: 0%;
     height: 20%;
+    color: #1D1B0D;
 }
 
 .presentationOn3D-text1 {
     position: absolute;
     top: 20%;
     height: 15%;
+    color: #1D1B0D;
 }
 
 .presentationOn3D-text2 {
     position: absolute;
     top: 35%;
     height: 15%;
+    color: #1D1B0D;
 }
 
 .presentationOn3D-text3 {
     position: absolute;
     top: 50%;
     height: 15%;
+    color: #1D1B0D;
 }
 
 .presentationOn3D-text4 {
     position: absolute;
     top: 65%;
     height: 15%;
+    color: #1D1B0D;
 }
 
 
@@ -153,6 +191,7 @@ h1, h2 {
     justify-content: center;
     bottom: 20px;
     cursor: pointer;
+    color: #544D31;
 }
 
 #textPres, #textPres {
@@ -188,14 +227,14 @@ h1, h2 {
 }
 
 .btn-primary {
-    background-color: #373D42;
+    background-color: #544D31;
     border-color: black;
     text-align: center;
-    color: white;
+    color: #F7F4EA;
 }
 
 .btn-primary.export {
-    background-color: #6c757d;
+    background-color: #9D8655;
     border-color: black;
     text-align: center;
     font-weight: bold;
@@ -235,6 +274,7 @@ h1, h2 {
     position:absolute;
     top:5px;
     left:10px;
+    color: #544D31;
 }
 
 #hideButton{
@@ -252,8 +292,8 @@ h1, h2 {
     position:absolute;
     box-sizing: content-box;
     padding: 10px;
-    border: 2px solid black;
-    background-color: #cccccc;
+    border: 2px solid #1D1B0D;
+    background-color: #D8CC99;
     z-index:2;
     top: 0;
     left: 0;
@@ -279,6 +319,7 @@ h1, h2 {
     font-size: 30px;
     font-family: "Fira Mono", Monaco, "Andale Mono", "Lucida Console", "Bitstream Vera Sans Mono", "Courier New", Courier, monospace;
     font-weight: bolder;
+    color: #544D31;
 }
 
 #leftButtons {
@@ -287,12 +328,14 @@ h1, h2 {
     display: flex;
     justify-content: center;
     padding-left: 10px;
+    color: #544D31;
 }
 
 #rightButtons {
     cursor: pointer;
     display: inline-flex;
     padding-right: 10px;
+    color: #544D31;
 }
 
 #speed {
@@ -307,6 +350,7 @@ h1, h2 {
     cursor: help;
     top: 5px;
     right: 10px;
+    color: #544D31;
 }
 
 #slider {
@@ -315,7 +359,11 @@ h1, h2 {
 }
 
 .noUi-connect {
-    background: #E8EBEF;
+    background: #D8CC99;
+}
+
+.noUi-connects {
+    background: #F7F4EA;
 }
 
 .noUi-horizontal .outer {
@@ -324,7 +372,7 @@ h1, h2 {
     border-radius: 20px;
     box-shadow: none;
     outline: none;
-    background: #262A2D;
+    background: #544D31;
     border: none;
     box-shadow: none;
     cursor: pointer;
@@ -335,7 +383,7 @@ h1, h2 {
     background: transparent;
     width: 10px;
     height: 20px;
-    border-top: solid 10px rgb(200,30,50);
+    border-top: solid 10px #9D8655;
     border-left: solid 10px transparent;
     border-right: solid 10px transparent;
     border-bottom: transparent;
@@ -356,6 +404,8 @@ h1, h2 {
 
 .noUi-tooltip {
     display: none;
+    background-color: #F7F4EA;
+    color: #1D1B0D;
 }
 .noUi-active .noUi-tooltip {
     display: block;
@@ -426,8 +476,8 @@ h1, h2 {
 .boundary {
     stroke-width: 1;
     vector-effect: non-scaling-stroke;
-    fill: white;
-    stroke: black;
+    fill: #D8CC99;
+    stroke: #1D1B0D;
 }
 .voronoi-poly {
     stroke-width: 0.1;
@@ -589,7 +639,7 @@ path.chord {
     width: 100%;
     height: 15px;
     border-radius: 5px;
-    background: #1b1e21;
+    background: #9D8655;
     outline: none;
     opacity: 0.7;
     -webkit-transition: .2s;
@@ -602,15 +652,19 @@ path.chord {
     width: 25px;
     height: 25px;
     border-radius: 50%;
-    background: #FFFFFF;
+    background: #1D1B0D;
     cursor: pointer;
+}
+
+.form-check-input {
+    background-color: #544D31 !important;
 }
 
 .slider::-moz-range-thumb {
     width: 25px;
     height: 25px;
     border-radius: 50%;
-    background: #FFFFFF;
+    background: #1D1B0D;
     cursor: pointer;
 }
 
@@ -649,9 +703,9 @@ path.chord {
 }
 
 .btn-primary.download:hover {
-    background: white;
-    border-color: black;
-    color: black;
+    background: #F7F4EA;
+    border-color: #1D1B0D;
+    color: #1D1B0D;
 }
 
 /* d3 TIP */
@@ -722,13 +776,17 @@ path.chord {
 .opt-graphs {
     box-sizing: content-box;
     padding: 10px;
-    border: 2px solid black;
-    background-color: #cccccc;
+    border: 2px solid #1D1B0D;
+    background-color: #D8CC99;
     font-size: 12px;
 }
 
 .opt-graphs-buttons, .btn-opt, .input-group-text, #chord-group-name {
     font-size: 12px;
+}
+
+.btn {
+
 }
 
 .input-group-text {
@@ -743,7 +801,7 @@ path.chord {
 }
 
 #statDiv {
-    background: #E8EBEF;
+    background: #dad2b3;
 }
 
 .middleVert{

@@ -44,7 +44,7 @@ function prepViz(change3DStyle=false) {
 
         // Light
         if (STYLE == "normal") {
-            scene.background = new THREE.Color(0xffffff);
+            scene.background = new THREE.Color(0xf7f4ea);
 
             light = new THREE.HemisphereLight( 0xbbbbff, 0x444422 );
             light.position.set( 0, wallHeight, 0 );
@@ -52,7 +52,7 @@ function prepViz(change3DStyle=false) {
             scene.add( light );
 
         } else if (STYLE == "TWD") {
-            scene.background = new THREE.Color(0x000000);
+            scene.background = new THREE.Color(0x00000);
 
             light = new THREE.HemisphereLight( 0xffffff, 0x444422, 0.02 );
             light.position.set( 0, wallHeight, 0 );
