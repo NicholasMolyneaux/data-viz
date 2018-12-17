@@ -372,8 +372,22 @@ function changeAxis(e, id, type) {
 
 function exportGraph(id) {
 
-    const type = document.getElementById("exportType_" + id).value;
     const name = document.getElementById("exportName_" + id).value;
+
+    if (name === "") {
+        window.alert("Please, specify a name!")
+    } else {
+        let type = "png";
+        if (name === "tt" || name === "density") {
+            type = document.getElementById("exportType_" + id).value;
+        }
+
+        if (type === 'png') {
+            saveAsPNG(id, name);
+        } else if (type == 'csv') {
+            saveAsCSV(id, name);
+        }
+    }
 
     if (name === "" || type === "") {
         window.alert("Please specifiy a name and a type!");
@@ -384,13 +398,6 @@ function exportGraph(id) {
             saveAsCSV(id, name);
         }
     }
-}
-
-function saveMainViz(id) {
-
-    const name = document.getElementById("exportName_" + id).value;
-
-    saveAsPNG(id, name);
 }
 
 function saveAsPNG(id, name) {
