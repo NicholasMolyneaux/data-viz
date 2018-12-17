@@ -76,16 +76,10 @@ function groupingChordGroups() {
         // input box which is filled by default with the concatenation of sub names.
         console.log(currentGroupingScheme);
         makingNewGroup.forEach(l => {
-            console.log(l, currentLabels[l], Object.keys(currentGroupingScheme).find(key => currentGroupingScheme[key] === currentLabels[l]));
             let keyUpdate =  Object.keys(currentGroupingScheme).find(key => currentGroupingScheme[key] === currentLabels[l]);
-            console.log(keyUpdate);
-            let n = 0;
-            while (keyUpdate && n < 100) {
+            while (keyUpdate) {
                 currentGroupingScheme[keyUpdate] = document.getElementById("chord-group-name").value;
-                console.log(keyUpdate);
-                console.log(currentGroupingScheme);
                 keyUpdate =  Object.keys(currentGroupingScheme).find(key => currentGroupingScheme[key] === currentLabels[l]);
-                n +=1;
             }
         });
 
