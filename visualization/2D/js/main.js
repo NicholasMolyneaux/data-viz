@@ -69,9 +69,9 @@ function checkFlow() {
 function checkTrajectories() {
     if (d3.select("#all_trajectories_checkbox").property("checked")) {
 
-        /*
+
         // remove densites
-        d3.select("#voronoi_checkbox").property("checked", false);
+        /*d3.select("#voronoi_checkbox").property("checked", false);
         clearCanvas(d3.select(".voronoi_canvas"));
 
         // removes control areas

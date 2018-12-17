@@ -74,6 +74,21 @@ function groupingChordGroups() {
 
         // For elements which have been selected (clicked), create new grouping object with name specified in th
         // input box which is filled by default with the concatenation of sub names.
+        console.log(currentGroupingScheme);
+        makingNewGroup.forEach(l => {
+            console.log(l, currentLabels[l], Object.keys(currentGroupingScheme).find(key => currentGroupingScheme[key] === currentLabels[l]));
+            let keyUpdate =  Object.keys(currentGroupingScheme).find(key => currentGroupingScheme[key] === currentLabels[l]);
+            console.log(keyUpdate);
+            let n = 0;
+            while (keyUpdate && n < 100) {
+                currentGroupingScheme[keyUpdate] = document.getElementById("chord-group-name").value;
+                console.log(keyUpdate);
+                console.log(currentGroupingScheme);
+                keyUpdate =  Object.keys(currentGroupingScheme).find(key => currentGroupingScheme[key] === currentLabels[l]);
+                n +=1;
+            }
+        });
+
         makingNewGroup.forEach(l => {
             currentGroupingScheme[currentLabels[l]] = document.getElementById("chord-group-name").value;
         });
@@ -86,8 +101,10 @@ function groupingChordGroups() {
 
         // Copies original names and then removes the ones which have been grouped together.
         let keysTmp = currentLabels.slice();
-        makingNewGroup.sort(function (a, b) {return b - a;}
-        ).forEach(i => keysTmp.splice(i, 1));
+        makingNewGroup.sort(function (a, b) {return b - a;})
+            .forEach(i => keysTmp.splice(i, 1));
+        console.log(keysTmp);
+        console.log(currentGroupingScheme);
 
         currentLabels = Array.from(new Set(keysTmp.concat(Object.values(currentGroupingScheme))));
         // Builds the new chord diagram with the grouped names
@@ -124,8 +141,6 @@ function deleteChord() {
  * @param keys list of keys to use
  */
 function staticChord(data, getVisibleName, keys) {
-
-    console.log(keys);
 
     //////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////// Static data processing ///////////////////////////////////
