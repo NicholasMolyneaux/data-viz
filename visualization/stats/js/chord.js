@@ -102,6 +102,7 @@ function groupingChordGroups() {
  */
 function deleteCustomGroups() {
     currentGroupingScheme = {};
+    currentLabels = chordKeysOriginalData;
     deleteChord();
     const getVisibleName = getVisibleNameMapping({});
     staticChord(trajSummary, getVisibleName, chordKeysOriginalData);
@@ -125,7 +126,6 @@ function deleteChord() {
 function staticChord(data, getVisibleName, keys) {
 
     console.log(keys);
-
 
     //////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////// Static data processing ///////////////////////////////////

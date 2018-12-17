@@ -191,7 +191,6 @@ function updateChordDiagram(canvas, chord, arc, ribbon, colors, matrix, keys, la
      * @param id
      */
     function groupOnClick(id) {
-        console.log(id);
         makingNewGroup.push(id);
         if (newGroupLabel.length === 0) newGroupLabel = keys[id].toString(); else {newGroupLabel = newGroupLabel + " / " + keys[id];}
         document.getElementById("chord-group-name").value = newGroupLabel;
@@ -220,7 +219,6 @@ function updateChordDiagram(canvas, chord, arc, ribbon, colors, matrix, keys, la
         .on("mouseout", hideOnMouseOver(1.0))
         .on("click", d => {
             groupOnClick(d.index);
-            console.log(makingNewGroup);
         });
 
     // Adds the new paths into the diagram

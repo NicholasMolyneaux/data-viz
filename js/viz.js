@@ -148,7 +148,7 @@ function prepViz(change3DStyle=false) {
             .attr("class", "pedes_layer");
 
         // layer for showing all trajectories
-        let trajectories_layer = svg.append("g")
+        let trajectories_layer = svg_zoom.append("g")
             .attr("class", "trajectories_layer");
 
         // Read json data and draw frameworks (walls and zones)
