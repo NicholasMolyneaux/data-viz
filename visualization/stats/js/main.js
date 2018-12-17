@@ -21,6 +21,8 @@ function showStatistics() {
 
         $('body').css("overflow-y", "hidden");
 
+        document.getElementById("optionsStatsButton").innerHTML = "<i class=\"fas fa-plus fa-lg\"></i>"
+
     } else {
         statsShown = true;
 
