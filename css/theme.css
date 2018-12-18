@@ -820,3 +820,15 @@ path.chord {
 #descInfra, #descTraj {
     margin-bottom: 0px;
 }
+
+.jumbotron, .card-header {
+    background-color: #D8CC99
+}
+
+.card-body {
+    background-color: #F7F4EA
+}
+
+.form-control-file {
+
+}

@@ -23,142 +23,131 @@
 </head>
 <body>
 
-<div class="allExceptFooter">
-    <nav class="navbar navbar-expand-md navbar-custom">
-        <a id="logo-nav" class="navbar-brand" href="./index.html">TWD</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <i class="fas fa-bars fa-lg nav-icon"></i>
-        </button>
+<nav class="navbar navbar-expand-md navbar-custom">
+    <a id="logo-nav" class="navbar-brand" href="./index.html">TWD</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <i class="fas fa-bars fa-lg nav-icon"></i>
+    </button>
 
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="./index.html">Home</a>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="./index.html">Home</a>
 
-                </li>
-                <li class="nav-item active">
-                    <a class="nav-link" href="#">Upload <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" href="#">Upload <span class="sr-only">(current)</span></a>
 
-                </li>
-            </ul>
-        </div>
-    </nav>
-
-    <!-- Main jumbotron for a primary marketing message or call to action -->
-    <div class="jumbotron">
-        <div class="container">
-            <h1 id="title" class="display-3">Upload</h1>
-            <br><br>
-            <p class="text-justify">In this part of this website, you can upload different files for the visulization. Please, click on one of the actions below.</p>
-        </div>
+            </li>
+        </ul>
     </div>
+</nav>
 
-    <div class="container" id="accordion">
-        <div class="card">
-            <div class="card-header" id="newInfra">
-                <h5 class="mb-0">
-                    <button class="btn btn-link clickableUpload" data-toggle="collapse" data-target="#detailsNewInfra" aria-expanded="true" aria-controls="detailsNewInfra" aria-expanded="false">
-                        Upload a new Infrastructure
-                    </button>
-                </h5>
-            </div>
-            <div id="detailsNewInfra" class="collapse" aria-labelledby="newInfra" data-parent="#accordion">
-            <div class="card-body container">
-                <br>
-                <form action = "http://transporsrv2.epfl.ch/api/uploadinfrastructure" method="POST" enctype="multipart/form-data">
-                    <div class="form-group">
-                        <label for="inputNameInfra">Name of the Infrastructure</label>
-                        <input type="text" name="location" class="form-control" id="inputNameInfra" placeholder="Enter Name" onchange="verifyInfraName(this)">
-                        <small class="form-text text-muted">Make sure that it's not an existing one. Otherwise, we will replace it.</small>
-                    </div>
-                    <div class="form-group" id="overrideInfra" style="display: none;">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="overrideInfraBox"> <span class="warning">Override the Infrastructure?</span>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="inputDescriptionInfra">Description of the Infrastructure</label>
-                        <textarea class="form-control" id="inputDescriptionInfra" name="description" rows="2"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="inputGraph">Graph</label>
-                        <input type="file" name="graph" class="form-control-file" id="inputGraph" aria-describedby="inputGraphHelp" >
-                        <small id="inputGraphHelp" class="form-text text-muted">This file is the design of the different zones in the infrastructure.</small>
-                    </div>
-                    <div class="form-group">
-                        <label for="inputWall">Walls</label>
-                        <input type="file" name="walls" class="form-control-file" id="inputWall" aria-describedby="inputWallhHelp">
-                        <small id="inputWallhHelp" class="form-text text-muted">This file is the design of the different walls in the infrastructure.</small>
-                    </div>
-                    <div class="form-group">
-                        <label for="passwordInfra">Password</label>
-                        <input type="password" name="key" class="form-control" id="passwordInfra" placeholder="Password">
-                    </div>
-                    <button type="submit" class="btn btn-primary">Submit</button>
-                </form>
-                <br>
-            </div>
-        </div>
-        <div class="card">
-            <div class="card-header" id="newTraj">
-                <h5 class="mb-0">
-                    <button class="btn btn-link clickableUpload" data-toggle="collapse" data-target="#detailsNewTraj" aria-expanded="true" aria-controls="detailsNewTraj" aria-expanded="false">
-                        Upload a new set of Trajectories
-                    </button>
-                </h5>
-            </div>
-            <div id="detailsNewTraj" class="collapse" aria-labelledby="newTraj" data-parent="#accordion">
-            <div class="card-body container">
-                <br>
-                <form action="http://transporsrv2.epfl.ch/api/uploadtrajectory" method="POST" enctype="multipart/form-data" >
-                    <div class="form-group">
-                        <label for="selectInfra">Select Infrastructure</label>
-                        <select class="form-control" name="infra" id="selectInfra" onchange="updateDescriptionInfraAndLoadTraj(this)">
-                        </select>
-                    </div>
-                    <div class="form-group" id="descInfra" style="display: none;">
-                        <span>Description:</span><br>
-                        <span class="text-muted" id="textDescInfra"></span>
-                    </div>
-                    <div class="form-group">
-                        <label for="inputNameTraj">Name of the Trajectory data</label>
-                        <input type="text" name="name" class="form-control" id="inputNameTraj" placeholder="Enter Name" onchange="verifyTrajName(this)">
-                        <small class="form-text text-muted">Make sure that it's not an existing one. Otherwise, we will replace it.</small>
-                    </div>
-                    <div class="form-group" id="overrideTraj" style="display: none;">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="overrideTrajBox"> <span class="warning">Override the Trajectories?</span>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="inputDescriptionTraj">Description of the Trajectory data</label>
-                        <textarea class="form-control" name="description" id="inputDescriptionTraj" rows="2"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="inputTraj">Trajectories</label>
-                        <input type="file" class="form-control-file" id="inputTraj" aria-describedby="inputTrajHelp", name="traj">
-                        <small id="inputTrajHelp" class="form-text text-muted">Simulation file of all the trajectories.</small>
-                    </div>
-                    <div class="form-group">
-                        <label for="passwordTraj">Password</label>
-                        <input type="password" name="key" class="form-control" id="passwordTraj" placeholder="Password">
-                    </div>
-                    <button type="submit" class="btn btn-primary">Submit</button>
-                </form>
-                <br>
-            </div>
-        </div>
-        </div>
-    </div>
-</div>
-
-</div>
-<footer class="footer">
+<!-- Main jumbotron for a primary marketing message or call to action -->
+<div class="jumbotron">
     <div class="container">
-        <span class="text-muted">Footer!</span>
+        <h1 id="title" class="display-3">Upload</h1>
     </div>
-</footer>
+</div>
+
+<div class="container" id="accordion">
+    <div class="card">
+        <div class="card-header" id="newInfra">
+            <h5 class="mb-0">
+                <button class="btn btn-link clickableUpload" data-toggle="collapse" data-target="#detailsNewInfra" aria-expanded="true" aria-controls="detailsNewInfra" aria-expanded="false">
+                    Upload a new Infrastructure
+                </button>
+            </h5>
+        </div>
+        <div id="detailsNewInfra" class="collapse" aria-labelledby="newInfra" data-parent="#accordion">
+        <div class="card-body container">
+            <br>
+            <form action = "http://transporsrv2.epfl.ch/api/uploadinfrastructure" method="POST" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="inputNameInfra">Name of the Infrastructure</label>
+                    <input type="text" name="location" class="form-control" id="inputNameInfra" placeholder="Enter Name" onchange="verifyInfraName(this)">
+                    <small class="form-text text-muted">Make sure that it's not an existing one. Otherwise, we will replace it.</small>
+                </div>
+                <div class="form-group" id="overrideInfra" style="display: none;">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="overrideInfraBox"> <span class="warning">Override the Infrastructure?</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="inputDescriptionInfra">Description of the Infrastructure</label>
+                    <textarea class="form-control" id="inputDescriptionInfra" name="description" rows="2"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="inputGraph">Graph</label>
+                    <input type="file" name="graph" class="form-control-file hide_file" id="inputGraph" aria-describedby="inputGraphHelp" >
+                    <small id="inputGraphHelp" class="form-text text-muted">This file is the design of the different zones in the infrastructure.</small>
+                </div>
+                <div class="form-group">
+                    <label for="inputWall">Walls</label>
+                    <input type="file" name="walls" class="form-control-file" id="inputWall" aria-describedby="inputWallhHelp">
+                    <small id="inputWallhHelp" class="form-text text-muted">This file is the design of the different walls in the infrastructure.</small>
+                </div>
+                <div class="form-group">
+                    <label for="passwordInfra">Password</label>
+                    <input type="password" name="key" class="form-control" id="passwordInfra" placeholder="Password">
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+            <br>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-header" id="newTraj">
+            <h5 class="mb-0">
+                <button class="btn btn-link clickableUpload" data-toggle="collapse" data-target="#detailsNewTraj" aria-expanded="true" aria-controls="detailsNewTraj" aria-expanded="false">
+                    Upload a new set of Trajectories
+                </button>
+            </h5>
+        </div>
+        <div id="detailsNewTraj" class="collapse" aria-labelledby="newTraj" data-parent="#accordion">
+        <div class="card-body container">
+            <br>
+            <form action="http://transporsrv2.epfl.ch/api/uploadtrajectory" method="POST" enctype="multipart/form-data" >
+                <div class="form-group">
+                    <label for="selectInfra">Select Infrastructure</label>
+                    <select class="form-control" name="infra" id="selectInfra" onchange="updateDescriptionInfraAndLoadTraj(this)">
+                    </select>
+                </div>
+                <div class="form-group" id="descInfra" style="display: none;">
+                    <span>Description:</span><br>
+                    <span class="text-muted" id="textDescInfra"></span>
+                </div>
+                <div class="form-group">
+                    <label for="inputNameTraj">Name of the Trajectory data</label>
+                    <input type="text" name="name" class="form-control" id="inputNameTraj" placeholder="Enter Name" onchange="verifyTrajName(this)">
+                    <small class="form-text text-muted">Make sure that it's not an existing one. Otherwise, we will replace it.</small>
+                </div>
+                <div class="form-group" id="overrideTraj" style="display: none;">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="overrideTrajBox"> <span class="warning">Override the Trajectories?</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="inputDescriptionTraj">Description of the Trajectory data</label>
+                    <textarea class="form-control" name="description" id="inputDescriptionTraj" rows="2"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="inputTraj">Trajectories</label>
+                    <input type="file" class="form-control-file" id="inputTraj" aria-describedby="inputTrajHelp", name="traj">
+                    <small id="inputTrajHelp" class="form-text text-muted">Simulation file of all the trajectories.</small>
+                </div>
+                <div class="form-group">
+                    <label for="passwordTraj">Password</label>
+                    <input type="password" name="key" class="form-control" id="passwordTraj" placeholder="Password">
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+            <br>
+        </div>
+    </div>
+    </div>
+</div>
 
 </body>
 
