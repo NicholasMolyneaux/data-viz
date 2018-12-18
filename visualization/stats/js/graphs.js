@@ -148,59 +148,74 @@ function hist(id, state) {
 
     svg.call(tool_tip);
 
-    let bar = g.selectAll(".bar")
-        .data(bins)
-        .enter().append("g")
-        .attr("class", "bar")
-        .attr("transform", function(d) { return "translate(" + x(d.x0) + "," + y(yVals(d)) + ")"; })
-        .attr("fill", function(d) { return colorScale(yVals(d)) })
-        .on('mouseenter', tool_tip.show)
-        .on('mouseout', tool_tip.hide);
+    console.log(graphOptions[id]['data']);
 
-    if (state == 'start' || state == 'changedBins' || state == 'changedAxis') {
-        bar.append("rect")
-            .attr("x", 2.5)
-            .attr("width", x(bins[0].x1) - x(bins[0].x0) - 5)
-            .attr("y", function(d) {
-                return height-y(yVals(d));
-            })
-            .attr("height", 0)
-            .transition()
-            .duration(transLength)
-            .attr("y", function() {
-                return 0;
-            })
-            .attr("height", function(d) {
-                return height - y(yVals(d));
-            });
+    if (graphOptions[id]['data'].length > 1) {
+        let bar = g.selectAll(".bar")
+            .data(bins)
+            .enter().append("g")
+            .attr("class", "bar")
+            .attr("transform", function(d) { return "translate(" + x(d.x0) + "," + y(yVals(d)) + ")"; })
+            .attr("fill", function(d) { return colorScale(yVals(d)) })
+            .on('mouseenter', tool_tip.show)
+            .on('mouseout', tool_tip.hide);
+
+        if (state == 'start' || state == 'changedBins' || state == 'changedAxis') {
+            bar.append("rect")
+                .attr("x", 2.5)
+                .attr("width", x(bins[0].x1) - x(bins[0].x0) - 5)
+                .attr("y", function(d) {
+                    return height-y(yVals(d));
+                })
+                .attr("height", 0)
+                .transition()
+                .duration(transLength)
+                .attr("y", function() {
+                    return 0;
+                })
+                .attr("height", function(d) {
+                    return height - y(yVals(d));
+                });
+        } else {
+            bar.append("rect")
+                .attr("x", 2.5)
+                .attr("width", x(bins[0].x1) - x(bins[0].x0) - 5)
+                .attr("y", function(d) {
+                    return 0;
+                })
+                .attr("height", function(d) {
+                    return height - y(yVals(d));
+                });
+        }
+
+        if (graphOptions[id]['showNumbers']) {
+            bar.append("text")
+                .attr("dy", ".75em")
+                .attr("y", 6)
+                .attr("x", (x(bins[0].x1) - x(bins[0].x0)) / 2)
+                .attr("text-anchor", "middle")
+                .attr("fill", "#fff")
+                .attr("font", "10px sans-serif")
+                .text(function(d) {
+                    if(graphOptions[id]['yAxisValue'] == 'count') {
+                        return formatCount(yVals(d));
+                    } else if (graphOptions[id]['yAxisValue'] == 'percentage') {
+                        return formatCountPerc(yVals(d));
+                    }
+                });
+        }
     } else {
-        bar.append("rect")
-            .attr("x", 2.5)
-            .attr("width", x(bins[0].x1) - x(bins[0].x0) - 5)
-            .attr("y", function(d) {
-                return 0;
-            })
-            .attr("height", function(d) {
-                return height - y(yVals(d));
-            });
+        // text label for the y axis
+        let text = svg.append("text")
+            .attr("y", height/2)
+            .attr("x", width/2 + margin.left)
+            .attr("dy", "1em")
+            .style("text-anchor", "middle")
+            .attr("font-size", "70")
+            .style("font-family", "DeadKansas")
+            .style("color", "#1D1B0D")
+            .text("no data");
     }
-
-     if (graphOptions[id]['showNumbers']) {
-         bar.append("text")
-             .attr("dy", ".75em")
-             .attr("y", 6)
-             .attr("x", (x(bins[0].x1) - x(bins[0].x0)) / 2)
-             .attr("text-anchor", "middle")
-             .attr("fill", "#fff")
-             .attr("font", "10px sans-serif")
-             .text(function(d) {
-                 if(graphOptions[id]['yAxisValue'] == 'count') {
-                     return formatCount(yVals(d));
-                 } else if (graphOptions[id]['yAxisValue'] == 'percentage') {
-                     return formatCountPerc(yVals(d));
-                }
-             });
-     }
 
     let xAxis = g.append("g")
         .style("font-size", graphOptions[id]['fontSize'])

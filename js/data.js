@@ -149,6 +149,8 @@ function prepareHistTT() {
     const restrOrigins = od_selection.Origins.size > 0;
     const restrDest = od_selection.Destinations.size > 0;
 
+    console.log(trajSummary);
+
     trajSummary.forEach(ped => {
 
         add = true;
@@ -180,28 +182,30 @@ function prepareDensityData() {
 
     densityData = [];
 
-    if (stateControlAreaButton != 'drawn') {
-        drawHiddenControlAreas(areasData, voronoi_poly_layer);
-    }
+    if (areasData.length > 0 || stateControlAreaButton === 'drawn') {
+        if (stateControlAreaButton != 'drawn') {
+            drawHiddenControlAreas(areasData, voronoi_poly_layer);
+        }
 
-    trajData.forEach(data => {
+        trajData.forEach(data => {
 
-        let timedData = new Object();
-        timedData.time = data.time;
-        let tmp  = [];
+            let timedData = new Object();
+            timedData.time = data.time;
+            let tmp  = [];
 
 
-        voronoi_poly_layer.selectAll("*").each(function () {
-            tmp.push(computeDensities(data.data, d3.select(this)))
+            voronoi_poly_layer.selectAll("*").each(function () {
+                tmp.push(computeDensities(data.data, d3.select(this)))
+            });
+
+            timedData.area = [].concat.apply([], tmp);
+
+            densityData.push(timedData);
         });
 
-        timedData.area = [].concat.apply([], tmp);
-
-        densityData.push(timedData);
-    });
-
-    if (stateControlAreaButton != 'drawn') {
-        d3.selectAll(".controlled-areas-hidden").remove();
+        if (stateControlAreaButton != 'drawn') {
+            d3.selectAll(".controlled-areas-hidden").remove();
+        }
     }
 
     prepareHistDensity();

@@ -325,6 +325,17 @@ function dataSelected() {
     document.getElementById("optionsButton").style.display = "";
     optionsShown = false;
 
+    if (statsShown) {
+        viz.classList.add("col");
+        viz.classList.remove("col-xl-8");
+
+        $('#statDiv').remove();
+
+        $('body').css("overflow-y", "hidden");
+
+        statsShown = false;
+    }
+
     console.log(selectedInfra, selectedTraj);
 
     clearInterval(pedMover);
@@ -391,14 +402,18 @@ function dataSelected() {
                 currentTimeShownIdx = 0;
 
                 prepareHistTT();
+                prepareDensityData();
                 interPolateData();
                 createSlider();
                 downSampleTrajectories();
 
-                trajDataLoaded = true;
                 finishedLoading();
                 document.getElementById("slider").style.visibility = "visible";
                 document.getElementById("leftButtons").style.visibility = "visible";
+
+                document.getElementById("playPauseButton").innerHTML = "<i class=\"fas fa-pause fa-lg\"></i>";
+                vizPaused = false;
+
                 runViz();
 
             });
@@ -573,6 +588,25 @@ function appendOptions() {
                 document.getElementById("optTraj").style.display = "none";
 
             }
+
+            $( "#optionsStatsButton" ).click(function() {
+
+                if(document.getElementById("optODChord").style.display === "") {
+
+                    document.getElementById("optionsStatsButton").innerHTML = "<i class=\"fas fa-plus fa-lg\"></i>";
+
+                    document.getElementById("optODChord").style.display = "none";
+                    document.getElementById("opt_tt").style.display = "none";
+                    document.getElementById("opt_density").style.display = "none";
+                } else {
+
+                    document.getElementById("optionsStatsButton").innerHTML = "<i class=\"fas fa-minus fa-lg\"></i>"
+
+                    document.getElementById("optODChord").style.display = "";
+                    document.getElementById("opt_tt").style.display = "";
+                    document.getElementById("opt_density").style.display = "";
+                }
+            });
         }
 
         if (viz3D && STYLE == "TWD") {
@@ -584,25 +618,6 @@ function appendOptions() {
 
 
 }
-
-$( "#optionsStatsButton" ).click(function() {
-
-    if(document.getElementById("optODChord").style.display === "") {
-
-        document.getElementById("optionsStatsButton").innerHTML = "<i class=\"fas fa-plus fa-lg\"></i>";
-
-        document.getElementById("optODChord").style.display = "none";
-        document.getElementById("opt_tt").style.display = "none";
-        document.getElementById("opt_density").style.display = "none";
-    } else {
-
-        document.getElementById("optionsStatsButton").innerHTML = "<i class=\"fas fa-minus fa-lg\"></i>"
-
-        document.getElementById("optODChord").style.display = "";
-        document.getElementById("opt_tt").style.display = "";
-        document.getElementById("opt_density").style.display = "";
-    }
-});
 
 $('#optionsButton').click(() => {
 
