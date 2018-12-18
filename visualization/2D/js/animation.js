@@ -87,42 +87,43 @@ function runAnimation2D() {
 
 function runOneStep2D() {
 
-    const voronoi_poly_layer = d3.select(".voronoi_poly_layer");
-    const pedes_layer = d3.select(".pedes_layer");
-    const voronoi_canvas = d3.select(".voronoi_canvas");
+    if (selectedTraj != null) {
 
-    const timeBounds = [minTime, maxTime];
+        const voronoi_poly_layer = d3.select(".voronoi_poly_layer");
+        const pedes_layer = d3.select(".pedes_layer");
+        const voronoi_canvas = d3.select(".voronoi_canvas");
 
-    const trajDataFiltered = trajData.filter(v => v.time > timeBounds[0] && v.time <= timeBounds[1]);
+        const timeBounds = [minTime, maxTime];
 
-    let current_time = trajDataFiltered[currentTimeShownIdx].time;
-    let current_filtered_data_by_od = filterByOD(trajDataFiltered[currentTimeShownIdx].data, trajSummary);
-    try {
-        checkVoronoi(current_filtered_data_by_od, voronoi_poly_layer, voronoi_canvas);
-    } catch (e) {
-        // Do Nothing;
-    }
+        const trajDataFiltered = trajData.filter(v => v.time > timeBounds[0] && v.time <= timeBounds[1]);
 
-    let ped_speed = current_filtered_data_by_od.map( d => {
-            let v = 0;
-            try {
-                if (d3.select("#ped_speed").property("checked")) {
-                    if (currentTimeShownIdx !== 0) {
-                        trajDataFiltered[currentTimeShownIdx - 1].data.map(p => {
-                            if (p.id === d.id) {
-                                v = Math.abs(Math.sqrt(Math.pow(p.x - d.x, 2) + Math.pow(p.y - d.y, 2))) / (Number(trajDataFiltered[currentTimeShownIdx].time) - Number(trajDataFiltered[currentTimeShownIdx - 1].time));
-                            }
-                        })
+        let current_time = trajDataFiltered[currentTimeShownIdx].time;
+        let current_filtered_data_by_od = filterByOD(trajDataFiltered[currentTimeShownIdx].data, trajSummary);
+        try {
+            checkVoronoi(current_filtered_data_by_od, voronoi_poly_layer, voronoi_canvas);
+        } catch (e) {
+            // Do Nothing;
+        }
+
+        let ped_speed = current_filtered_data_by_od.map( d => {
+                let v = 0;
+                try {
+                    if (d3.select("#ped_speed").property("checked")) {
+                        if (currentTimeShownIdx !== 0) {
+                            trajDataFiltered[currentTimeShownIdx - 1].data.map(p => {
+                                if (p.id === d.id) {
+                                    v = Math.abs(Math.sqrt(Math.pow(p.x - d.x, 2) + Math.pow(p.y - d.y, 2))) / (Number(trajDataFiltered[currentTimeShownIdx].time) - Number(trajDataFiltered[currentTimeShownIdx - 1].time));
+                                }
+                            })
+                        }
                     }
+                } catch (e) {
+                    // Do Nothing!
                 }
-            } catch (e) {
-                // Do Nothing!
-            }
 
-            return {"id":d.id, "speed": v};
-        });
+                return {"id":d.id, "speed": v};
+            });
 
-    if (selectedTraj.value !== "None") {
         updatePosition2D(current_filtered_data_by_od, ped_speed, pedes_layer);
         updateTimer(current_time);
     } else {

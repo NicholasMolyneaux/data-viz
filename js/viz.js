@@ -100,7 +100,7 @@ function prepViz(change3DStyle=false) {
 
         animate();
 
-    } else if (viz2D) {
+    } else {
 
         cancelAnimationFrame(animation);
 
@@ -183,7 +183,7 @@ function runViz() {
 
     if (viz3D) {
         runAnimation3D();
-    } else if (viz2D)  {
+    } else  {
         //Pedestrians
         runAnimation2D();
     }
@@ -192,14 +192,14 @@ function runViz() {
 function do1Step() {
     if (viz3D) {
         runOneStep3D();
-    } else if (viz2D) {
+    } else {
         runOneStep2D();
     }
 }
 
 function updateTimer(time) {
 
-    if (selectedTraj.value === "None") {
+    if (selectedTraj == null) {
         document.getElementById("timer").innerHTML = "No trajectory data!";
     } else {
         document.getElementById("timer").innerHTML = secondsToHms(time);
@@ -412,7 +412,6 @@ function transitionBetween2D3D() {
             document.getElementById("help").title = "Scroll for zoom/dezoom; Click + Mouse to move around; Click on a zone to select it as an origin and ctrl+click to select it as a destination."
 
             viz3D = false;
-            viz2D = true;
 
             clearInterval(pedMover);
 
@@ -423,7 +422,7 @@ function transitionBetween2D3D() {
             }
 
 
-        } else if (viz2D) {
+        } else {
 
             document.getElementById("threeDButton").innerHTML = "<i class=\"fas fa-square fa-lg\"></i>";
             document.getElementById("threeDButton").title = "2D viz";
@@ -431,7 +430,6 @@ function transitionBetween2D3D() {
             document.getElementById("help").title = "Scroll for zoom/dezoom; CTRL+Mouse/Arrow keys to more; Mouse to rotate."
 
             viz3D = true;
-            viz2D = false;
 
             clearInterval(pedMover);
 

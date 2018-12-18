@@ -22,7 +22,6 @@ let selectedTraj = "test10";
 let infraSelected = false;
 
 let viz3D = false;
-let viz2D = false;
 let trajDataLoaded = false;
 let infraDataLoaded = false;
 
@@ -45,8 +44,6 @@ $(document).ready(function() {
     resizeViz();
 
     presentation();
-
-    //viz2D();
 
     $("#fullscreen").on('click', function() {
         if(IsFullScreenCurrently())
@@ -120,7 +117,6 @@ function addInfra() {
 
     // TODO: To fix later
 
-    document.getElementById('descInfra').style.display = '';
     document.getElementById('textDescInfra').innerHTML = infrastructures[idx]['description'];
 
     document.getElementById("infraData").selectedIndex = idx;
@@ -132,13 +128,17 @@ function updateDescriptionInfra(e) {
 
     const idx = infrastructures.map(function(e) { return e.name; }).indexOf(infraName);
 
-    selectedInfra = infrastructures[idx];
+    document.getElementById('textDescInfra').innerHTML = infrastructures[idx]['description'];
 
-    document.getElementById('textDescInfra').innerHTML = selectedInfra['description'];
+    if (infrastructures[idx]['description'] === "") {
+        document.getElementById('textDescInfra').innerHTML = "No description";
+    } else {
+        document.getElementById('textDescInfra').innerHTML = infrastructures[idx]['description'];
+    }
 
     infraSelected = true;
 
-    const url = baseURL + 'trajlist/' + selectedInfra['name'];
+    const url = baseURL + 'trajlist/' + infrastructures[idx]['name'];
 
     // We will have to take into account the infra.
 
@@ -149,6 +149,7 @@ function updateDescriptionInfra(e) {
         crossDomain : true,
     })
         .done(function( data ) {
+            console.log(data);
             trajectories = data;
             //console.log(trajectories);
             // DEBUG
@@ -188,7 +189,7 @@ function loadTraj() {
                 prepareHistTT();
                 interPolateData();
                 createSlider();
-                    downSampleTrajectories();
+                downSampleTrajectories();
 
                 if (!presentationPlaying) {
                     finishedLoading();
@@ -301,18 +302,19 @@ function addTraj() {
         }))
     });
 
-    document.getElementById('descTraj').style.display = '';
+    if (idx > -1) {
 
-    if (presentationPlaying) {
-        document.getElementById('textDescTraj').innerHTML = trajectories[idx]['description'];
+        if(trajectories[idx]['description'] == "") {
+            document.getElementById('textDescTraj').innerHTML = "No description";
+        } else {
+            document.getElementById('textDescTraj').innerHTML = trajectories[idx]['description'];
+        }
 
-        document.getElementById("trajData").selectedIndex = idx;
+        document.getElementById("trajData").selectedIndex = idx+1;
     } else {
         document.getElementById('textDescTraj').innerHTML = "Only show the structure";
 
         document.getElementById("trajData").selectedIndex = 0;
-
-        selectedTraj = {'value': 'None'};
     }
 
 }
@@ -342,6 +344,34 @@ function dataSelected() {
     document.getElementById("playPauseButton").innerHTML = "<i class=\"fas fa-play fa-lg\"></i>";
     vizPaused = true;
 
+    // Get selected infra
+    let infraData = document.getElementById("infraData");
+    const infraName = infraData.options[infraData.selectedIndex].value;
+
+    let idx = infrastructures.map(function(e) { return e.name; }).indexOf(infraName);
+
+    selectedInfra = infrastructures[idx];
+
+    // Get selected trajectories
+    let trajData = document.getElementById("trajData");
+    const trajName = trajData.options[trajData.selectedIndex].value;
+
+    function isSelectedTraj(traj){return traj.name === trajName}
+
+    idx = trajectories.findIndex(isSelectedTraj);
+
+    if (idx == -1) {
+        selectedTraj = null;
+
+        minTime = 0;
+        maxTime = 0;
+    } else {
+        selectedTraj = trajectories[idx];
+
+        minTime = selectedTraj.tmin;
+        maxTime = selectedTraj.tmax;
+    }
+
     loading();
     document.getElementById("slider").style.visibility = "hidden";
     document.getElementById("leftButtons").style.visibility = "hidden";
@@ -352,7 +382,7 @@ function dataSelected() {
         deleteStuff2D();
     }
 
-    if (selectedTraj.value === "None") {
+    if (selectedTraj == null) {
         loadInfraData().then(() => {
             infraDataLoaded = true;
 
@@ -384,7 +414,6 @@ function dataSelected() {
             if (selectedInfra.name === "denhaag") {
                 if (viz3D) {
                     viz3D = false;
-                    viz2D = true;
                 }
                 document.getElementById("threeDButton").style.display = "none";
             } else {
@@ -427,28 +456,25 @@ function dataSelected() {
 function updateDescriptionTraj(e) {
     //console.log("updateDescriptionTraj");
 
+    console.log(trajectories);
+
     //console.log(e);
     const trajName = e.options[e.selectedIndex].value;
 
     function isSelectedTraj(traj){return traj.name === trajName}
 
-    //console.log(trajName);
-    //console.log(trajectories);
-    //console.log();
-    const idx = trajectories.findIndex(isSelectedTraj);//trajectories.map(function(e) { return e.name; }).indexOf(trajName);
+    const idx = trajectories.findIndex(isSelectedTraj);
+
+    console.log(idx);
 
     if (idx == -1) {
-        selectedTraj = null;
         document.getElementById('textDescTraj').innerHTML = "Only show the structure";
-
-        minTime = 0;
-        maxTime = 0;
     } else {
-        selectedTraj = trajectories[idx];
-        document.getElementById('textDescTraj').innerHTML = selectedTraj['description'];
-
-        minTime = selectedTraj.tmin;
-        maxTime = selectedTraj.tmax;
+        if (trajectories[idx]['description'] === "") {
+            document.getElementById('textDescTraj').innerHTML = "No description";
+        } else {
+            document.getElementById('textDescTraj').innerHTML = trajectories[idx]['description'];
+        }
     }
 
 }
@@ -577,14 +603,14 @@ function appendOptions() {
                 });
         } );
 
-        if (viz2D && !allTrajLoaded) {
+        if (!viz3D) {
             document.getElementById("voronoi_checkbox").disabled = true;
 
             if (!allTrajLoaded) {
                 document.getElementById("all_trajectories_checkbox").disabled = true;
             }
 
-            if (selectedTraj.value === "None") {
+            if (selectedTraj == null) {
                 document.getElementById("optTraj").style.display = "none";
 
             }
@@ -660,20 +686,21 @@ function resizeViz() {
     vizHeight = getVizHeight();
 
     document.getElementById("mainViz").style.height = vizHeight + "px";
+    if (vizPrepared) {
+        if (viz3D) {
 
-    if (viz3D) {
+            let width = document.body.clientWidth;
 
-        let width = document.body.clientWidth;
+            camera.aspect = width / vizHeight;
+            camera.updateProjectionMatrix();
 
-        camera.aspect = width / vizHeight;
-        camera.updateProjectionMatrix();
+            renderer.setSize(width, vizHeight);
 
-        renderer.setSize(width, vizHeight);
-
-        //document.getElementById("canvas").height = vizHeight + "px";
-        //document.getElementById("canvas").width = window.innerWidth + "px";
-    } else if (viz2D) {
-        document.getElementById("svgCont").style.height = vizHeight + "px";
+            //document.getElementById("canvas").height = vizHeight + "px";
+            //document.getElementById("canvas").width = window.innerWidth + "px";
+        } else {
+            document.getElementById("svgCont").style.height = vizHeight + "px";
+        }
     }
 
     $('html,body').scrollTop(0);
@@ -1070,7 +1097,6 @@ function skipPresentation() {
     // prepares the viz if skip is called very early on.
     if (!vizPrepared) {
         viz3D = false;
-        viz2D = true;
 
         document.getElementById("threeDButton").innerHTML = "<i class=\"fas fa-cube fa-lg\"></i>";
         document.getElementById("threeDButton").title = "3D viz";

@@ -42,7 +42,7 @@ function runOneStep3D() {
         trajDataFiltered = trajData.filter(v => v.time > timeBounds[0] && v.time <= timeBounds[1]);
     }
 
-    if (selectedTraj.value !== "None") {
+    if (selectedTraj != null) {
         animatePedestrians(trajDataFiltered[currentTimeShownIdx].data);
         updateTimer(trajDataFiltered[currentTimeShownIdx].time);
     }
