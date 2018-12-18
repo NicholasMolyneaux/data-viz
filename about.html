@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="./assets/img/favicon-96x96.png">
+
+    <title>The Walking Data</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="./css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="./css/theme.css" rel="stylesheet">
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Press+Start+2P|Roboto" rel="stylesheet">
+
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
+</head>
+<body>
+
+<nav class="navbar navbar-expand-md navbar-custom">
+    <a id="logo-nav" class="navbar-brand" href="./index.html">TWD</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <i class="fas fa-bars fa-lg nav-icon"></i>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="./index.html">Home</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="./upload.html">Upload</a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" href="#">About <span class="sr-only">(current)</span></a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<!-- Main jumbotron for a primary marketing message or call to action -->
+<div class="jumbotron">
+    <div class="container">
+        <h1 id="title" class="display-3">Visualization</h1>
+    </div>
+</div>
+
+<div class="jumbotron">
+    <div class="container">
+        <h1 class="display-3">Data</h1>
+    </div>
+</div>
+
+<div class="container">
+    <p class="mainText">
+        The data presented on this website comes from two alternative sources.
+        The first is simulated data and the second is empirical data.
+    </p>
+
+    <h2 style="text-align: left">Emprical data</h2>
+    <p class="mainText">
+        For several months in 2013 the two pedestrian underpasses of the train station in Lausanne (Switzerland) were equiped with a tracking system used to record the motions of pedestrians. This system, which respected the privacy of the users, tracked the pedestrians with a very high resolution of 100 milliseconds. This produced a large amount of data which has proven very valuable for exploratory analysis of pedestrian dynamics during peak hours.
+    </p>
+
+    <h2 style="text-align: left">Simulated data</h2>
+
+    <p class="mainText">
+        Multiple scientific projects have relied on the empirical data for calibration purposes. Two PhD theses have been published using the tracking data and another one is currently taking place:
+    </p>
+
+    <blockquote class="blockquote">
+        <p class="mb-0">
+            Nikolić, M. (2017). <b>Data-driven fundamental models for pedestrian movements</b> (<i>Doctoral dissertation, École Polytechnique Fédérale de Lausanne</i>).
+        </p>
+        <p class="mb-0">
+            Hänseler, F. S. (2016). <b>Modeling and estimation of pedestrian flows in train stations</b> (<i>Doctoral dissertation, École Polytechnique Fédérale de Lausanne</i>).
+        </p>
+    </blockquote>
+
+    <p class="mainText">
+        The current ongoing research covers control and management strategies for pedestrians. The objective is to transpose the successful concepts used in road traffic like ramp metering, signalized intersections or variable speed limits to the pedestrian world. For further reading regarding this topic, please refer to the following:
+    </p>
+
+    <blockquote class="blockquote">
+        <p class="mb-0">
+            Molyneaux, N., Scarinci, R., and Bierlaire, M. (2018). <b>Two management strategies for improving passenger transfer experience in train stations</b>. <i>Proceedings of the 18th Swiss Transport Research Conference (STRC) 16-18 May, 2018</i>.
+        </p>
+        <p class="mb-0">
+            Molyneaux, N., Scarinci, R., and Bierlaire, M. (2018). <b>Controlling Pedestrian Flows Using a Dynamic Traffic Management System</b>. <i>Proceedings of the 7th International Symposium on Dynamic Traffic Assignment: Smart Transportation (DTA) 6-8 June, 2018</i>.
+        </p>
+        <p class="mb-0">
+            Molyneaux, N., Hänseler, F.S., and Bierlaire, M. (2014). <b>Modelling of train-induced pedestrian flows in railway stations</b>. <i>Proceedings of the Swiss Transportation Research Conference (STRC) 14-16 May, 2014</i>.
+        </p>
+    </blockquote>
+
+    <h2 style="text-align: left">TRANS-FORM</h2>
+
+    <p class="mainText">
+        A joint european project between multiple academic and industrial partners which uses the microscopic pedestrian simulator as part of the multi-level modelling approach. For more details on the project, please visit: <a href="http://www.trans-form-project.org/" target="_blank">http://www.trans-form-project.org/</a>. This visualization tool is used for the project in order to gain insight into the pedestrian motions taking place at the main station of Den Haag (Netherlands).
+    </p>
+</div>
+
+<div class="jumbotron">
+    <div class="container">
+        <h1 class="display-3">Team</h1>
+    </div>
+</div>
+
+<div class="container" id="accordion">
+    <div class="card">
+        <div class="card-header" id="NichoNiMoly">
+            <h5 class="mb-0">
+                <button class="btn btn-link clickableUpload" data-toggle="collapse" data-target="#NichoNiMolyName" aria-expanded="true" aria-controls="NichoNiMolyName" aria-expanded="false">
+                    Nicholas Molyneaux
+                </button>
+            </h5>
+        </div>
+        <div id="NichoNiMolyName" class="collapse" aria-labelledby="NichoNiMoly" data-parent="#accordion">
+            <div class="card-body container">
+                <h2>Nicholas Molyneaux</h2>
+                <br>
+                <div class="media">
+                    <span class="media-left media-middle">
+                        <img src="./assets/team/203854.png" height="300px" alt="Nicholas Molyneaux">
+                    </span>
+                    <div class="media-body" style="margin-left: 10px;">
+                        <h3>Occupation</h3>
+                        <p>
+                            PhD student in the <a href="http://transp-or.epfl.ch/" target="_blank">Transport and Mobility laboratory</a>
+                        </p>
+                        <h3>Topics of interest</h3>
+                        <ul>
+                            <li>Pedestrian</li>
+                        </ul>
+                        <h3>Web pages</h3>
+                            <p>
+                                <a href="https://people.epfl.ch/nicholas.molyneaux" target="_blank">https://people.epfl.ch/nicholas.molyneaux</a>
+                            </p>
+                        <h3>Work</h3>
+                        <ul>
+                            <li>Backend</li>
+                            <li>Presentation on the homepage</li>
+                            <li>Trajectories</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-header" id="Gayouf">
+            <h5 class="mb-0">
+                <button class="btn btn-link clickableUpload" data-toggle="collapse" data-target="#GayoufName" aria-expanded="true" aria-controls="GayoufName" aria-expanded="false">
+                    Gael Lederrey
+                </button>
+            </h5>
+        </div>
+        <div id="GayoufName" class="collapse" aria-labelledby="Gayouf" data-parent="#accordion">
+            <div class="card-body container">
+                <h2>Gael Lederrey</h2>
+                <br>
+                <div class="media">
+                    <span class="media-left media-middle">
+                        <img src="./assets/team/204874.png" height="300px" alt="Gael Lederrey">
+                    </span>
+                    <div class="media-body" style="margin-left: 10px;">
+                        <h3>Occupation</h3>
+                        <p>
+                            PhD student in the <a href="http://transp-or.epfl.ch/" target="_blank">Transport and Mobility laboratory</a>
+                        </p>
+                        <h3>Topics of interest</h3>
+                        <ul>
+                            <li>Machine Learning</li>
+                            <li>Optimization</li>
+                            <li>Data Science</li>
+                        </ul>
+                        <h3>Web pages</h3>
+                        <ul>
+                            <li><a href="http://glederrey.ch" target="_blank">http://glederrey.ch</a></li>
+                            <li><a href="https://people.epfl.ch/gael.lederrey" target="_blank">https://people.epfl.ch/gael.lederrey</a></li>
+                        </ul>
+                        <h3>Work</h3>
+                        <ul>
+                            <li>3D visualization</li>
+                            <li>Website Structure + communication with Backend</li>
+                            <li>Histograms</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-header" id="LUTSguy">
+            <h5 class="mb-0">
+                <button class="btn btn-link clickableUpload" data-toggle="collapse" data-target="#LUTSguyName" aria-expanded="true" aria-controls="LUTSguyName" aria-expanded="false">
+                    Semin Kwak
+                </button>
+            </h5>
+        </div>
+        <div id="LUTSguyName" class="collapse" aria-labelledby="LUTSguy" data-parent="#accordion">
+            <div class="card-body container">
+                <h2>Semin Kwak</h2>
+                <br>
+                <div class="media">
+                    <span class="media-left media-middle">
+                        <img src="./assets/team/277321.png" height="300px" alt="Semin Kwak">
+                    </span>
+                    <div class="media-body" style="margin-left: 10px;">
+                        <h3>Occupation</h3>
+                        <p>
+                            PhD student in the <a href="http://luts.epfl.ch/" target="_blank">Urban Transport Systems Laboratory</a>
+                        </p>
+                        <h3>Topics of interest</h3>
+                        <ul>
+                            <li>Traffic forecasting</li>
+                            <li>Travel-time forecasting</li>
+                        </ul>
+                        <h3>Web page</h3>
+                        <p>
+                            <a href="https://people.epfl.ch/semin.kwak" target="_blank">https://people.epfl.ch/semin.kwak</a>
+                        </p>
+                        <h3>Work</h3>
+                        <ul>
+                            <li>2D visualization</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br>
+</div>
+
+</body>
+
+
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
+<script src="js/libraries/bootstrap.min.js"></script>
+<script>
+    $('body').css("overflow-y", "auto");
+</script>
+</html>

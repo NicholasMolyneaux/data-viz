@@ -113,6 +113,15 @@ h1, h2 {
     text-align: center;
 }
 
+h3 {
+    font-family: "DeadKansas";
+    font-size: 18px;
+}
+
+.mainText {
+    text-align: justify;
+}
+
 
 .presentation {
     display: flex;
@@ -829,6 +838,28 @@ path.chord {
     background-color: #F7F4EA
 }
 
-.form-control-file {
-
+.jumbotron {
+    padding: 25px;
 }
+
+a {
+    color: #544D31;
+}
+
+a:hover {
+    color: red;
+}
+
+.blockquote {
+    font-size: 14px;
+}
+
+blockquote p{ margin: 0 16px 16px; }
+blockquote p:last-child{ margin-bottom: 0; }
+blockquote footer{
+    font-size: 0.7em;
+    text-align:right;
+    font-style:italic;
+    margin:12px 20px 0;
+}
+blockquote footer:before{ content:"\2014 \00a0"; }
