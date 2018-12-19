@@ -151,3 +151,30 @@ function moveCameraToDesiredPosition(pos, control=[0,0,0]) {
         })
         .start();
 }
+
+function deleteStuff3D() {
+
+    $("#canvas").remove();
+
+    // Have to delete correctly these stuff.
+    topFloor = null;
+    bottomFloor = null;
+    ceiling = null;
+    walls = [];
+    clocks = [];
+    lights = [];
+
+    function clearThree(obj){
+        while(obj.children.length > 0){
+            clearThree(obj.children[0])
+            obj.remove(obj.children[0]);
+        }
+        if(obj.geometry) obj.geometry.dispose()
+        if(obj.material) obj.material.dispose()
+        if(obj.texture) obj.texture.dispose()
+    }
+
+    clearThree(scene);
+    dctPed = new Object();
+    mixers = [];
+}

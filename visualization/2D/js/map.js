@@ -125,96 +125,6 @@ function checkVoronoi(data, voronoi_poly_layer, voronoi_canvas) {
     }
 }
 
-function setVoronoiArea() {
-
-    let svg = d3.select("svg");
-    let voronoi_clip_canvas = d3.select(".voronoi_clip_layer");
-
-    if (stateControlAreaButton == 'idle') {
-
-        d3.selectAll(".controlled-areas").remove();
-
-        stateControlAreaButton = 'drawing';
-        document.getElementById("control_area").innerHTML = "Make Control Area";
-
-        svg.on("click", function () {
-            let mouse = d3.mouse(svg.select("#subSvgCont").node());
-            console.log(mouse);
-            voronoi_clip_canvas.append("circle")
-                .attr("class", "voronoi-pre-circle")
-                .attr("cx", mouse[0])
-                .attr("cy", mouse[1])
-                .attr("r", 0.15);
-        });
-
-        document.getElementById("voronoi_checkbox").checked = false;
-        document.getElementById("voronoi_checkbox").disabled = true;
-
-        document.getElementById("control_checkbox").checked = false;
-        document.getElementById("control_checkbox").disabled = true;
-
-
-    } else if (stateControlAreaButton == 'drawing') {
-        d3.select("#control_checkbox").property("checked", false);
-        d3.select("#control_checkbox").property("disabled", true);
-        d3.selectAll(".controlled-areas").remove();
-
-        stateControlAreaButton = 'drawn';
-        document.getElementById("control_area").innerHTML = "Delete Control Area";
-
-        // Remove onclick function
-        svg.on("click", null);
-
-        let pre_circles = Array.from(document.getElementsByClassName('voronoi-pre-circle')).map(d => [Number(d.attributes.cx.value), Number(d.attributes.cy.value)]);
-        drawVoronoiArea(voronoi_clip_canvas, pre_circles);
-        d3.selectAll(".voronoi-pre-circle").remove();
-
-        prepareDensityData();
-
-        if (statsShown) {
-            reDrawHistDensity();
-        }
-
-        document.getElementById("voronoi_checkbox").disabled = false;
-
-    } else if (stateControlAreaButton == 'drawn') {
-        d3.select("#control_checkbox").property("disabled", false);
-        stateControlAreaButton = 'idle';
-        document.getElementById("control_area").innerHTML = "Draw Control Area";
-
-        d3.select("#voronoi-area").remove();
-        clearCanvas(voronoi_clip_canvas);
-
-        prepareDensityData();
-        if (statsShown) {
-            reDrawHistDensity();
-        }
-
-        document.getElementById("voronoi_checkbox").disabled = true;
-        document.getElementById("voronoi_checkbox").checked = false;
-        document.getElementById("control_checkbox").disabled = false;
-
-
-    }
-
-    /*
-    svg.on("click", function () {
-        let mouse = d3.mouse(svg.select("#subSvgCont").node());
-        console.log(mouse);
-        voronoi_clip_canvas.append("circle")
-            .attr("class", "voronoi-pre-circle")
-            .attr("cx", mouse[0])
-            .attr("cy", mouse[1]);
-        if (d3.event.shiftKey) {
-            let pre_circles = Array.from(document.getElementsByClassName('voronoi-pre-circle')).map(d => [Number(d.attributes.cx.value), Number(d.attributes.cy.value)]);
-            drawVoronoiArea(voronoi_clip_canvas, pre_circles);
-            console.log(`mouse click with shift at ${mouse[0]} and ${mouse[1]}`);
-
-        }
-
-    })
-    */
-}
 function drawVoronoiArea(svg, polygon) {
     clearCanvas(svg.select("#subSvgCont"));
     let polygon_hull = d3.polygonHull(polygon);
@@ -234,4 +144,40 @@ function drawVoronoiArea(svg, polygon) {
     d3.select(".voronoi_poly_layer").append("polygon")
         .attr("id", "voronoi-area")
         .attr("points", polygon_hull.map(p => p.join(",")).join(" "));
+}
+
+/**
+ * Plots a single trajectory
+ *
+ * @param data
+ * @param svg
+ * @returns {Promise<*>}
+ */
+async function plotData(data, svg) {
+
+    async function drawPath(traj) {
+        const newData = [];
+        for (i = 0; i < traj.x.length; i++) {newData.push({"x": traj.x[i], "y": traj.y[i]})}
+        svg.append("path")
+            .datum(newData)
+            .attr("class", "trajectories")
+            .attr("id", `traj_${traj.id}`)
+            .attr("d", line);
+    }
+
+    var line = d3.line()
+        .x(function(d, i) { return d.x; })
+        .y(function(d, i) { return d.y; })
+        .curve(d3.curveMonotoneX);
+
+
+    for (lineData of data) {
+        drawPath(lineData);
+    }
+
+}
+
+function plotAllTrajectories(svg) {
+    plotData(trajectoryDataByID, svg);
+
 }

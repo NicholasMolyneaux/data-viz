@@ -1,70 +1,45 @@
-function showStatistics() {
+function prepareChord() {
 
-    let viz = document.getElementById("viz");
-    let mainViz = document.getElementById("mainViz");
+    // canvas size and chord diagram radii
+    const size = 900;
 
-    if (statsShown) {
-        statsShown = false;
+    const svg = d3.select("#viz_OD").append("svg")
+        .attr("preserveAspectRatio", "xMidYMid meet")
+        .attr("viewBox", `${-size/2} ${-size/2} ${size} ${size}`)
+        .attr("id", "svgViz_OD")
+        .append("svg:g")
+        .attr("id", "circle");
 
-        let showStats = document.getElementById("showStats");
 
-        showStats.innerHTML = "Show Statistics";
-        //showStats.classList.remove("col-12");
-        //showStats.classList.add("col");
+    //dynamicChord(data, {});
+    const getVisibleName = getVisibleNameMapping({});
+    chordKeysOriginalData = Array.from(new Set(trajSummary.map(v => getVisibleName(v.o)).concat(trajSummary.map(v => getVisibleName(v.d)))));
+    currentLabels = chordKeysOriginalData.slice();
+    staticChord(trajSummary, getVisibleName, chordKeysOriginalData);
+}
 
-        document.getElementById("divOptStats").style.display = "none";
+function addHistograms() {
 
-        viz.classList.add("col");
-        viz.classList.remove("col-xl-8");
+    $.get('visualization/stats/templates/graph.mst', function(graph) {
+        var rendered = Mustache.render(graph, {id: 'tt'});
+        $('#TTContainer').append(rendered);
+    }).then(() => {
+        graphOptions['tt'] = {'data': histTT, 'xAxis': 'Travel Time [s]'};
 
-        $('#statDiv').remove();
+        drawGraph('tt');
+    });
 
-        $('body').css("overflow-y", "hidden");
 
-        document.getElementById("optionsStatsButton").innerHTML = "<i class=\"fas fa-plus fa-lg\"></i>"
 
-    } else {
-        statsShown = true;
+    $.get('visualization/stats/templates/graph.mst', function(graph) {
+        var rendered = Mustache.render(graph, {id: 'density'});
+        $('#densityContainer').append(rendered);
+    }).then(() => {
 
-        document.getElementById("divOptStats").style.display = "";
+        graphOptions['density'] = {'data': histDensity, 'xAxis': 'Ped/m^2 [m^-2]'};
 
-        let showStats = document.getElementById("showStats");
-
-        //showStats.classList.remove("col");
-        //showStats.classList.add("col-12");
-
-        viz.classList.remove("col");
-        viz.classList.add("col-xl-8");
-
-        let statDiv = document.createElement("div");
-        //statDiv.style.overflowY = "scroll";
-        //statDiv.style.height = getVizHeight();
-
-        statDiv.classList.add("col");
-        statDiv.classList.add("col-xl-4");
-
-        statDiv.setAttribute("id", "statDiv");
-        mainViz.appendChild(statDiv);
-
-        $.get('./assets/templates/stats.html', function(opts) {
-            var rendered = Mustache.render(opts);
-
-            $('#statDiv').append(rendered);
-            prepareChord();
-            addHistograms();
-        });
-
-        document.getElementById("showStats").innerHTML = "Hide Stats";
-
-        if (window.innerWidth >= 1200) {
-            $('body').css("overflow-y", "hidden");
-            document.getElementById("statDiv").style.overflowY = 'auto';
-        } else {
-            $('body').css("overflow-y", "auto");
-            document.getElementById("statDiv").style.overflowY = 'hidden';
-        }
-
-    }
+        drawGraph('density');
+    });
 
 }
 

@@ -27,40 +27,6 @@ function publish(json) {
     console.log(json);
 }
 
-//checkboxes
-
-function checkZone() {
-    if (d3.select("#zone_checkbox").property("checked")) {
-        drawZones(zonesData, d3.select(".structure_layer"));
-    } else {
-        d3.selectAll(".the-zones").remove();
-        d3.selectAll(".zone-text-overlay").remove();
-        od_selection = {"Origins": new Set(), "Destinations": new Set()};
-
-    }
-}
-function checkControl() {
-    if (d3.select("#control_checkbox").property("checked")) {
-        drawControlAreas(areasData, d3.select(".voronoi_poly_layer"));
-
-        document.getElementById("voronoi_checkbox").disabled = false;
-
-
-    } else {
-        d3.selectAll(".controlled-areas").remove();
-
-        document.getElementById("voronoi_checkbox").disabled = true;
-        document.getElementById("voronoi_checkbox").checked = false;
-    }
-}
-function checkFlow() {
-    if (d3.select("#flow_checkbox").property("checked")) {
-        d3.selectAll(".flow-gates").style("opacity", 1);
-    } else {
-        d3.selectAll(".flow-gates").style("opacity", 0);
-    }
-}
-
 /**
  * Triggered when the show all trajectories button is selected in the 2D options.
  * The voronoi densities and the controlled areas must be removed when plotting the trajectories.

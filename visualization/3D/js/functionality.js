@@ -1,30 +1,3 @@
-function hideWalls() {
-    if (wallsHidden) {
-        console.log("Walls shown!");
-
-        walls.forEach(w => {
-            w.scale.y = 1;
-            w.position.y = wallHeight/2;
-        });
-
-        ceiling.visible = true;
-
-        wallsHidden = false;
-    } else {
-        console.log("Walls hidden!");
-
-        walls.forEach(w => {
-            w.scale.y = 0.01;
-            w.position.y = 0.01;
-        });
-
-        ceiling.visible = false;
-
-        wallsHidden = true;
-    }
-
-}
-
 function onDocumentMouseMove( event ) {
     event.stopPropagation();
     event.preventDefault();

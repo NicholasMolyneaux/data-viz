@@ -3,7 +3,7 @@ let pedMover;
 let currentTimeShownIdx = 0;
 const INTERVAL2D = 100;
 let SPEEDFACTOR = 1;
-let threeDButtonDisabled = false;
+let changeVizButtonDisabled = false;
 
 function prepViz(change3DStyle=false) {
 
@@ -209,120 +209,8 @@ function updateTimer(time) {
 
 }
 
-function prepareChord() {
-
-    // canvas size and chord diagram radii
-    const size = 900;
-
-    const svg = d3.select("#viz_OD").append("svg")
-        .attr("preserveAspectRatio", "xMidYMid meet")
-        .attr("viewBox", `${-size/2} ${-size/2} ${size} ${size}`)
-        .attr("id", "svgViz_OD")
-        .append("svg:g")
-        .attr("id", "circle");
-
-
-    //dynamicChord(data, {});
-    const getVisibleName = getVisibleNameMapping({});
-    chordKeysOriginalData = Array.from(new Set(trajSummary.map(v => getVisibleName(v.o)).concat(trajSummary.map(v => getVisibleName(v.d)))));
-    currentLabels = chordKeysOriginalData.slice();
-    staticChord(trajSummary, getVisibleName, chordKeysOriginalData);
-}
-
-
-
 // Options specific to a graph. key = graphID (Data + other options)
 let graphOptions = new Object();
-
-function addHistograms() {
-
-    $.get('visualization/stats/templates/graph.mst', function(graph) {
-        var rendered = Mustache.render(graph, {id: 'tt'});
-        $('#TTContainer').append(rendered);
-    }).then(() => {
-        graphOptions['tt'] = {'data': histTT, 'xAxis': 'Travel Time [s]'};
-
-        drawGraph('tt');
-    });
-
-
-
-    $.get('visualization/stats/templates/graph.mst', function(graph) {
-        var rendered = Mustache.render(graph, {id: 'density'});
-        $('#densityContainer').append(rendered);
-    }).then(() => {
-
-        graphOptions['density'] = {'data': histDensity, 'xAxis': 'Ped/m^2 [m^-2]'};
-
-        drawGraph('density');
-    });
-
-}
-
-// Faster and Slower buttons
-$( "#forward" ).click(function() {
-
-    if (SPEEDFACTOR <= 16) {
-        clearInterval(pedMover);
-
-        if (viz3D & SPEEDFACTOR == 2) {
-            currentTimeShownIdx = Math.round(currentTimeShownIdx/(INTERP+1));
-        }
-
-        SPEEDFACTOR *= 2;
-
-        if (SPEEDFACTOR < 1) {
-            const frac = math.fraction(SPEEDFACTOR);
-            document.getElementById("speed").innerHTML = "&#215;" + frac.n + "/" + frac.d;
-        } else {
-            document.getElementById("speed").innerHTML = "&#215;" + SPEEDFACTOR;
-        }
-
-        if (!vizPaused) {
-            runViz();
-        }
-    }
-});
-
-$( "#backward" ).click(function() {
-
-    if (SPEEDFACTOR >= 0.25) {
-        clearInterval(pedMover);
-
-        if (viz3D & SPEEDFACTOR == 4) {
-            currentTimeShownIdx = currentTimeShownIdx*(INTERP+1);
-        }
-
-
-        SPEEDFACTOR /= 2;
-
-        if (SPEEDFACTOR < 1) {
-            const frac = math.fraction(SPEEDFACTOR);
-            document.getElementById("speed").innerHTML = "&#215;" + frac.n + "/" + frac.d;
-        } else {
-            document.getElementById("speed").innerHTML = "&#215;" + SPEEDFACTOR;
-        }
-
-        if (!vizPaused) {
-            runViz();
-        }
-    }
-
-});
-
-$( "#playPauseButton" ).click(function() {
-
-    if (vizPaused) {
-        runViz();
-        document.getElementById("playPauseButton").innerHTML = "<i class=\"fas fa-pause fa-lg\"></i>";
-        vizPaused = false;
-    } else {
-        clearInterval(pedMover);
-        document.getElementById("playPauseButton").innerHTML = "<i class=\"fas fa-play fa-lg\"></i>";
-        vizPaused = true;
-    }
-
-});
 
 function secondsToHms(d) {
     d = Number(d);
@@ -386,18 +274,14 @@ function changeTimes(times) {
     }
 }
 
-$( "#threeDButton" ).click(function() {
-    transitionBetween2D3D()
-});
-
 function transitionBetween2D3D() {
 
-    if (!threeDButtonDisabled) {
+    if (!changeVizButtonDisabled) {
 
-        threeDButtonDisabled = true;
+        changeVizButtonDisabled = true;
 
         setTimeout(function() {
-            threeDButtonDisabled = false;
+            changeVizButtonDisabled = false;
         }, 1000);
 
         $("#dragOpt").remove();
@@ -406,8 +290,8 @@ function transitionBetween2D3D() {
 
         if(viz3D) {
 
-            document.getElementById("threeDButton").innerHTML = "<i class=\"fas fa-cube fa-lg\"></i>";
-            document.getElementById("threeDButton").title = "3D viz";
+            document.getElementById("changeVizButton").innerHTML = "<i class=\"fas fa-cube fa-lg\"></i>";
+            document.getElementById("changeVizButton").title = "3D viz";
 
             document.getElementById("help").title = "Scroll for zoom/dezoom; Click + Mouse to move around; Click on a zone to select it as an origin and ctrl+click to select it as a destination."
 
@@ -424,8 +308,8 @@ function transitionBetween2D3D() {
 
         } else {
 
-            document.getElementById("threeDButton").innerHTML = "<i class=\"fas fa-square fa-lg\"></i>";
-            document.getElementById("threeDButton").title = "2D viz";
+            document.getElementById("changeVizButton").innerHTML = "<i class=\"fas fa-square fa-lg\"></i>";
+            document.getElementById("changeVizButton").title = "2D viz";
 
             document.getElementById("help").title = "Scroll for zoom/dezoom; CTRL+Mouse/Arrow keys to more; Mouse to rotate."
 
@@ -451,33 +335,6 @@ function transitionBetween2D3D() {
     }
 }
 
-function deleteStuff3D() {
-
-    $("#canvas").remove();
-
-    // Have to delete correctly these stuff.
-    topFloor = null;
-    bottomFloor = null;
-    ceiling = null;
-    walls = [];
-    clocks = [];
-    lights = [];
-
-    function clearThree(obj){
-        while(obj.children.length > 0){
-            clearThree(obj.children[0])
-            obj.remove(obj.children[0]);
-        }
-        if(obj.geometry) obj.geometry.dispose()
-        if(obj.material) obj.material.dispose()
-        if(obj.texture) obj.texture.dispose()
-    }
-
-    clearThree(scene);
-    dctPed = new Object();
-    mixers = [];
-}
-
 function deleteStuff2D() {
     $("#svgCont").remove();
 
@@ -487,63 +344,5 @@ function deleteStuff2D() {
 
         $('#statDiv').remove();
     }
-}
-
-function changeStyle3D() {
-
-    document.getElementById("changeStyle").disabled = true;
-
-    cancelAnimationFrame(animation);
-
-    clearInterval(pedMover);
-
-    if (STYLE == "TWD") {
-        STYLE = "normal";
-    } else {
-        STYLE = "TWD";
-    }
-
-    $("#canvas").remove();
-
-    // Have to delete correctly these stuff.
-    topFloor = null;
-    bottomFloor = null;
-    ceiling = null;
-    walls = [];
-    clocks = [];
-    lights = [];
-
-    while(scene.children.length > 0){
-        scene.remove(scene.children[0]);
-    }
-
-    // TODO: Delete correctly the pedestrians!!!
-
-    dctPed = new Object();
-    mixers = [];
-
-    container = null;
-    stats = null;
-    controls = null;
-    raycaster = null;
-    camera = null;
-    scene = null;
-    renderer = null;
-    light = null;
-
-    prepViz(true);
-
-    if (!presentationPlaying) {
-        if(vizPaused) {
-            do1Step();
-        } else {
-            runViz();
-        }
-    }
-
-    setTimeout(function() {
-            document.getElementById("changeStyle").disabled = false;
-        }, 2000);
-
 }
 

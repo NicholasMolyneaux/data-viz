@@ -122,42 +122,6 @@ function addInfra() {
     document.getElementById("infraData").selectedIndex = idx;
 }
 
-function updateDescriptionInfra(e) {
-
-    const infraName = e.options[e.selectedIndex].value;
-
-    const idx = infrastructures.map(function(e) { return e.name; }).indexOf(infraName);
-
-    document.getElementById('textDescInfra').innerHTML = infrastructures[idx]['description'];
-
-    if (infrastructures[idx]['description'] === "") {
-        document.getElementById('textDescInfra').innerHTML = "No description";
-    } else {
-        document.getElementById('textDescInfra').innerHTML = infrastructures[idx]['description'];
-    }
-
-    infraSelected = true;
-
-    const url = baseURL + 'trajlist/' + infrastructures[idx]['name'];
-
-    // We will have to take into account the infra.
-
-    $.ajax({
-        type: "GET",
-        dataType: "json",
-        url: url,
-        crossDomain : true,
-    })
-        .done(function( data ) {
-            console.log(data);
-            trajectories = data;
-            //console.log(trajectories);
-            // DEBUG
-            addTraj();
-        });
-
-}
-
 /* TRAJECTORIES */
 
 function loadTraj() {
@@ -178,7 +142,7 @@ function loadTraj() {
             trajectories = data;
             //console.log(trajectories);
             // DEBUG
-            addTraj();
+            addTrajDescription();
 
             // With animation
             loadTrajData().then(() => {
@@ -274,51 +238,6 @@ function createSlider() {
     //origins[1].setAttribute('disabled', true);
 }
 
-function addTraj() {
-    //console.log(trajectories);
-
-    // Remove all options
-    $('#trajData').children('option').remove();
-
-    let idx = -1;
-
-    $('#trajData').append($('<option>', {
-        value: "None",
-        text: "No trajectory data"
-    }))
-
-    trajectories.forEach((traj, index) => {
-
-        if (presentationPlaying) {
-            if(traj.name == selectedTraj) {
-                selectedTraj = traj;
-                idx = index;
-            }
-        }
-
-        $('#trajData').append($('<option>', {
-            value: traj.name,
-            text: traj.name
-        }))
-    });
-
-    if (idx > -1) {
-
-        if(trajectories[idx]['description'] == "") {
-            document.getElementById('textDescTraj').innerHTML = "No description";
-        } else {
-            document.getElementById('textDescTraj').innerHTML = trajectories[idx]['description'];
-        }
-
-        document.getElementById("trajData").selectedIndex = idx+1;
-    } else {
-        document.getElementById('textDescTraj').innerHTML = "Only show the structure";
-
-        document.getElementById("trajData").selectedIndex = 0;
-    }
-
-}
-
 function dataSelected() {
 
     trajDataLoaded = false;
@@ -392,9 +311,9 @@ function dataSelected() {
                 } else {
                     prepViz();
                 }
-                document.getElementById("threeDButton").style.display = "none";
+                document.getElementById("changeVizButton").style.display = "none";
             } else {
-                document.getElementById("threeDButton").style.display = "";
+                document.getElementById("changeVizButton").style.display = "";
 
                 prepViz();
             }
@@ -409,15 +328,15 @@ function dataSelected() {
         loadInfraData().then(() => {
             infraDataLoaded = true;
 
-            document.getElementById("threeDButton").style.display = "";
+            document.getElementById("changeVizButton").style.display = "";
 
             if (selectedInfra.name === "denhaag") {
                 if (viz3D) {
                     viz3D = false;
                 }
-                document.getElementById("threeDButton").style.display = "none";
+                document.getElementById("changeVizButton").style.display = "none";
             } else {
-                document.getElementById("threeDButton").style.display = "";
+                document.getElementById("changeVizButton").style.display = "";
             }
 
             prepViz();
@@ -645,13 +564,7 @@ function appendOptions() {
 
 }
 
-$('#optionsButton').click(() => {
 
-    document.getElementById("optionsButton").style.display = "none";
-    document.getElementById("dragOpt").style.display = "";
-
-    optionsShown = true;
-});
 
 function hideOptions() {
 
@@ -1098,8 +1011,8 @@ function skipPresentation() {
     if (!vizPrepared) {
         viz3D = false;
 
-        document.getElementById("threeDButton").innerHTML = "<i class=\"fas fa-cube fa-lg\"></i>";
-        document.getElementById("threeDButton").title = "3D viz";
+        document.getElementById("changeVizButton").innerHTML = "<i class=\"fas fa-cube fa-lg\"></i>";
+        document.getElementById("changeVizButton").title = "3D viz";
 
         document.getElementById("help").title = "Scroll for zoom/dezoom; Click + Mouse to move around; Click on a zone to select it as an origin and ctrl+click to select it as a destination."
 

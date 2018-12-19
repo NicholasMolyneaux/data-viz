@@ -232,3 +232,99 @@ function computeDensities(data, polygon) {
     }
     return voronoi_polygons.map(d => d3.polygonArea(d));
 }
+
+/**
+ * Update the description of the infrastructure
+ *
+ * @param element HTML element (select)
+ */
+function updateDescriptionInfra(element) {
+
+    // Get the name of the selected infrastructure
+    const infraName = element.options[element.selectedIndex].value;
+
+    // Get the index of the selected infrastructure
+    const idx = infrastructures.map(function (e) {
+        return e.name;
+    }).indexOf(infraName);
+
+    // Change the description of this infrastructure
+    // If there is no description, just write no description =)
+    if (infrastructures[idx]['description'] === "") {
+        document.getElementById('textDescInfra').innerHTML = "No description";
+    } else {
+        document.getElementById('textDescInfra').innerHTML = infrastructures[idx]['description'];
+    }
+
+    // Say that an infrastructure has been selected
+    infraSelected = true;
+
+    // URL to have the list of trajectories linked to an infrastructure
+    const url = baseURL + 'trajlist/' + infrastructures[idx]['name'];
+
+    // Ajax call to get the trajectories
+    $.ajax({
+        type: "GET",
+        dataType: "json",
+        url: url,
+        crossDomain: true,
+    }).done(function (data) {
+            // Update the list of trajectories
+            trajectories = data;
+
+            // Add the trajectories in the HTML
+            // Define in
+            addTrajDescription();
+        }
+    );
+}
+
+/**
+ * Update the description of the infrastructure
+ *
+ * @param element HTML element (select)
+ */
+function addTrajDescription() {
+    //console.log(trajectories);
+
+    // Remove all options
+    $('#trajData').children('option').remove();
+
+    let idx = -1;
+
+    $('#trajData').append($('<option>', {
+        value: "None",
+        text: "No trajectory data"
+    }))
+
+    trajectories.forEach((traj, index) => {
+
+        if (presentationPlaying) {
+            if(traj.name == selectedTraj) {
+                selectedTraj = traj;
+                idx = index;
+            }
+        }
+
+        $('#trajData').append($('<option>', {
+            value: traj.name,
+            text: traj.name
+        }))
+    });
+
+    if (idx > -1) {
+
+        if(trajectories[idx]['description'] == "") {
+            document.getElementById('textDescTraj').innerHTML = "No description";
+        } else {
+            document.getElementById('textDescTraj').innerHTML = trajectories[idx]['description'];
+        }
+
+        document.getElementById("trajData").selectedIndex = idx+1;
+    } else {
+        document.getElementById('textDescTraj').innerHTML = "Only show the structure";
+
+        document.getElementById("trajData").selectedIndex = 0;
+    }
+
+}
