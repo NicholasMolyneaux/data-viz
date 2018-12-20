@@ -1,3 +1,11 @@
+/*********************************************************/
+/*                                                       */
+/*   Functions for the chord diagram                     */
+/*                                                       */
+/*   By Nicholas Molyneaux, Gael Lederrey & Semin Kwak   */
+/*                                                       */
+/*********************************************************/
+
 /**
  * Creates a function which maps the name to either itself or to an aggregate name if specified. The argument is an object
  * which contains the list of names to update the corresponding new name to show.

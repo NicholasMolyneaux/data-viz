@@ -225,7 +225,6 @@ function createPedestrian(ped) {
 
         // Define the ration and scale the pedestrian
         var ratio = peopleHeight / size.y;
-        console.log("ratio = " + ratio);
         object.scale.set(ratio, ratio, ratio);
 
         // Animation of the object
@@ -267,18 +266,32 @@ function createZombie(ped) {
     // DEBUG
     //console.log("Create Zombie with ID " + ped.id);
 
+    // Add the ped to the dict of ped.
     dctPed[ped.id] = new Object();
 
+    // The zombies can be either male or female (sorry, non-binary people)
+    // For each gender, we have 3 different meshes,
+    // For these 2*3 = 6 zombies, we have 10 different meshes
+    // And for these 2*3*10 = 60 different zombies, we have 3 different animations (walk, lunatic walk, and crawl)
+    // Thus, a total of 180 different models.
+
+    // 50% chance of being male/female
     let gender = 'male';
 
     if (Math.random() > 0.5) {
         gender = 'female';
     }
 
+    // Equal chances to have one of the three different mesh
     const nbr = Math.floor(Math.random() * 3) + 1;
 
+    // Equal chances to have on of the 10 textures
     const texture = Math.floor(Math.random() * 10) + 1;
 
+    // Animation
+    // 20% to be crawling
+    // 40% to be walking
+    // 40% to be lunatic walking
     const proba = Math.random();
 
     let anim = "lunwalk";
@@ -289,16 +302,17 @@ function createZombie(ped) {
         anim = "walk";
     }
 
+    // Loading the zombie blender model we want
     loader.load(modelsFolder + '3DRT/zombie_' + gender + nbr + '_text' + texture + '_' + anim + '.glb', function (gltf) {
 
         let object = gltf.scene;
 
+        // Just cast the shadows. Nothing useful
         object.traverse(function (child) {
             if (child.isMesh) {
 
                 child.castShadow = true;
                 child.receiveShadow = true;
-                child.material.refractionRatio = 0.5;
             }
         });
 
@@ -308,19 +322,21 @@ function createZombie(ped) {
 
         // Define the ration and scale the minecraft steve
         var ratio = peopleHeight / size.y;
-        //console.log("ratio = " + ratio);
         object.scale.set(ratio, ratio, ratio);
 
         // Animation of the object
         object.mixer = new THREE.AnimationMixer( object );
 
+        // Push the animation to the mixer and play it.
         mixers.push( object.mixer );
         var action = object.mixer.clipAction( gltf.animations[0]);
         action.play();
 
+        // Add a clock to update the animation of the pedestrian
         clocks.push(new THREE.Clock());
 
         // Set the position
+        // (if they're crawling, we need to put them a little bit higher, otherwise, they go through the floor)
         if (anim == "crawl") {
             gltf.scene.position.set(ped.x-avg[0],0.1,ped.y-avg[1]);
 

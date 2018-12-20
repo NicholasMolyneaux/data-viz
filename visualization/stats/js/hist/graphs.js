@@ -1,5 +1,19 @@
+/*********************************************************/
+/*                                                       */
+/*   Main functions for the histograms                   */
+/*                                                       */
+/*   By Nicholas Molyneaux, Gael Lederrey & Semin Kwak   */
+/*                                                       */
+/*********************************************************/
+
+/**
+ * Draw the graph. Initial function to setup the options of the histogram
+ *
+ * @param: id - ID of the histogram
+ */
 function drawGraph(id) {
 
+    // Setup the initial options
     graphOptions[id]['nbrBins'] = 20;
     graphOptions[id]['showNumbers'] = false;
     graphOptions[id]['yAxis'] = "Count";
@@ -14,43 +28,63 @@ function drawGraph(id) {
     graphOptions[id]['xMax'] = null;
     graphOptions[id]['binsData'] = {};
 
+    // Actually draw the histogram
     hist(id, 'start');
 }
 
+/**
+ * Draw the histogram. Actual function to draw the histogram.
+ *
+ * The state parameter is used to trigger different animation on the histogram based on which option changed.
+ *
+ * @param: id - ID of the histogram
+ * @param: state - string for the state of the histogram
+ *                 (start, changedBins, changedAxis, changedYAxis, and changeColor)
+ */
 function hist(id, state) {
-    // State is used for the transitions
 
+    // Length of the transition
     const transLength = 1000;
 
+    // ID of the viz with the histograms
     const vizId = "viz_" + id;
 
     // A formatter for counts.
     const formatCount = d3.format(",.0f");
     const formatCountPerc = d3.format(",.1f");
 
-    const ttDiv = d3.select("#" + vizId);
+    // Get the d3 div
+    const svgDiv = d3.select("#" + vizId);
 
+    // Define the margins
     let margin = {top: 20, right: 20, bottom: 0, left: 0};
 
+    // The margins depend on the font size. (bigger margins for bigger font size)
     margin['bottom'] = 20+2*graphOptions[id]['fontSize'];
     margin['left'] = 30+2*graphOptions[id]['fontSize'];
 
+    // For the density, we need a bigger margin on the left since the number are quite big
     if (id === 'density') {
         margin.left += 25;
     }
 
+    // Width and height of the graph
     const width = 960,
         height = 600;
 
+    // Width and height with the margins
     const fullWidth = width + margin.left + margin.right;
     const fullHeight = height + margin.top + margin.bottom;
 
+    // Save these values
     graphOptions[id]['width'] = fullWidth;
     graphOptions[id]['height'] = fullHeight;
+    
+    // We remove all SVG inside this div (in case, we're redrawing it)
+    svgDiv.select("svg").remove();
 
-    ttDiv.select("svg").remove();
-
-    let svg = ttDiv
+    // Prepare the svg
+    let svg = svgDiv
         .classed("svg-container", true) //container class to make it responsive
         .attr(
             "style",
@@ -65,54 +99,63 @@ function hist(id, state) {
         .classed("svg-content-responsive", true),
         g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
+    // Get max and min values in the data for the x axis
     let max = d3.max(graphOptions[id]['data']);
     let min = d3.min(graphOptions[id]['data']);
 
+    // If a min has been specified, we need to change it
     if (graphOptions[id]['xMin'] != null) {
         min = graphOptions[id]['xMin'];
     }
 
+    // If a max has been specified, we need to change it
     if (graphOptions[id]['xMax'] != null) {
         max = graphOptions[id]['xMax'];
     }
 
-
-    // set the ranges
+    // Set the ranges
     let x = d3.scaleLinear()
         .domain([min, max])
         .rangeRound([0, width]);
     let y = d3.scaleLinear()
         .range([height, 0]);
 
-    // Create the bins
+    // Step for the ticks
     let step = (max-min)/(graphOptions[id]['nbrBins']);
 
+    // Ticks
     let ticks = Array.from(new Array(graphOptions[id]['nbrBins']), (val,index) => index*step+min);
 
+    // Number of points in the data
     const nbrData = graphOptions[id]['data'].length;
-    // set the parameters for the histogram
+
+    // Set the parameters for the histogram
     var bins = d3.histogram()
         .domain(x.domain())
         .thresholds(ticks)
         (graphOptions[id]['data']);
 
-    if (graphOptions[id]['yAxisValue'] == 'count') {
+    // Get the values of the yAxis depending on if we want the count or the percentage
+    if (graphOptions[id]['yAxisValue'] === 'count') {
         function yVals(d) {
             return d.length;
         }
-    } else if (graphOptions[id]['yAxisValue'] == 'percentage') {
+    } else if (graphOptions[id]['yAxisValue'] === 'percentage') {
         function yVals(d) {
             return d.length/nbrData*100;
         }
     }
 
+    // Min and max values for y axis
     let yMinVal = 0;
     let yMaxVal = d3.max(bins, function(d) { return yVals(d); });
 
+    // If min is specified in the options, change it
     if (graphOptions[id]['yMin'] != null) {
         yMinVal = graphOptions[id]['yMin'];
     }
 
+    // If max is specified in the options, change it
     if (graphOptions[id]['yMax'] != null) {
         yMaxVal = graphOptions[id]['yMax'];
     }
@@ -141,6 +184,7 @@ function hist(id, state) {
             .range([graphOptions[id]['colors'][0], graphOptions[id]['colors'][0]]);
     }
 
+    // Add a tolltip
     const tool_tip = d3.tip()
         .attr("class", "d3-tip")
         .offset([-8, 0])
@@ -148,9 +192,11 @@ function hist(id, state) {
 
     svg.call(tool_tip);
 
-    console.log(graphOptions[id]['data']);
-
+    // Now, we can finally draw the bars of the histograms.
+    // Finally, time, no? =)
     if (graphOptions[id]['data'].length > 1) {
+        // We have some data, so we can draw something
+
         let bar = g.selectAll(".bar")
             .data(bins)
             .enter().append("g")
@@ -160,7 +206,8 @@ function hist(id, state) {
             .on('mouseenter', tool_tip.show)
             .on('mouseout', tool_tip.hide);
 
-        if (state == 'start' || state == 'changedBins' || state == 'changedAxis') {
+        // Depending on the state, we'll add some transition
+        if (state === 'start' || state === 'changedBins' || state === 'changedAxis') {
             bar.append("rect")
                 .attr("x", 2.5)
                 .attr("width", x(bins[0].x1) - x(bins[0].x0) - 5)
@@ -188,6 +235,7 @@ function hist(id, state) {
                 });
         }
 
+        // Draw the numbers on the bars if specified
         if (graphOptions[id]['showNumbers']) {
             bar.append("text")
                 .attr("dy", ".75em")
@@ -197,15 +245,16 @@ function hist(id, state) {
                 .attr("fill", "#fff")
                 .attr("font", "10px sans-serif")
                 .text(function(d) {
-                    if(graphOptions[id]['yAxisValue'] == 'count') {
+                    if(graphOptions[id]['yAxisValue'] === 'count') {
                         return formatCount(yVals(d));
-                    } else if (graphOptions[id]['yAxisValue'] == 'percentage') {
+                    } else if (graphOptions[id]['yAxisValue'] === 'percentage') {
                         return formatCountPerc(yVals(d));
                     }
                 });
         }
     } else {
-        // text label for the y axis
+        // We don't have data, for one reason or another.
+        // So, we just say that we don't have data =P
         let text = svg.append("text")
             .attr("y", height/2)
             .attr("x", width/2 + margin.left)
@@ -217,12 +266,13 @@ function hist(id, state) {
             .text("no data");
     }
 
+    // Draw the xAxis
     let xAxis = g.append("g")
         .style("font-size", graphOptions[id]['fontSize'])
         .attr("class", "axis axis--x")
         .style("stroke-width", "1px")
         .attr("transform", "translate(0," + height + ")");
-    if(state == 'start' || state == 'changedAxis') {
+    if(state === 'start' || state === 'changedAxis') {
         xAxis.transition()
             .duration(transLength)
             .call(d3.axisBottom(x));
@@ -231,7 +281,7 @@ function hist(id, state) {
     }
 
 
-    // text label for the x axis
+    // Text labels for the xAxis
     let xAxisText = svg.append("text")
         .attr("transform",
             "translate(" + (width/2 + margin.left) + " ," +
@@ -240,18 +290,18 @@ function hist(id, state) {
         .style("font-size", graphOptions[id]['fontSize'])
         .text(graphOptions[id]['xAxis']);
 
-    if(state == 'start' || state == 'changedAxis') {
+    if(state === 'start' || state === 'changedAxis') {
         xAxisText.attr("fill-opacity", 0)
             .transition()
             .duration(transLength)
             .attr("fill-opacity", 1);
     }
 
-    // Add the y Axis
+    // Draw the yAxis
     let yAxis = g.append("g")
         .style("font-size", graphOptions[id]['fontSize']);
 
-    if (state == 'start' || state == 'changedYAxis' || state == 'changedBins' || state == 'changedAxis') {
+    if (state === 'start' || state === 'changedYAxis' || state === 'changedBins' || state === 'changedAxis') {
         yAxis.transition()
             .duration(transLength)
             .call(d3.axisLeft(y));
@@ -259,7 +309,7 @@ function hist(id, state) {
         yAxis.call(d3.axisLeft(y));
     }
 
-    // text label for the y axis
+    // Text labels for the yAxis
     let text = svg.append("text")
         .attr("transform", "rotate(-90)")
         .attr("y", 5)
@@ -269,64 +319,107 @@ function hist(id, state) {
         .style("font-size", graphOptions[id]['fontSize'])
         .text(graphOptions[id]['yAxis']);
 
-    if (state == 'start' || state == 'changedYAxis' || state == 'changedAxis') {
+    if (state === 'start' || state === 'changedYAxis' || state === 'changedAxis') {
         text.attr("fill-opacity", 0)
             .transition()
             .duration(transLength)
             .attr("fill-opacity", 1);
     }
 
-    // Prepare Bins data
-
+    // Prepare the bins data for exporting in CSV
     graphOptions[id]['binsData'] = {'x': ticks, 'y_count': bins.map(d => d.length), 'y_perc': bins.map(d => d.length/nbrData*100)};
 
 }
 
-// Options
+///////////////////////////////////////////////////////////
+//                                                       //
+//                       Options                         //
+//                                                       //
+///////////////////////////////////////////////////////////
 
+/**
+ * Change the number of bins and redraw the histogram
+ *
+ * @param: e - HTML element
+ * @param: id - ID of the histogram
+ */
 function changeBins(e, id) {
 
-    console.log(e.value);
-
+    // Change the number of bins and save it
     graphOptions[id]['nbrBins'] = parseInt(e.value);
 
+    // Redraw the histogram
     hist(id, 'changedBins');
 
 }
 
+/**
+ * Change the number of bins and redraw the histogram
+ *
+ * @param: e - HTML element
+ * @param: id - ID of the histogram
+ */
 function changeYAxis(e, id) {
-    console.log(e.value);
 
+    // Get the values from the HTML
     graphOptions[id]['yAxisValue'] = e.value;
 
-    if (e.value == 'count') {
+    // Update the y axis name
+    if (e.value === 'count') {
         graphOptions[id]['yAxis'] = 'Count';
-    } else if (e.value == 'percentage') {
+    } else if (e.value === 'percentage') {
         graphOptions[id]['yAxis'] = 'Percentage';
     }
 
+    // Redraw the hist
     hist(id, 'changedYAxis');
 }
 
+/**
+ * Show the numbers on hist and redraw the histogram
+ *
+ * @param: e - HTML element
+ * @param: id - ID of the histogram
+ */
 function changeShowNumbers(e, id) {
-    console.log(e.checked);
-
+    // Get the boolean from the HTML
     graphOptions[id]['showNumbers'] = e.checked;
+
+    // Redraw the hist
     hist(id, 'showNumbers');
 
 }
 
+/**
+ * Change the font size and redraw the histogram
+ *
+ * @param: e - HTML element
+ * @param: id - ID of the histogram
+ */
 function changeFontSize(e, id) {
+    // Get the value from the HTML
     graphOptions[id]['fontSize'] = parseInt(e.value);
+
+    // Redraw the hist
     hist(id, 'changeFontSize');
 }
 
+/**
+ * Add another color to the histogram
+ *
+ * Fancy, no?
+ *
+ * @param: id - ID of the histogram
+ */
 function addColor(id) {
 
+    // Get the div with the colors for the histogram
     const strColorsDiv = "colors_" + id;
 
+    // update the counter of colors
     graphOptions[id]['counterColor'] += 1;
 
+    // some HTML =D
     let toBeAdded = "                <div class=\"col-lg-8 col-9\"  id=\"color" + graphOptions[id]['counterColor'] + "Picker_" + id + "\">\n" +
         "                    <input class=\"form-control\" type=\"color\" id=\"color" + graphOptions[id]['counterColor'] + "_" + id + "\" value=\"#000000\" oninput=\"changeColor(this, 'color" + graphOptions[id]['counterColor'] + "', '" + id + "')\">\n" +
         "                </div>\n" +
@@ -336,177 +429,86 @@ function addColor(id) {
         "                            </button>\n" +
         "                        </div>"
 
-
-
-
+    // Append the HTML
     $('#' + strColorsDiv).append(toBeAdded);
 
+    // Push the color in the options
     graphOptions[id]['colors'].push('#000000');
     graphOptions[id]['colorIndex']['color'+graphOptions[id]['counterColor']] = graphOptions[id]['colors'].length -1;
 
+    // Redraw the hist
     hist(id, 'changeColor');
 }
 
+/**
+ * Remove one color from the histogram
+ *
+ * Apparently, no...
+ *
+ * @param: e - HTML element
+ * @param: thisId - ID of the color
+ * @param: id - ID of the histogram
+ */
 function removeColor(e, thisId, id) {
 
+    // Get the index of the color we want to remove
     const index = graphOptions[id]['colorIndex'][thisId]
 
+    // Splice the color, yeahhh!!!
     graphOptions[id]['colors'].splice(index, 1);
 
+    // Delete it
     delete graphOptions[id]['colorIndex'][thisId];
 
+    // Change the key of all the colors after the one being removed
     Object.keys(graphOptions[id]['colorIndex']).forEach(key => {
         if (graphOptions[id]['colorIndex'][key] > index) {
             graphOptions[id]['colorIndex'][key] -= 1;
         }
-    })
+    });
 
+    // Remove the divs
     $('#' + thisId + 'Picker_' + id).remove();
     $('#' + thisId + 'Remove_' + id).remove();
 
+    // Redraw the hist
     hist(id, 'changeColor');
 }
 
+/**
+ * Change one of the colors
+ *
+ * Really fancy this time!
+ *
+ * @param: e - HTML element
+ * @param: thisId - ID of the color
+ * @param: id - ID of the histogram
+ */
 function changeColor(e, thisId, id) {
 
+    // Change the color value in the options
     graphOptions[id]['colors'][graphOptions[id]['colorIndex'][thisId]] = e.value;
 
+    // Redraw the hist
     hist(id, 'changeColor');
 }
 
+/**
+ * Change the axis values (X and Y)
+ **
+ * @param: e - HTML element
+ * @param: id - ID of the histogram
+ * @param: type - which axis value has changed
+ */
 function changeAxis(e, id, type) {
 
+    // Either put it as null or take the value
     if (e.value == "") {
         graphOptions[id][type] = null;
     } else {
         graphOptions[id][type] = parseFloat(e.value);
     }
 
+    // Redraw the hist
     hist(id, 'changedAxis');
-}
-
-function exportGraph(id) {
-
-    const name = document.getElementById("exportName_" + id).value;
-
-    if (name === "") {
-        window.alert("Please, specify a name!")
-    } else {
-        let type = "png";
-        if (name === "tt" || name === "density") {
-            type = document.getElementById("exportType_" + id).value;
-        }
-
-        if (type === 'png') {
-            saveAsPNG(id, name);
-        } else if (type == 'csv') {
-            saveAsCSV(id, name);
-        }
-    }
-
-    if (name === "" || type === "") {
-        window.alert("Please specifiy a name and a type!");
-    } else {
-        if (type === 'png') {
-            saveAsPNG(id, name);
-        } else if (type == 'csv') {
-            saveAsCSV(id, name);
-        }
-    }
-}
-
-function saveAsPNG(id, name) {
-
-    let svg;
-
-    if (id !== "mainViz") {
-        svg = d3.select("#svgViz_" + id).node();
-    } else {
-        svg = d3.select("#svgCont").node();
-    }
-
-    console.log(svg);
-
-    let height;
-
-    if (id === 'tt' || id === 'density') {
-        height = graphOptions[id]['height']
-    } else if (id === 'OD') {
-        height = 900;
-    } else if (id === "mainVIz") {
-        height = getVizHeight();
-    }
-
-    let scale;
-
-    if ( id==="tt" || id === "density") {
-        scale = 2;
-    } else if (id === 'OD') {
-        scale = 1;
-    } else if (id === "mainViz") {
-        scale = 50;
-    }
-
-    let left = 0;
-
-    if (id === "OD") {
-        left = -450;
-    }
-
-    let top = 0;
-
-    if (id === "OD") {
-        top = -450;
-    }
-
-
-    saveSvgAsPng(svg, name + ".png", {scale: scale, backgroundColor: '#FFFFFF', height: height, top:top, left:left, encoderOptions: 0.2});
-
-}
-
-function saveAsCSV(id, name) {
-
-    // Transform the data first
-
-    let data = [];
-
-    data.push(Object.keys(graphOptions[id]['binsData']));
-
-    graphOptions[id]['binsData']['x'].forEach((x, i) => {
-        data.push([x, graphOptions[id]['binsData']['y_count'][i], graphOptions[id]['binsData']['y_perc'][i]]);
-    })
-
-    // Building the CSV from the Data two-dimensional array
-    // Each column is separated by ";" and new line "\n" for next row
-    var csvContent = '';
-    data.forEach(function(infoArray, index) {
-        dataString = infoArray.join(';');
-        csvContent += index < data.length ? dataString + '\n' : dataString;
-    });
-
-    // The download function takes a CSV string, the filename and mimeType as parameters
-    // Scroll/look down at the bottom of this snippet to see how download is called
-    var download = function(content, fileName, mimeType) {
-        var a = document.createElement('a');
-        mimeType = mimeType || 'application/octet-stream';
-
-        if (navigator.msSaveBlob) { // IE10
-            navigator.msSaveBlob(new Blob([content], {
-                type: mimeType
-            }), fileName);
-        } else if (URL && 'download' in a) { //html5 A[download]
-            a.href = URL.createObjectURL(new Blob([content], {
-                type: mimeType
-            }));
-            a.setAttribute('download', fileName);
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-        } else {
-            location.href = 'data:application/octet-stream,' + encodeURIComponent(content); // only this mime type is supported
-        }
-    }
-
-    download(csvContent, name + '.csv', 'text/csv;encoding:utf-8');
-
 }
