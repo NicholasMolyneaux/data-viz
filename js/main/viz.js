@@ -1,274 +1,104 @@
+/*********************************************************/
+/*                                                       */
+/*   File with the main function for the viz.            */
+/*                                                       */
+/*   By Nicholas Molyneaux, Gael Lederrey & Semin Kwak   */
+/*                                                       */
+/*********************************************************/
 
-
+/**
+ * Prepare the 2D or 3D visualization
+ *
+ * @param: change3DStyle - boolean parameter used to avoid reloading the options if only the style of the 3D was changed.
+ */
 function prepViz(change3DStyle=false) {
 
     if (viz3D) {
-
-        container = document.getElementById("viz");
-
-        // Set Camera position
-        camera = new THREE.PerspectiveCamera( 45, document.body.clientWidth / vizHeight, 0.1, 1000 );
-        camera.position.set( cameraInitPos[0], cameraInitPos[1], cameraInitPos[2]);
-
-        // Set the controls
-        controls = new THREE.OrbitControls( camera, container );
-        controls.target.set( 0,0,0 );
-
-        controls.update();
-
-        // New scene
-        scene = new THREE.Scene();
-        camera.lookAt(scene.position);
-
-        // If walls are not built, build them!
-        buildWalls(wallsData);
-
-        // Load pedestrians
-        //interpolateAndAnimate(trajData);
-
-        // Load one pedestrian (DEBUG PURPOSE)
-        //loadMinecraft();
-
-        // Load one zombie (DEBUG PURPOSE)
-        //loadZombie();
-
-        // Add axes (DEBUG PURPOSE)
-        //var worldAxis = new THREE.AxesHelper(20);
-        //scene.add(worldAxis);
-
-        // Light
-        if (STYLE == "normal") {
-            scene.background = new THREE.Color(0xf7f4ea);
-
-            light = new THREE.HemisphereLight( 0xbbbbff, 0x444422 );
-            light.position.set( 0, wallHeight, 0 );
-            light.castShadow = true;
-            scene.add( light );
-
-        } else if (STYLE == "TWD") {
-            scene.background = new THREE.Color(0x00000);
-
-            light = new THREE.HemisphereLight( 0xffffff, 0x444422, 0.02 );
-            light.position.set( 0, wallHeight, 0 );
-            light.castShadow = true;
-            scene.add( light );
-
-            addTWDLights(scene, zonesData);
-        }
-
-
-        raycaster = new THREE.Raycaster();
-
-        renderer = new THREE.WebGLRenderer( { antialias: true } );
-        renderer.setPixelRatio( window.devicePixelRatio );
-
-        renderer.setSize(document.body.clientWidth, vizHeight);
-        renderer.gammaOutput = true;
-        renderer.domElement.id = 'canvas';
-        container.appendChild( renderer.domElement );
-
-        // stats (DEBUG)
-        // stats = new Stats();
-        // container.appendChild( stats.dom );
-
-        resizeViz();
-
-        renderer.render( scene, camera );
-
-        // Mouse stuff
-
-        const canvas = document.getElementById("canvas");
-
-        canvas.addEventListener("mouseover", () => {
-            document.addEventListener('keypress', onKeyPress, false);
-            document.addEventListener( 'mousemove', onDocumentMouseMove, false);
-            document.addEventListener( 'mousedown', onDocumentMouseDown, false);
-
-        });
-
-
-        canvas.addEventListener("mouseout",function() {
-            document.removeEventListener("keypress", onKeyPress, false);
-            document.removeEventListener( 'mousemove', onDocumentMouseMove, false);
-            document.removeEventListener( 'mousedown', onDocumentMouseDown, false);
-        });
-
-        animate();
+        // Defined in visualization/3D/js/main.js
+        prepViz3D();
 
     } else {
-
-        cancelAnimationFrame(animation);
-
-        const xmin = selectedInfra.xmin,
-            xmax = selectedInfra.xmax,
-            ymin = selectedInfra.ymin,
-            ymax = selectedInfra.ymax;
-
-        let svg = d3.select("#viz")
-            .append("svg")
-            .attr("class", "container-fluid")
-            .attr("id", "svgCont")
-            .attr("height", vizHeight)
-            .attr("viewBox", `${xmin-1} ${ymin} ${xmax} ${ymax+10}`);
-        let svg_zoom = svg.append('g')
-            .attr("id", "subSvgCont");
-
-        svg.call(d3.zoom().on("zoom", () => {
-            svg_zoom.attr("transform", d3.event.transform);
-            }
-        ));
-
-
-
-        document.getElementById("mainViz").style.height = 0 + "px";
-
-        vizHeight = getVizHeight();
-
-        document.getElementById("mainViz").style.height = vizHeight + "px";
-
-        document.getElementById("svgCont").style.height = vizHeight + "px";
-
-        let structure_layer = svg_zoom.append("g")
-            .attr("class", "structure_layer");
-
-        let voronoi_clip_layer = svg_zoom.append("g")
-            .attr("class", "voronoi_clip_layer");
-        let voronoi_canvas = svg_zoom.append("g")
-            .attr("class", "voronoi_canvas");
-        let voronoi_poly_layer = svg_zoom.append("g")
-            .attr("class", "voronoi_poly_layer");
-        let pedes_layer = svg_zoom.append("g")
-            .attr("class", "pedes_layer");
-
-        // layer for showing all trajectories
-        let trajectories_layer = svg_zoom.append("g")
-            .attr("class", "trajectories_layer");
-
-        // Read json data and draw frameworks (walls and zones)
-
-        drawStructures(structure_layer);
-
-        let viewBox = svg.attr("viewBox").split(" ").map(d => Number(d));
-        let padding = 1;
-        let r = [1/10, 1/7];
-
-
-        let los_colors = ["rgb(255,0,0)","rgb(255,128,0)","rgb(255,255,0)","rgb(0,255,0)","rgb(0,255,255)","rgb(0,0,255)"];
-        let boundaries = ["∞", 2.17, 1.08, 0.72, 0.43, 0.31, 0];
-        drawColorbar("colorbar", svg, d3.schemeRdYlGn[10], [0,2], viewBox[2]-(viewBox[2]-viewBox[0])*r[0],
-            viewBox[3]-5, (viewBox[2]-viewBox[0])*r[0], 5, padding, "Speed [m/s]");
-        drawColorbar("voronoi-los", svg, los_colors, boundaries, viewBox[2]-(viewBox[2]-viewBox[0])*(r[1]+r[0])-3*padding, viewBox[3]-5, (viewBox[2]-viewBox[0])*r[1], 5, padding, "Level of service [ped/m^2]");
-
-
-        //drawColorbar("", svg, los_colors, boundaries, );
-        //drawLOSColorbar(svg);
-        prepareDensityData();
+        // Defined in visualization/2D/js/main.js
+        prepViz2D();
     }
 
+    // If we only change the style of the 3D, we don't want to reload the options
     if (!change3DStyle) {
         appendOptions();
     }
 
+    // Defined below
     resizeViz();
     vizPrepared = true;
 }
 
+/**
+ * Run the 2D or 3D visualization
+ */
 function runViz() {
 
     if (viz3D) {
+        // Defined in visualization/3D/js/animation.js
         runAnimation3D();
     } else  {
-        //Pedestrians
+        // Defined in visualization/2D/js/animation.js
         runAnimation2D();
     }
 }
 
+/**
+ * Run one step of the 2D or 3D visualization
+ */
 function do1Step() {
+
     if (viz3D) {
+        // Defined in visualization/3D/js/animation.js
         runOneStep3D();
     } else {
+        // Defined in visualization/2D/js/animation.js
         runOneStep2D();
     }
 }
 
-function updateTimer(time) {
-
-    if (selectedTraj == null) {
-        document.getElementById("timer").innerHTML = "No trajectory data!";
-    } else {
-        document.getElementById("timer").innerHTML = secondsToHms(time);
-    }
-
-    slider.noUiSlider.setHandle(1, time, true);
-
-}
-
-function changeTimes(times) {
-
-    const tmin = times[0].split(':').reduce((acc,time) => (60 * acc) + +time);
-    const current = times[1].split(':').reduce((acc,time) => (60 * acc) + +time);
-    const tmax = times[2].split(':').reduce((acc,time) => (60 * acc) + +time);
-
-    let mult = 10;
-
-    if (viz3D & SPEEDFACTOR <= 2) {
-        mult *= (INTERP+1);
-    }
-
-    let nbrIdx = parseInt(mult*(tmin-minTime));
-
-    currentTimeShownIdx -= nbrIdx;
-
-    let middleChanged = false;
-
-    if (tmin == minTime && tmax == maxTime) {
-        middleChanged = true;
-    }
-
-    minTime = tmin;
-    maxTime = tmax;
-
-    currentTimeShownIdx = parseInt(mult*(current-minTime));
-
-    if (!vizPaused) {
-        clearInterval(pedMover);
-        runViz();
-    } else {
-        do1Step();
-    }
-
-    if (statsShown && !middleChanged) {
-        reDrawHist();
-    }
-}
-
+/**
+ * Transition between the 2D and the 3D
+ */
 function transitionBetween2D3D() {
 
+    // Since some stuff have to be loaded (especially for the 3D), we want to have a timeout between
+    // the transitions. Thus, we use this boolean to disabled the button for 1 second.
     if (!changeVizButtonDisabled) {
 
+        // Transition has started. Function is disabled for 1 second
         changeVizButtonDisabled = true;
-
         setTimeout(function() {
             changeVizButtonDisabled = false;
         }, 1000);
 
-        $("#dragOpt").remove();
-        document.getElementById("optionsButton").style.display = "";
-        optionsShown = false;
+        // Remove the options
+        // Defined below
+        removeOptions();
 
         if(viz3D) {
 
+            // Change the button and its text
             document.getElementById("changeVizButton").innerHTML = "<i class=\"fas fa-cube fa-lg\"></i>";
             document.getElementById("changeVizButton").title = "3D viz";
 
+            // Change the helper
             document.getElementById("help").title = "Scroll for zoom/dezoom; Click + Mouse to move around; Click on a zone to select it as an origin and ctrl+click to select it as a destination."
 
             viz3D = false;
 
+            // Stop the animation
             clearInterval(pedMover);
 
+            // Delete everything for the 3D
+            // Defined in visualization/3D/js/main.js
             deleteStuff3D();
 
+            // If the speed factor is less than 2, we have to go back to the non-interpolated data.
+            // => we have to change the current index of the animation
             if (SPEEDFACTOR <= 2) {
                 currentTimeShownIdx = Math.floor(currentTimeShownIdx/(INTERP+1));
             }
@@ -276,42 +106,65 @@ function transitionBetween2D3D() {
 
         } else {
 
+            // Change the button and its text
             document.getElementById("changeVizButton").innerHTML = "<i class=\"fas fa-square fa-lg\"></i>";
             document.getElementById("changeVizButton").title = "2D viz";
 
+            // Change the helper
             document.getElementById("help").title = "Scroll for zoom/dezoom; CTRL+Mouse/Arrow keys to more; Mouse to rotate."
 
             viz3D = true;
 
+            // Stop the animation
             clearInterval(pedMover);
 
+            // Delete everything for the 2D
+            // Defined in visualization/2D/js/main.js
             deleteStuff2D();
 
+            // If the speed factor is less than 2, we have to go back to the interpolated data.
+            // => we have to change the current index of the animation
             if (SPEEDFACTOR <= 2) {
                 currentTimeShownIdx *= (INTERP+1);
             }
 
         }
 
+        // Prepare the visualization
+        // Defined above
         prepViz();
 
         if(vizPaused) {
+            // If the viz is paused, we only do 1 step
+            // Defined above
             do1Step();
         } else {
+            // Otherwise, we run the viz
+            // Defined above
             runViz();
         }
     }
 }
 
-function deleteStuff2D() {
-    $("#svgCont").remove();
+/**
+ * Update the timer at each time step
+ *
+ * @param: time - time in seconds
+ */
+function updateTimer(time) {
 
-    if (statsShown) {
-        viz.classList.add("col");
-        viz.classList.remove("col-xl-8");
 
-        $('#statDiv').remove();
+    if (selectedTraj == null) {
+        // We make sure that if no trajectory data are selected, we tell this to the user
+        document.getElementById("timer").innerHTML = "No trajectory data!";
+    } else {
+        // Update the timer using the function secondsToHms defined in js/main/misc.js
+        document.getElementById("timer").innerHTML = secondsToHms(time);
     }
+
+    // Change the handle of the slider to display the current time
+    slider.noUiSlider.setHandle(1, time, true);
+
 }
 
 function loading() {
@@ -372,31 +225,92 @@ function createSlider() {
     handles[0].classList.add('outer');
     handles[1].classList.add('inner');
     handles[2].classList.add('outer');
-
-    //let origins = slider.getElementsByClassName('noUi-origin');
-    //origins[1].setAttribute('disabled', true);
 }
 
+/**
+ * Get the time values from the slider to change some stuff in the visualization
+ *
+ * @param: times - Array: [minTime, currentTime, maxTime] in format HH:MM:SS
+ */
+function changeTimes(times) {
+
+    // Get lower, upper bound, and current time in seconds
+    const tmin = times[0].split(':').reduce((acc,time) => (60 * acc) + +time);
+    const current = times[1].split(':').reduce((acc,time) => (60 * acc) + +time);
+    const tmax = times[2].split(':').reduce((acc,time) => (60 * acc) + +time);
+
+    // Set the original multiple to compute the number of index we have to change in the viz
+    let mult = 10;
+
+    // check if we're using the interpolated data
+    if (viz3D & SPEEDFACTOR <= 2) {
+        // Update the multiple if needed
+        mult *= (INTERP+1);
+    }
+
+    // Check if the middle handle changed
+    let middleChanged = false;
+    if (tmin == minTime && tmax == maxTime) {
+        middleChanged = true;
+    }
+
+    // Update the upper and lower bounds of the visualization
+    minTime = tmin;
+    maxTime = tmax;
+
+    // Change the value of the index of the position update
+    currentTimeShownIdx = parseInt(mult*(current-minTime));
+
+    if (!vizPaused) {
+        // If the viz was not paused, we need to stop it and restart it
+        clearInterval(pedMover);
+
+        // Defined above
+        runViz();
+    } else {
+        // Otherwise, we can just do 1 step
+        // Defined above
+        do1Step();
+    }
+
+    if (statsShown && !middleChanged) {
+        // If the stats are shown and the lower or the upper bound was changed, we need to redraw the histograms
+        // Defined in visualization/stats/js/main.js
+        reDrawHist();
+    }
+}
+
+/**
+ * Append the options using an external HTML file
+ */
 function appendOptions() {
 
     let file;
 
+    // Get the path of the file
     if (viz3D) {
         file = './assets/templates/options3D.html';
     } else {
         file = './assets/templates/options2D.html';
     }
 
+    // Use jquery to get the file
     $.get(file, function(opts) {
+        // Use Mustache to render the file
         var rendered = Mustache.render(opts);
 
+        // Append the rendered file to the viz
         $('#viz').append(rendered);
 
+        // Hide it
         document.getElementById("dragOpt").style.display = "none";
 
+        // And place it
         document.getElementById("dragOpt").style.top = 0 + "px";
         document.getElementById("dragOpt").style.left = 0 + "px";
 
+        // Add the option to drag it
+        // Using jquery-ui
         $( function() {
             $( "#dragOpt" ).draggable(
                 {
@@ -414,81 +328,114 @@ function appendOptions() {
                 });
         } );
 
+        // Now, we check which buttons are enabled
         if (!viz3D) {
+
+            // Disable the button for the density
             document.getElementById("voronoi_checkbox").disabled = true;
 
+            // Check if all the traj have been loaded. If it's not the case, we have to disabled the button
             if (!allTrajLoaded) {
                 document.getElementById("all_trajectories_checkbox").disabled = true;
             }
 
+            // If the user didn't select some trajectories, we hide some options
             if (selectedTraj == null) {
                 document.getElementById("optTraj").style.display = "none";
 
             }
 
+            // Add the option to show the options of the stats
             $( "#optionsStatsButton" ).click(function() {
 
+                // Check if the options of the Chord diagram are shown
+                // TODO: DO a better hack than this. =P
                 if(document.getElementById("optODChord").style.display === "") {
 
+                    // Change the icon
                     document.getElementById("optionsStatsButton").innerHTML = "<i class=\"fas fa-plus fa-lg\"></i>";
 
+                    // Hide the options
                     document.getElementById("optODChord").style.display = "none";
                     document.getElementById("opt_tt").style.display = "none";
                     document.getElementById("opt_density").style.display = "none";
                 } else {
 
+                    // Change the icon
                     document.getElementById("optionsStatsButton").innerHTML = "<i class=\"fas fa-minus fa-lg\"></i>"
 
+                    // Show the options
                     document.getElementById("optODChord").style.display = "";
                     document.getElementById("opt_tt").style.display = "";
                     document.getElementById("opt_density").style.display = "";
                 }
             });
-        }
-
-        if (viz3D && STYLE == "TWD") {
-
+        } else if (STYLE == "TWD") {
+            // If we are in 3D and using the style TWD, we need to check the appropriate checkbox
             document.getElementById("changeStyle").checked = true;
         }
 
     });
-
-
 }
 
+/**
+ * Remove the options
+ */
+function removeOptions() {
+    $("#dragOpt").remove();
+    document.getElementById("optionsButton").style.display = "";
+    optionsShown = false;
+}
+
+/**
+ * Resize the visualization
+ */
 function resizeViz() {
 
-    document.getElementById("mainViz").style.height = 0 + "px";
-
+    // Get the height of the viz
+    // Defined in js/main/misc.js
     vizHeight = getVizHeight();
 
+    // Change the size of the div mainViz
     document.getElementById("mainViz").style.height = vizHeight + "px";
+
     if (vizPrepared) {
+        // If the viz is prepared, we can update the 3D canvas or the 2D SVG
+        // If not, we don't have to do anything =)
         if (viz3D) {
 
+            // Get the width
             let width = document.body.clientWidth;
 
+            // Update the camera
             camera.aspect = width / vizHeight;
             camera.updateProjectionMatrix();
 
+            // Update the renderer
             renderer.setSize(width, vizHeight);
 
-            //document.getElementById("canvas").height = vizHeight + "px";
-            //document.getElementById("canvas").width = window.innerWidth + "px";
         } else {
+
+            // Update the height of the SVG
             document.getElementById("svgCont").style.height = vizHeight + "px";
         }
     }
 
+    // Scroll to the top (just in case)
     $('html,body').scrollTop(0);
 
-    if (statsShown) {
 
+    if (statsShown) {
+        // If the stats are shown, we check if they have to be shown on the right or below.
         if (window.innerWidth >= 1200) {
+            // If it's on the right (big screen), we hide the scrolling of the main page
             $('body').css("overflow-y", "hidden");
+            // And show the scrolling for the stats
             document.getElementById("statDiv").style.overflowY = 'auto';
         } else {
+            // Otherwise (small screen), we show the scrolling of the main page
             $('body').css("overflow-y", "auto");
+            // And hide the scrolling for the stats
             document.getElementById("statDiv").style.overflowY = 'hidden';
         }
     } else {

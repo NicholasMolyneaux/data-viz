@@ -654,9 +654,8 @@ function dataSelected() {
     trajDataLoaded = false;
 
     // We also remove the options (just to avoid some bugs)
-    $("#dragOpt").remove();
-    document.getElementById("optionsButton").style.display = "";
-    optionsShown = false;
+    // Defined in js/main/viz.js
+    removeOptions();
 
     // If the stats are shown, we go back to a full view without them
     if (statsShown) {

@@ -105,7 +105,6 @@ function setVoronoiArea() {
         // Add the function to click on the svg and add the corners of the shape
         svg.on("click", function () {
             let mouse = d3.mouse(svg.select("#subSvgCont").node());
-            console.log(mouse);
             voronoi_clip_canvas.append("circle")
                 .attr("class", "voronoi-pre-circle")
                 .attr("cx", mouse[0])
@@ -150,6 +149,9 @@ function setVoronoiArea() {
             // Defined in visualization/stats/main.js
             reDrawHistDensity();
         }
+
+        // Enable the button to show density
+        document.getElementById("voronoi_checkbox").disabled = false;
 
     } else if (stateControlAreaButton == 'drawn') {
 
