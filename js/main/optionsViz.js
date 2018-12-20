@@ -1,8 +1,7 @@
 /*********************************************************/
 /*                                                       */
 /*   File with all the options in the visualization      */
-/*   2D options first, 3D options afterwards             */
-/*   (Except the options for the data (in js/data.js)    */
+/*   2D options first, 3D options afterwards.             */
 /*                                                       */
 /*   By Nicholas Molyneaux, Gael Lederrey & Semin Kwak   */
 /*                                                       */
@@ -143,7 +142,7 @@ function setVoronoiArea() {
         d3.selectAll(".voronoi-pre-circle").remove();
 
         // Prepare the density data with the new area
-        // Defined in js/data.js
+        // Defined in js/main/data.js
         prepareDensityData();
 
         // If the stats are shown, we redraw the histogram for density
@@ -168,7 +167,7 @@ function setVoronoiArea() {
         clearCanvas(voronoi_clip_canvas);
 
         // Prepare the density data with the area from the data
-        // Defined in js/data.js
+        // Defined in js/main/data.js
         prepareDensityData();
 
         // If the stats are shown, we redraw the histogram for density
@@ -364,7 +363,7 @@ function changeStyle3D() {
     deleteStuff3D();
 
     // Prepare the visualization again without reloading the options
-    // Defined in js/viz.js
+    // Defined in js/main/viz.js
     prepViz(true);
 
     // Check if the presentation is playing. If it's the case, do nothing
@@ -372,11 +371,11 @@ function changeStyle3D() {
         // Otherwise, check if the animation is paused.
         if(vizPaused) {
             // Yes => do 1 step to load the 3D models
-            // Defined in js/viz.js
+            // Defined in js/main/viz.js
             do1Step();
         } else {
             // No => run the visualization
-            // Defined in js/viz.js
+            // Defined in js/main/viz.js
             runViz();
         }
     }
@@ -385,4 +384,22 @@ function changeStyle3D() {
     setTimeout(function() {
         document.getElementById("changeStyle").disabled = false;
     }, 2000);
+}
+
+///////////////////////////////////////////////////////////
+//                                                       //
+//                         Both                          //
+//                                                       //
+///////////////////////////////////////////////////////////
+
+/**
+ * Hide the options
+ */
+function hideOptions() {
+
+    // Show the options button and hide the option div
+    document.getElementById("optionsButton").style.display = "";
+    document.getElementById("dragOpt").style.display = "none";
+
+    optionsShown = false;
 }

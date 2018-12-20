@@ -1,9 +1,4 @@
-// General global parameters
-let pedMover;
-let currentTimeShownIdx = 0;
-const INTERVAL2D = 100;
-let SPEEDFACTOR = 1;
-let changeVizButtonDisabled = false;
+
 
 function prepViz(change3DStyle=false) {
 
@@ -119,7 +114,6 @@ function prepViz(change3DStyle=false) {
             .attr("id", "subSvgCont");
 
         svg.call(d3.zoom().on("zoom", () => {
-            console.log("hello");
             svg_zoom.attr("transform", d3.event.transform);
             }
         ));
@@ -207,32 +201,6 @@ function updateTimer(time) {
 
     slider.noUiSlider.setHandle(1, time, true);
 
-}
-
-// Options specific to a graph. key = graphID (Data + other options)
-let graphOptions = new Object();
-
-function secondsToHms(d) {
-    d = Number(d);
-    var h = Math.floor(d / 3600);
-    var m = Math.floor(d % 3600 / 60);
-    var s = Math.floor(d % 3600 % 60);
-
-    let hDisplay = h;
-    if (h < 10) {
-        hDisplay = "0" + hDisplay;
-    }
-
-    let mDisplay = m;
-    if (m < 10) {
-        mDisplay = "0" + mDisplay;
-    }
-
-    let sDisplay = s;
-    if (s < 10) {
-        sDisplay = "0" + sDisplay;
-    }
-    return hDisplay + ":" + mDisplay + ":" + sDisplay;
 }
 
 function changeTimes(times) {
@@ -343,6 +311,188 @@ function deleteStuff2D() {
         viz.classList.remove("col-xl-8");
 
         $('#statDiv').remove();
+    }
+}
+
+function loading() {
+
+    if (!presentationPlaying) {
+        let timer = document.getElementById("timer");
+        timer.innerHTML = "LOADING";
+
+        keepFading($("#timer"));
+    }
+}
+
+
+
+function finishedLoading() {
+
+    $("#timer").stop(true, true);
+
+    document.getElementById("timer").innerHTML = "0 [s.]";
+    document.getElementById("timer").style.opacity = "1";
+    document.getElementById("timer").style.display = "";
+
+}
+
+function createSlider() {
+
+    slider = document.getElementById('slider');
+
+    try {
+        slider.noUiSlider.destroy();
+    } catch (e) {
+        // Do nothing
+    };
+
+    noUiSlider.create(slider, {
+        start: [selectedTraj.tmin, selectedTraj.tmin, selectedTraj.tmax],
+        connect: [false, true, true, false],
+        range: {
+            'min': selectedTraj.tmin,
+            'max': selectedTraj.tmax
+        },
+        tooltips: [true, false, true],
+        format: {
+            to: secondsToHmss,
+            from: Number
+        }
+    }, true);
+
+    slider.noUiSlider.on('slide', function () {
+
+        let times = slider.noUiSlider.get();
+
+        changeTimes(times);
+    });
+
+
+    let handles = slider.querySelectorAll('.noUi-handle');
+    handles[0].classList.add('outer');
+    handles[1].classList.add('inner');
+    handles[2].classList.add('outer');
+
+    //let origins = slider.getElementsByClassName('noUi-origin');
+    //origins[1].setAttribute('disabled', true);
+}
+
+function appendOptions() {
+
+    let file;
+
+    if (viz3D) {
+        file = './assets/templates/options3D.html';
+    } else {
+        file = './assets/templates/options2D.html';
+    }
+
+    $.get(file, function(opts) {
+        var rendered = Mustache.render(opts);
+
+        $('#viz').append(rendered);
+
+        document.getElementById("dragOpt").style.display = "none";
+
+        document.getElementById("dragOpt").style.top = 0 + "px";
+        document.getElementById("dragOpt").style.left = 0 + "px";
+
+        $( function() {
+            $( "#dragOpt" ).draggable(
+                {
+                    containment: $( "body" ),
+                    start: function() {
+                        if (viz3D) {
+                            controls.enabled = false;
+                        }
+                    },
+                    stop: function() {
+                        if (viz3D) {
+                            controls.enabled = true;
+                        }
+                    },
+                });
+        } );
+
+        if (!viz3D) {
+            document.getElementById("voronoi_checkbox").disabled = true;
+
+            if (!allTrajLoaded) {
+                document.getElementById("all_trajectories_checkbox").disabled = true;
+            }
+
+            if (selectedTraj == null) {
+                document.getElementById("optTraj").style.display = "none";
+
+            }
+
+            $( "#optionsStatsButton" ).click(function() {
+
+                if(document.getElementById("optODChord").style.display === "") {
+
+                    document.getElementById("optionsStatsButton").innerHTML = "<i class=\"fas fa-plus fa-lg\"></i>";
+
+                    document.getElementById("optODChord").style.display = "none";
+                    document.getElementById("opt_tt").style.display = "none";
+                    document.getElementById("opt_density").style.display = "none";
+                } else {
+
+                    document.getElementById("optionsStatsButton").innerHTML = "<i class=\"fas fa-minus fa-lg\"></i>"
+
+                    document.getElementById("optODChord").style.display = "";
+                    document.getElementById("opt_tt").style.display = "";
+                    document.getElementById("opt_density").style.display = "";
+                }
+            });
+        }
+
+        if (viz3D && STYLE == "TWD") {
+
+            document.getElementById("changeStyle").checked = true;
+        }
+
+    });
+
+
+}
+
+function resizeViz() {
+
+    document.getElementById("mainViz").style.height = 0 + "px";
+
+    vizHeight = getVizHeight();
+
+    document.getElementById("mainViz").style.height = vizHeight + "px";
+    if (vizPrepared) {
+        if (viz3D) {
+
+            let width = document.body.clientWidth;
+
+            camera.aspect = width / vizHeight;
+            camera.updateProjectionMatrix();
+
+            renderer.setSize(width, vizHeight);
+
+            //document.getElementById("canvas").height = vizHeight + "px";
+            //document.getElementById("canvas").width = window.innerWidth + "px";
+        } else {
+            document.getElementById("svgCont").style.height = vizHeight + "px";
+        }
+    }
+
+    $('html,body').scrollTop(0);
+
+    if (statsShown) {
+
+        if (window.innerWidth >= 1200) {
+            $('body').css("overflow-y", "hidden");
+            document.getElementById("statDiv").style.overflowY = 'auto';
+        } else {
+            $('body').css("overflow-y", "auto");
+            document.getElementById("statDiv").style.overflowY = 'hidden';
+        }
+    } else {
+        $('body').css("overflow-y", "hidden");
     }
 }
 

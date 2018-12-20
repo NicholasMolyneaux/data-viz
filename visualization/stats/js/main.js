@@ -1,3 +1,6 @@
+// Options specific to a graph. key = graphID (Data + other options)
+let graphOptions = new Object();
+
 function prepareChord() {
 
     // canvas size and chord diagram radii

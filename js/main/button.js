@@ -16,7 +16,7 @@ $( "#playPauseButton" ).click(function() {
 
     if (vizPaused) {
         // Run the visualization
-        // Defined in js/viz.js
+        // Defined in js/main/viz.js
         runViz();
         // Change the icon
         document.getElementById("playPauseButton").innerHTML = "<i class=\"fas fa-pause fa-lg\"></i>";
@@ -62,6 +62,7 @@ $( "#forward" ).click(function() {
 
         // Continue the animation if it was not paused.
         if (!vizPaused) {
+            // Defined in js/main/viz.js
             runViz();
         }
     }
@@ -98,6 +99,7 @@ $( "#backward" ).click(function() {
 
         // Continue the animation if it was not paused.
         if (!vizPaused) {
+            // Defined in js/main/viz.js
             runViz();
         }
     }
@@ -112,6 +114,8 @@ $( "#backward" ).click(function() {
  * Function defined in the file viz.js
  */
 $( "#changeVizButton" ).click(function() {
+
+    // Defined in js/main/viz.js
     transitionBetween2D3D()
 });
 

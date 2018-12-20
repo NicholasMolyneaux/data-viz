@@ -13,6 +13,10 @@ let line = d3.line()
     .x(d => d[0])
     .y(d => d[1]);
 
+
+// Time interval between two updates of the position for the 2D
+const INTERVAL2D = 100;
+
 function centerOfRect(rect) {
     let x_center = Number(rect.attr("x")) + Number(rect.attr("width"))/2;
     let y_center = Number(rect.attr("y")) + Number(rect.attr("height"))/2;
@@ -25,44 +29,4 @@ function encodeJson(data, areas) {
 
 function publish(json) {
     console.log(json);
-}
-
-/**
- * Triggered when the show all trajectories button is selected in the 2D options.
- * The voronoi densities and the controlled areas must be removed when plotting the trajectories.
- * The moving pedestrians must also be removed.
- */
-function checkTrajectories() {
-    if (d3.select("#all_trajectories_checkbox").property("checked")) {
-
-
-        // remove densites
-        /*d3.select("#voronoi_checkbox").property("checked", false);
-        clearCanvas(d3.select(".voronoi_canvas"));
-
-        // removes control areas
-        d3.select("#control_checkbox").property("checked", false);
-        checkControl();
-
-        // pausing time
-        // Copied from viz.js lines 283-285. Wrap all of this into a functio ideally.
-        clearInterval(pedMover);
-        document.getElementById("playPauseButton").innerHTML = "<i class=\"fas fa-play fa-lg\"></i>";
-        vizPaused = true;
-        // removes dots
-        d3.select(".pedes_layer").selectAll(".ped-individual").remove();*/
-
-        // show trajectories
-        plotAllTrajectories(d3.select(".trajectories_layer"));
-
-    } else {
-        // remove trajectories
-        d3.select(".trajectories_layer").selectAll(".trajectories").remove();
-
-        // add pedestrians again
-        /*runViz();
-        document.getElementById("playPauseButton").innerHTML = "<i class=\"fas fa-pause fa-lg\"></i>";
-        paused = false;*/
-
-    }
 }

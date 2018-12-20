@@ -1,7 +1,3 @@
-function intersection(o1, o2) {
-    return Object.keys(o1).filter({}.hasOwnProperty.bind(o2));
-}
-
 function runAnimation3D() {
 
     const timeBounds = [minTime, maxTime];
