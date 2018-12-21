@@ -20,14 +20,14 @@ This directory contains the basic js code which handles the collecting of the da
 The heart of the website. Here all the functionalites regarding the visualization of the pedestrian tracking data takes place.
 There are three subdirectories with the 2D, 3D and statisitcal functionalites are defined.
 
->###### 2D
->There is only one subfolder in this folder named *js*. It contains all the functionalities for the pedestrians moving in 2D, >voronoi diagrams, and trajectory plotting.
+>#### 2D/
+>There is only one subfolder in this folder named *js*. It contains all the functionalities for the pedestrians moving in 2D, voronoi diagrams, and trajectory plotting.
 
->###### 3D
->There are three subfolders in this folder. One is for the different textures, named *assets*, one is for the different 3D >models, named *models*, and the final and most important one is named *js*. It contains all the functions to make the >zombies alive in a creepy 3D environment.
+>#### 3D/
+>There are three subfolders in this folder. One is for the different textures, named *assets*, one is for the different 3D models, named *models*, and the final and most important one is named *js*. It contains all the functions to make the zombies alive in a creepy 3D environment.
 
->###### stats
->There are two subfolders in this folder. One is for the mustache templates, named *templates*, and the second one is the >*js* folder. In the latter, you will find all the functions to draw the histograms and the OD chord diagram.
+>#### stats/
+>There are two subfolders in this folder. One is for the mustache templates, named *templates*, and the second one is the *js* folder. In the latter, you will find all the functions to draw the histograms and the OD chord diagram.
 
 ## Requirements
 - Apache server for hosting the website
