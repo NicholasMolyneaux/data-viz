@@ -2,7 +2,7 @@
 Welcome to the repo containing the Walking Data website. This project was initiated thanks to the assignment given in the "Data Visualization" course taught at EPFL.
 The objective of the website is to present pedestrian tracking data from research taking place in the TRANSP-OR lab at EPFL (http://transp-or.epfl.ch/). 
 
-**You can have a look at the final result here: (http://transporsrv2.epfl.ch)**
+**You can have a look at the final result here: http://transporsrv2.epfl.ch**
 
 ## Contents
 The html pages are located in the root of the repo. The website structure itself is simple. The magic happens thanks to Javascript, the D3 library, and the THREE js library! Normally, with each function used in any of the JS file, we give the path to find it. So, it shouldn't be a problem to navigate between the functions. In addition, the name of the js files are quite explanatory.
@@ -16,7 +16,7 @@ Quite self explanatory. Bootstrap is used to manage many aspects of the buttons,
 #### js/
 This directory contains the basic js code which handles the collecting of the data, initialization of the visualization and the animation when the website is first loaded. We also added all the libraries here.
 
-#### visualiztion/
+#### visualization/
 The heart of the website. Here all the functionalites regarding the visualization of the pedestrian tracking data takes place.
 There are three subdirectories with the 2D, 3D and statisitcal functionalites are defined.
 
