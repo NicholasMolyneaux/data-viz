@@ -85,7 +85,7 @@ const INTERP = 4;
 ///////////////////////////////////////////////////////////
 
 // Set the size of the main div
-document.getElementById("mainViz").style.height = vizHeight + "px";
+document.getElementById("mainViz").style.height = getVizHeight() + "px";
 
 // Initialize the visualization
 $(document).ready(function() {
