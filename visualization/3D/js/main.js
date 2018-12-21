@@ -77,7 +77,7 @@ function prepViz3D() {
     container = document.getElementById("viz");
 
     // Set Camera position
-    camera = new THREE.PerspectiveCamera( 45, document.body.clientWidth / vizHeight, 0.1, 1000 );
+    camera = new THREE.PerspectiveCamera( 45, document.body.clientWidth / getVizHeight(), 0.1, 1000 );
     camera.position.set( cameraInitPos[0], cameraInitPos[1], cameraInitPos[2]);
 
     // Set the controls
@@ -124,7 +124,7 @@ function prepViz3D() {
     // Prepare the rendered
     renderer = new THREE.WebGLRenderer( { antialias: true } );
     renderer.setPixelRatio( window.devicePixelRatio );
-    renderer.setSize(document.body.clientWidth, vizHeight);
+    renderer.setSize(document.body.clientWidth, getVizHeight());
     renderer.gammaOutput = true;
     renderer.domElement.id = 'canvas';
     // Append it to the container

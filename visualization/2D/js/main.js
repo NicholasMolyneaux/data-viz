@@ -52,7 +52,7 @@ function prepViz2D() {
         .append("svg")
         .attr("class", "container-fluid")
         .attr("id", "svgCont")
-        .attr("height", vizHeight)
+        .attr("height", getVizHeight())
         .attr("viewBox", `${xmin-1} ${ymin} ${xmax} ${ymax+10}`);
 
     // Add a group to zoom inside
