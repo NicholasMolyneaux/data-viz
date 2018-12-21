@@ -165,8 +165,7 @@ function setVoronoiArea() {
         d3.select("#voronoi-area").remove();
 
         // Clear the canvas
-        // Defined in visualization/2D/js/map.js
-        clearCanvas(voronoi_clip_canvas);
+        voronoi_clip_canvas.selectAll("*").remove();
 
         // Prepare the density data with the area from the data
         // Defined in js/main/data.js

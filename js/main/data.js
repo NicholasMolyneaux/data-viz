@@ -351,7 +351,7 @@ function prepareHistDensity() {
 /**
  * Compute the densities using the Voronoi diagrams.
  *
- * Most of the functions are used in the function drawAVoronoi in
+ * Most of the functions are used in the function drawDensityInVoronoi in
  * visualization/2D/js/map.js
  */
 function computeDensities(data, polygon) {

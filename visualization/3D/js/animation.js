@@ -120,22 +120,35 @@ function animatePedestrians(json) {
     deletePedestrian(listIds);
 }
 
+/**
+ * Update the position of the pedestrians in 3D, i.e. Move it to its new position and update its direction
+ *
+ * @param: ped - JSON object (used to get the ID of the pedestrian)
+ */
 function updatePosition3D(ped) {
+
+    // We just make sure that the pedestrian has a position in its dict
     if (dctPed[ped.id].hasOwnProperty("position")) {
 
+        // Get the previous position
         var oldX = dctPed[ped.id].position['x'];
         var oldY = dctPed[ped.id].position['z'];
 
+        // We just recenter its new position
         var newX = ped.x-avg[0];
         var newY = ped.y-avg[1];
 
+        // Compute the direction
         var direction = [newX-oldX, newY-oldY];
 
+        // The norm
         var norm = Math.sqrt(Math.pow(direction[0],2) + Math.pow(direction[1],2));
 
+        // And normalize the direction
         direction[0] /= norm;
         direction[1] /= norm;
 
+        // Compute the new angle for the new direction
         var angle = 0;
 
         if (direction[0] > 0) {
@@ -144,11 +157,15 @@ function updatePosition3D(ped) {
             angle = Math.atan(direction[1]/direction[0]) + Math.PI/2;
         }
 
+        // Small correction with the zombies due to the direction of the 3D model
         if (STYLE == "TWD") {
             angle = angle - Math.PI/2;
         }
 
+        // Set the new position for the THREE Mesh
         dctPed[ped.id].position.set(newX, dctPed[ped.id].position['y'], newY);
+
+        // Set the new rotation for the THREE Mesh
         if (norm > 0) {
             dctPed[ped.id].rotation.set(0, -angle, 0);
         }

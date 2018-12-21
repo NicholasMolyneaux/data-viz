@@ -6,6 +6,12 @@
 /*                                                       */
 /*********************************************************/
 
+///////////////////////////////////////////////////////////
+//                                                       //
+//                   Global variables                    //
+//                                                       //
+///////////////////////////////////////////////////////////
+
 // Various folders
 const assetsFolder = "./visualization/3D/assets/";
 const modelsFolder = "./visualization/3D/models/";
@@ -55,6 +61,12 @@ let cameraPresControl = [0,0,0];
 
 // Animation (used to cancel it)
 var animation;
+
+///////////////////////////////////////////////////////////
+//                                                       //
+//               Function for the 3D viz                 //
+//                                                       //
+///////////////////////////////////////////////////////////
 
 /**
  * Prepare the 3D visualization
