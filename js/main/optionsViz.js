@@ -259,6 +259,12 @@ function showStatistics() {
 
         // Add an id and add it to the mainViz
         statDiv.setAttribute("id", "statDiv");
+
+        // Fix for firefox (We need to add the height of the divs)
+        viz.style.height = getVizHeight() + "px";
+        statDiv.style.height = getVizHeight() + "px";
+
+        // Append the stats div in the mainviz
         mainViz.appendChild(statDiv);
 
         // Load the mustache templates

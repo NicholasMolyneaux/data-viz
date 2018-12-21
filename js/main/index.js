@@ -26,10 +26,6 @@ let vizPrepared = false;
 // Indicator whether the viz is actually running or not. This should be changed when the play/pause button is clicked.
 let vizPaused = true;
 
-// Height of the visualization
-// Defined in js/main/misc.js
-let vizHeight = getVizHeight();
-
 // list of infrastructures and trajectories
 let infrastructures = null;
 let trajectories = null;

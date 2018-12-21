@@ -115,6 +115,21 @@ function transitionBetween2D3D() {
 
             viz3D = true;
 
+            // Remove the stats if they are shown
+            if (statsShown) {
+                statsShown = false;
+
+                // Update the class of the visualization
+                viz.classList.add("col");
+                viz.classList.remove("col-xl-8");
+
+                // Remove the div for the stats
+                $('#statDiv').remove();
+
+                // Hide the scroll bar
+                $('body').css("overflow-y", "hidden");
+            }
+
             // Stop the animation
             clearInterval(pedMover);
 
@@ -394,7 +409,7 @@ function resizeViz() {
 
     // Get the height of the viz
     // Defined in js/main/misc.js
-    vizHeight = getVizHeight();
+    let vizHeight = getVizHeight();
 
     // Change the size of the div mainViz
     document.getElementById("mainViz").style.height = vizHeight + "px";
@@ -431,7 +446,7 @@ function resizeViz() {
             // If it's on the right (big screen), we hide the scrolling of the main page
             $('body').css("overflow-y", "hidden");
             // And show the scrolling for the stats
-            document.getElementById("statDiv").style.overflowY = 'auto';
+            document.getElementById("statDiv").style.overflowY = 'scroll';
         } else {
             // Otherwise (small screen), we show the scrolling of the main page
             $('body').css("overflow-y", "auto");

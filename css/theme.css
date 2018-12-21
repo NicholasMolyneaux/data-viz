@@ -811,6 +811,7 @@ path.chord {
 
 #statDiv {
     background: #dad2b3;
+    min-height: 0;
 }
 
 .middleVert{
