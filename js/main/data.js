@@ -425,7 +425,7 @@ function loadInfra() {
             loadTraj();
         })
         .fail( function(xhr, textStatus, errorThrown) {
-            alert("Error, please reload the website.");
+            alert("Error... The backend seems to be dead. Please contact nicholas.molyneaux@epfl.ch.");
         });
 }
 
@@ -510,7 +510,7 @@ function loadTraj() {
             });
         })
         .fail( function(xhr, textStatus, errorThrown) {
-            alert("Error, please reload the website.");
+            alert("Error... The backend seems to be dead. Please contact nicholas.molyneaux@epfl.ch.");
         });
 
 }
