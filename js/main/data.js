@@ -814,7 +814,8 @@ function dataSelected() {
                 // Create the slider for the time
                 createSlider();
 
-                // Down sample the trajectories to plot them later on.
+                // Down sample the trajectories to plot them later on. But first clear the old trajectories
+                trajectoryDataByID=[];
                 downSampleTrajectories();
 
                 // Trajectories finally loaded
