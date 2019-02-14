@@ -187,6 +187,8 @@ function interPolateData() {
  * We let it run and enable the button in the options if it's finished.
  */
 function downSampleTrajectories() {
+    trajectoryDataByID.empty();
+
     // Fetch the data
     fetch(baseURL + "trajectoriesbyid/" + selectedInfra.name + "/" + selectedTraj.name).then(response => {
         return response.json();
@@ -813,8 +815,7 @@ function dataSelected() {
                 // Create the slider for the time
                 createSlider();
 
-                // Down sample the trajectories to plot them later on. But first we need to clear the old trajectories.
-                trajectoryDataByID = [];
+                // Down sample the trajectories to plot them later on.
                 downSampleTrajectories();
 
                 // Trajectories finally loaded
