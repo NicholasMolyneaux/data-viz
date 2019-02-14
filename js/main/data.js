@@ -187,7 +187,6 @@ function interPolateData() {
  * We let it run and enable the button in the options if it's finished.
  */
 function downSampleTrajectories() {
-    trajectoryDataByID.empty();
 
     // Fetch the data
     fetch(baseURL + "trajectoriesbyid/" + selectedInfra.name + "/" + selectedTraj.name).then(response => {
