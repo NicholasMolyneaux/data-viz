@@ -64,8 +64,8 @@ body {
     #font-size: 2vw;
     overflow-x: hidden;
     overflow-y: hidden;
-    color: #1D1B0D;
-    background-color: #F7F4EA;
+    color: #000000;
+    background-color: #FFFFFF;
 }
 
 @font-face {
@@ -75,32 +75,32 @@ body {
 
 /* Navbar */
 .navbar-custom {
-    background-color: #1D1B0D;
+    background-color: #DDDDDD;
 }
 /* change the brand and text color */
 .navbar-custom .navbar-brand,
 .navbar-custom .navbar-text, .nav-icon {
-    color: #D8CC99;
+    color: #555555;
 }
 /* change the link color */
 .navbar-custom .navbar-nav .nav-link {
-    color: #D8CC99;
+    color: #FFFFFF;
 }
 /* change the color of active or hovered links */
 .navbar-custom .nav-item.active .nav-link,
 .navbar-custom .nav-item:hover .nav-link {
-    color: #D8CC99;
+    color: #555555;
 }
 
 /* change the link color and padding  */
 .navbar-custom .navbar-nav .nav-link {
-    color: #D8CC99;
+    color: #555555;
 }
 
 /* change the color and background color of active links */
 .navbar-custom .nav-item.active .nav-link,
 .navbar-custom .nav-item:hover .nav-link {
-    color: #F7F4EA;
+    color: #555555;
 }
 .mainViz{
     position: relative;
@@ -135,7 +135,7 @@ h3 {
     height: 100%;
     font-weight: bold;
     font-size: 20px;
-    color: #1D1B0D;
+    color: #000000;
 }
 
 .presentation-title {
@@ -143,11 +143,11 @@ h3 {
 }
 
 .presentation-text {
-    height: 15%;
+    height: 10%;
 }
 
 .presentation-padding {
-    height: 50%;
+    height: 60%;
 }
 
 
@@ -159,42 +159,42 @@ h3 {
     width: 100%;
     font-weight: bold;
     font-size: 20px;
-    color: #1D1B0D;
+    color: #000000;
 }
 
 .presentationOn3D-title {
     position: absolute;
     top: 0%;
     height: 20%;
-    color: #1D1B0D;
+    color: #000000;
 }
 
 .presentationOn3D-text1 {
     position: absolute;
     top: 20%;
-    height: 15%;
-    color: #1D1B0D;
+    height: 10%;
+    color: #000000;
 }
 
 .presentationOn3D-text2 {
     position: absolute;
-    top: 35%;
-    height: 15%;
-    color: #1D1B0D;
+    top: 30%;
+    height: 10%;
+    color: #000000;
 }
 
 .presentationOn3D-text3 {
     position: absolute;
-    top: 50%;
-    height: 15%;
-    color: #1D1B0D;
+    top: 40%;
+    height: 10%;
+    color: #000000;
 }
 
 .presentationOn3D-text4 {
     position: absolute;
     top: 65%;
     height: 15%;
-    color: #1D1B0D;
+    color: #000000;
 }
 
 
@@ -204,7 +204,7 @@ h3 {
     justify-content: center;
     bottom: 20px;
     cursor: pointer;
-    color: #544D31;
+    color: #000000;
 }
 
 #textPres, #textPres {
@@ -240,14 +240,14 @@ h3 {
 }
 
 .btn-primary {
-    background-color: #544D31;
+    background-color: #555555;
     border-color: black;
     text-align: center;
-    color: #F7F4EA;
+    color: #FFFFFF;
 }
 
 .btn-primary.export {
-    background-color: #9D8655;
+    background-color: #AAAAAA;
     border-color: black;
     text-align: center;
     font-weight: bold;
@@ -287,14 +287,14 @@ h3 {
     position:absolute;
     top:5px;
     left:10px;
-    color: #544D31;
+    color: #000000;
 }
 
 #hideButton{
     cursor: pointer;
     position:absolute;
     top:0px;
-    right:5px;
+    left:5px;
 }
 
 .min-opt {
@@ -305,8 +305,8 @@ h3 {
     position:absolute;
     box-sizing: content-box;
     padding: 10px;
-    border: 2px solid #1D1B0D;
-    background-color: #D8CC99;
+    border: 2px solid #000000;
+    background-color: #EEEEEE;
     z-index:2;
     top: 0;
     left: 0;
@@ -332,7 +332,7 @@ h3 {
     font-size: 30px;
     font-family: "Fira Mono", Monaco, "Andale Mono", "Lucida Console", "Bitstream Vera Sans Mono", "Courier New", Courier, monospace;
     font-weight: bolder;
-    color: #544D31;
+    color: #000000;
 }
 
 #leftButtons {
@@ -341,14 +341,14 @@ h3 {
     display: flex;
     justify-content: center;
     padding-left: 10px;
-    color: #544D31;
+    color: #000000;
 }
 
 #rightButtons {
     cursor: pointer;
     display: inline-flex;
     padding-right: 10px;
-    color: #544D31;
+    color: #000000;
 }
 
 #speed {
@@ -363,7 +363,7 @@ h3 {
     cursor: help;
     top: 5px;
     right: 10px;
-    color: #544D31;
+    color: #000000;
 }
 
 #slider {
@@ -372,11 +372,11 @@ h3 {
 }
 
 .noUi-connect {
-    background: #D8CC99;
+    background: #EEEEEE;
 }
 
 .noUi-connects {
-    background: #F7F4EA;
+    background: #FFFFFF;
 }
 
 .noUi-horizontal .outer {
@@ -385,7 +385,7 @@ h3 {
     border-radius: 20px;
     box-shadow: none;
     outline: none;
-    background: #544D31;
+    background: #AAAAAA;
     border: none;
     box-shadow: none;
     cursor: pointer;
@@ -396,7 +396,7 @@ h3 {
     background: transparent;
     width: 10px;
     height: 20px;
-    border-top: solid 10px #9D8655;
+    border-top: solid 10px #ee2939ff;
     border-left: solid 10px transparent;
     border-right: solid 10px transparent;
     border-bottom: transparent;
@@ -417,8 +417,8 @@ h3 {
 
 .noUi-tooltip {
     display: none;
-    background-color: #F7F4EA;
-    color: #1D1B0D;
+    background-color: #FFFFFF;
+    color: #555555;
 }
 .noUi-active .noUi-tooltip {
     display: block;
@@ -489,8 +489,8 @@ h3 {
 .boundary {
     stroke-width: 1;
     vector-effect: non-scaling-stroke;
-    fill: #D8CC99;
-    stroke: #1D1B0D;
+    fill: #FFFFFF;
+    stroke: #000000;
 }
 .voronoi-poly {
     stroke-width: 0.1;
@@ -665,19 +665,19 @@ path.chord {
     width: 25px;
     height: 25px;
     border-radius: 50%;
-    background: #1D1B0D;
+    background: #000000;
     cursor: pointer;
 }
 
 .form-check-input {
-    background-color: #544D31 !important;
+    background-color: #000000 !important;
 }
 
 .slider::-moz-range-thumb {
     width: 25px;
     height: 25px;
     border-radius: 50%;
-    background: #1D1B0D;
+    background: #000000;
     cursor: pointer;
 }
 
@@ -716,9 +716,9 @@ path.chord {
 }
 
 .btn-primary.download:hover {
-    background: #F7F4EA;
-    border-color: #1D1B0D;
-    color: #1D1B0D;
+    background: #FFFFFF;
+    border-color: #000000;
+    color: #000000;
 }
 
 /* d3 TIP */
@@ -789,8 +789,8 @@ path.chord {
 .opt-graphs {
     box-sizing: content-box;
     padding: 10px;
-    border: 2px solid #1D1B0D;
-    background-color: #D8CC99;
+    border: 2px solid #000000;
+    background-color: #FFFFFF;
     font-size: 12px;
 }
 
@@ -814,7 +814,7 @@ path.chord {
 }
 
 #statDiv {
-    background: #dad2b3;
+    background: #EEEEEE;
     min-height: 0;
 }
 
@@ -836,11 +836,11 @@ path.chord {
 }
 
 .jumbotron, .card-header {
-    background-color: #D8CC99
+    background-color: #FFFFFF
 }
 
 .card-body {
-    background-color: #F7F4EA
+    background-color: #FFFFFF
 }
 
 .jumbotron {
@@ -848,7 +848,7 @@ path.chord {
 }
 
 a {
-    color: #544D31;
+    color: #000000;
 }
 
 a:hover {

@@ -775,7 +775,7 @@ function dataSelected() {
 
             // Still the same hack with denhaag
             // TODO: Add a 3D flag in the database
-            if (selectedInfra.name === "denhaag") {
+            /*if (selectedInfra.name === "denhaag") {
                 // If denhaag is selected and we're in 3D, we need to go back to 2D.
                 // Otherwise, we can simply prepare the viz.
                 if (viz3D) {
@@ -787,7 +787,7 @@ function dataSelected() {
             } else {
                 // We make sure the 2D/3D button is shown.
                 document.getElementById("changeVizButton").style.display = "";
-            }
+            }*/
 
             // Prepare the visualization
             // Defined in js/main/viz.js

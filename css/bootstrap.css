@@ -1637,7 +1637,7 @@ pre code {
 .table-warning,
 .table-warning > th,
 .table-warning > td {
-  background-color: #ffeeba;
+  background-color: #abdde5;
 }
 
 .table-hover .table-warning:hover {
@@ -3989,6 +3989,16 @@ input[type="button"].btn-block {
   padding-top: 0.3125rem;
   padding-bottom: 0.3125rem;
   margin-right: 1rem;
+  font-size: 1.25rem;
+  line-height: inherit;
+  white-space: nowrap;
+}
+
+.navbar-brand-logo {
+  display: inline-block;
+  padding-top: 0.0rem;
+  padding-bottom: 0.0rem;
+  margin-right: 0.1rem;
   font-size: 1.25rem;
   line-height: inherit;
   white-space: nowrap;

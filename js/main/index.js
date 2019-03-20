@@ -100,7 +100,7 @@ $(document).ready(function() {
 
     // Start the presentation
     // Defined in js/main/presentation.js
-    presentation();
+    presentationShort();
 
     // Initialize the click function to go full screen
     $("#fullscreen").on('click', function() {
