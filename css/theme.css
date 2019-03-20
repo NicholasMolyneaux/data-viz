@@ -517,9 +517,11 @@ h3 {
 .the-zones {
     vector-effect: non-scaling-stroke;
     stroke-dasharray: 5;
-    stroke: black;
-    stroke-width: 1;
-    fill: white;
+    stroke: #ee2939ff;
+    stroke-opacity: 1.0;
+    stroke-width: 1px;
+    fill: #ee2939ff;
+    fill-opacity: 0.15;
 }
 
 .controlled-areas {
