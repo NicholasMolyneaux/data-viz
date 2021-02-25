@@ -92,15 +92,16 @@ $(document).ready(function() {
 
     // Load the infrastructure (and then the trajectories
     // Defined in js/main/data.js
-    loadInfra();
+    
+    //loadInfra(); Removed for rebuilding ther website
 
     // Resize the visualization
     // Defined in js/main/viz.js
-    resizeViz();
+    //resizeViz(); Removed for rebuilding ther website
 
     // Start the presentation
     // Defined in js/main/presentation.js
-    presentation();
+    //presentation(); Removed for rebuilding ther website
 
     // Initialize the click function to go full screen
     $("#fullscreen").on('click', function() {
