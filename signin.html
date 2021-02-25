@@ -12,10 +12,19 @@
 
         <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
 
+        <!--
         <link rel="stylesheet" href="css/font.css">
         <link rel="stylesheet" href="css/normalize.css">
         <link rel="stylesheet" href="css/index.css">
         <link rel="stylesheet" href="/css/message.css">
+        -->
+
+        <!-- Bootstrap core CSS -->
+        <link href="./css/bootstrap.min.css" rel="stylesheet">
+
+        <!-- Custom styles for this template -->
+        <link href="./css/theme.css" rel="stylesheet">
+
     </head>
     <body>
         <!--[if lt IE 7]>
@@ -42,9 +51,40 @@
         </header>
         -->
 
+        <nav class="navbar navbar-expand-md navbar-custom">
+            <a id="logo-nav" class="navbar-brand" href="./index.html">TWD</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <i class="fas fa-bars fa-lg nav-icon"></i>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="./index.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="about.html">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="./upload.html">Upload</a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="#">Sign in <span class="sr-only">(current)</span></a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Main jumbotron for a primary marketing message or call to action -->
+        <div class="jumbotron">
+            <div class="container">
+                <h1 id="title" class="display-3">Sign in</h1>
+            </div>
+        </div>
+
 
         <section class="form-wrap">
-            <h1>Sign In</h1>
             <form id="signinForm">
               <input type="email" id="emailInputSignin" placeholder="Email" required>
               <input type="password" id="passwordInputSignin" placeholder="Password" pattern=".*" required>
